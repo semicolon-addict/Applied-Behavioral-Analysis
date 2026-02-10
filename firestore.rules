@@ -1,0 +1,88 @@
+/**
+ * @file Firebase Security Rules for ABA Assessments Platform
+ *
+ * @core_philosophy This ruleset enforces a strict user-ownership model for user-specific data, with role-based access for administrative and clinical functions. It prioritizes data security by validating user identity, ownership, and role for all operations.
+ * @data_structure
+ *  - /users/{userId}: Stores individual user profiles.
+ *  - /roles_admin/{userId}: Documents indicate admin privileges.
+ *  - /users/{userId}/children/{childId}: Stores child data.
+ *  - /users/{userId}/children/{childId}/assessments/{assessmentId}: Stores child assessment data.
+ *  - /users/{userId}/children/{childId}/questionnaires/{questionnaireId}: Stores child questionnaire data.
+ *  - /abllsr_data/{abllsrDataId}: Stores ABLLS-R assessment data.
+ * @key_security_decisions
+ *  - Clinicians can read/write data for children they are assigned to.
+ *  - Parents (owners) can read/write data for their own children.
+ *  - Admins have read access to most data for oversight but limited write access.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+    
+    function isClinician() {
+        // Check if the requesting user has the 'Clinician' role.
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Clinician';
+    }
+    
+    // Check if the clinician is assigned to the child whose data is being accessed.
+    function isClinicianAssignedToChild(userId, childId) {
+        return isClinician() && get(/databases/$(database)/documents/users/$(userId)/children/$(childId)).data.clinicianId == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+    }
+
+    match /roles_admin/{userId} {
+      allow get: if isAdmin();
+      allow list: if false;
+      allow create: if isAdmin();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /users/{userId}/children/{childId} {
+      // Parents can access their own children's data.
+      // Assigned clinicians can access the children's data they are assigned to.
+      // Admins can read for oversight.
+      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
+      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
+      allow write: if isOwner(userId) || isClinicianAssignedToChild(userId, childId);
+    }
+
+    match /users/{userId}/children/{childId}/assessments/{assessmentId} {
+      // Parents can access their own children's assessments.
+      // Assigned clinicians can access assessments for children they are assigned to.
+      // Admins can read for oversight.
+      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
+      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
+      allow write: if isOwner(userId) || isClinicianAssignedToChild(userId, childId);
+    }
+
+    match /users/{userId}/children/{childId}/questionnaires/{questionnaireId} {
+      // Parents can create their own children's questionnaires.
+      // Assigned clinicians and admins can read them.
+      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
+      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
+      allow create: if isOwner(userId);
+      allow update, delete: if false;
+    }
+
+    match /abllsr_data/{abllsrDataId} {
+      allow read, write: if isAdmin();
+      allow list: if isAdmin();
+    }
+  }
+}

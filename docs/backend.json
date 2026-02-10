@@ -1,0 +1,116 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user account within the ABA Assessments platform.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the User entity." },
+        "role": { "type": "string", "description": "Role of the user (Admin, Clinician, Parent).", "format": "string" },
+        "email": { "type": "string", "description": "Email address of the user.", "format": "email" },
+        "firstName": { "type": "string", "description": "First name of the user." },
+        "lastName": { "type": "string", "description": "Last name of the user." },
+        "contactNumber": { "type": "string", "description": "Contact phone number of the user." }
+      },
+      "required": ["id", "role", "email", "firstName", "lastName"]
+    },
+    "Questionnaire": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Questionnaire",
+      "type": "object",
+      "description": "Represents the parent intake and behavioral questionnaire.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the Questionnaire." },
+        "childId": { "type": "string", "description": "ID of the child this questionnaire is for." },
+        "parentId": { "type": "string", "description": "ID of the parent who filled out the form." },
+        "childName": { "type": "string" },
+        "childAge": { "type": "number" },
+        "childDob": { "type": "string", "format": "date" },
+        "guardian1": { "type": "string" },
+        "guardian2": { "type": "string" },
+        "medicalCond": { "type": "string" },
+        "commStyle": { "type": "string" },
+        "behavior": { "type": "string" },
+        "settings": { "type": "string" },
+        "goals": { "type": "string" },
+        "comments": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "childId", "parentId", "childName", "childAge", "childDob", "guardian1", "medicalCond", "commStyle", "behavior", "settings", "goals", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["password", "anonymous"]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "users/{userId}",
+        "definition": {
+          "entityName": "user",
+          "schema": { "$ref": "#/backend/entities/User" },
+          "description": "Stores user profile data. The 'userId' path segment represents the unique user ID. This collection facilitates path-based ownership for user-specific data.",
+          "params": [{ "name": "userId", "description": "The unique identifier for the user." }]
+        }
+      },
+      {
+        "path": "roles_admin/{userId}",
+        "definition": {
+          "entityName": "role_admin",
+          "schema": { "$ref": "#/backend/entities/User" },
+          "description": "Documents in this collection signify that a user has 'admin' role. Authorization relies solely on `request.auth.uid`. Existence over content.",
+          "params": [{ "name": "userId", "description": "The unique identifier for the user who is an admin." }]
+        }
+      },
+      {
+        "path": "users/{userId}/children/{childId}",
+        "definition": {
+          "entityName": "child",
+          "schema": { "$ref": "#/backend/entities/User" },
+          "description": "Stores child data associated with a specific user (parent). Access is controlled via path-based ownership; only the parent (identified by userId) can access child documents under their path. Includes denormalized 'userId' to ensure Authorization Independence, even in subcollections.",
+          "params": [
+            { "name": "userId", "description": "The unique identifier for the parent user." },
+            { "name": "childId", "description": "The unique identifier for the child." }
+          ]
+        }
+      },
+      {
+        "path": "users/{userId}/children/{childId}/assessments/{assessmentId}",
+        "definition": {
+          "entityName": "assessment",
+          "schema": { "$ref": "#/backend/entities/User" },
+          "description": "Stores assessment data for a specific child. Access is path-based, inheriting ownership from the parent and child paths. Includes denormalized 'userId' and 'childId' for Authorization Independence within the subcollection.",
+          "params": [
+            { "name": "userId", "description": "The unique identifier for the parent user." },
+            { "name": "childId", "description": "The unique identifier for the child." },
+            { "name": "assessmentId", "description": "The unique identifier for the assessment." }
+          ]
+        }
+      },
+      {
+        "path": "users/{userId}/children/{childId}/questionnaires/{questionnaireId}",
+        "definition": {
+          "entityName": "questionnaire",
+          "schema": { "$ref": "#/backend/entities/Questionnaire" },
+          "description": "Stores questionnaires data for a specific child, filled out by the parent. Access is path-based, inheriting ownership from the parent and child paths. Includes denormalized 'userId' and 'childId' for Authorization Independence.",
+          "params": [
+            { "name": "userId", "description": "The unique identifier for the parent user." },
+            { "name": "childId", "description": "The unique identifier for the child." },
+            { "name": "questionnaireId", "description": "The unique identifier for the questionnaire." }
+          ]
+        }
+      },
+      {
+        "path": "abllsr_data/{abllsrDataId}",
+        "definition": {
+          "entityName": "abllsr_data",
+          "schema": { "$ref": "#/backend/entities/User" },
+          "description": "Stores ABLLS-R assessment data, which can be accessed by clinicians and admins.",
+          "params": [{ "name": "abllsrDataId", "description": "The unique identifier for the ABLLS-R assessment data." }]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the ABA Assessments platform's requirements for role-based access, data isolation, and efficient querying. It prioritizes Authorization Independence (Strategy A) by denormalizing authorization data where necessary, enabling secure list operations (QAPs) through Structural Segregation (Strategy B), and utilizes Access Modeling (Strategy C) for consistency. The structure uses path-based ownership for user-specific data and membership maps for collaborative access where appropriate. The login issue will require a separate investigation on the implementation, possibly on the authentication code of the frontend application, or the configuration on the firebase console."
+  }
+}
