@@ -1,28 +1,63 @@
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: Integration of assessment questionnaires into clinician dashboard
+// Outcome: Questionnaires tab now shows assessment questionnaires and parent intake forms as sub-tabs
+// Short Description: Added QuestionnaireSelector and QuestionnaireFlow under Questionnaires tab with sub-navigation
+/////////////////////////////////////////////////////////////
 
 "use client";
 
+import { useState, useCallback } from "react";
 import { Child, Assessment, Questionnaire } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileText, PlusCircle, Baby, Stethoscope, MessageSquare, Activity, FileQuestion } from "lucide-react";
+import { FileText, PlusCircle, Baby, Stethoscope, MessageSquare, Activity, FileQuestion, ClipboardList } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentGrid } from "./assessment-grid";
 import { mockMessages } from "@/lib/mock-data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { QuestionnaireView } from "@/components/app/questionnaire-view";
+import { QuestionnaireSelector } from "@/components/app/questionnaire-selector";
+import { QuestionnaireFlow } from "@/components/app/questionnaire-flow";
 
-export function ClinicianDashboardClient({ 
-    children, 
+export function ClinicianDashboardClient({
+    children,
     assessments,
     questionnaires
-}: { 
-    children: Child[], 
+}: {
+    children: Child[],
     assessments: Assessment[],
     questionnaires: Questionnaire[]
- }) {
-    
+}) {
+    // State for assessment questionnaire flow
+    const [activeQuestionnaireType, setActiveQuestionnaireType] = useState<string | null>(null);
+    const [preSelectedType, setPreSelectedType] = useState<string | null>(null);
+
+    const handleSelectQuestionnaire = useCallback((assessmentType: string) => {
+        setActiveQuestionnaireType(assessmentType);
+    }, []);
+
+    const handleBackToSelector = useCallback(() => {
+        setActiveQuestionnaireType(null);
+        setPreSelectedType(null);
+    }, []);
+
+    const handleQuestionnaireComplete = useCallback(() => {
+        setActiveQuestionnaireType(null);
+        setPreSelectedType(null);
+    }, []);
+
+    // Called from assessment grid "View Questionnaire" button
+    const handleViewQuestionnaire = useCallback((assessmentType: string) => {
+        setPreSelectedType(assessmentType);
+        setActiveQuestionnaireType(assessmentType);
+        // Switch to questionnaires tab via DOM
+        const trigger = document.querySelector('[data-value="questionnaires"]') as HTMLElement;
+        if (trigger) trigger.click();
+    }, []);
+
     return (
         <>
             <div className="flex items-center justify-between space-y-2">
@@ -43,12 +78,12 @@ export function ClinicianDashboardClient({
                     <TabsTrigger value="ablls-r">ABLLS-R</TabsTrigger>
                     <TabsTrigger value="aflls">AFLLS</TabsTrigger>
                     <TabsTrigger value="dayc-2">DAYC-2</TabsTrigger>
-                     <TabsTrigger value="questionnaires">
-                         <FileQuestion className="mr-2 h-4 w-4" />
+                    <TabsTrigger value="questionnaires" data-value="questionnaires">
+                        <FileQuestion className="mr-2 h-4 w-4" />
                         Questionnaires
                     </TabsTrigger>
-                     <TabsTrigger value="messages">
-                         <MessageSquare className="mr-2 h-4 w-4" />
+                    <TabsTrigger value="messages">
+                        <MessageSquare className="mr-2 h-4 w-4" />
                         Messages
                     </TabsTrigger>
                 </TabsList>
@@ -60,7 +95,7 @@ export function ClinicianDashboardClient({
                                 <CardTitle>Assigned Children</CardTitle>
                                 <CardDescription>Manage and track progress for your assigned children.</CardDescription>
                             </div>
-                             <Button size="sm">
+                            <Button size="sm">
                                 <PlusCircle className="mr-2 h-4 w-4" /> Assign Child
                             </Button>
                         </CardHeader>
@@ -104,48 +139,83 @@ export function ClinicianDashboardClient({
                     {assessments.filter(a => a.type === 'ABLLS-R').map(a => {
                         const child = children.find(c => c.id === a.childId);
                         const questionnaire = questionnaires.find(q => q.childId === a.childId);
-                        return <AssessmentGrid key={a.id} assessment={a} child={child} questionnaire={questionnaire} />
+                        return <AssessmentGrid key={a.id} assessment={a} child={child} questionnaire={questionnaire} onViewQuestionnaire={handleViewQuestionnaire} />
                     })}
                 </TabsContent>
                 <TabsContent value="aflls">
-                     {assessments.filter(a => a.type === 'AFLLS').map(a => {
+                    {assessments.filter(a => a.type === 'AFLLS').map(a => {
                         const child = children.find(c => c.id === a.childId);
                         const questionnaire = questionnaires.find(q => q.childId === a.childId);
-                        return <AssessmentGrid key={a.id} assessment={a} child={child} questionnaire={questionnaire} />
+                        return <AssessmentGrid key={a.id} assessment={a} child={child} questionnaire={questionnaire} onViewQuestionnaire={handleViewQuestionnaire} />
                     })}
                 </TabsContent>
                 <TabsContent value="dayc-2">
-                     {assessments.filter(a => a.type === 'DAYC-2').map(a => {
+                    {assessments.filter(a => a.type === 'DAYC-2').map(a => {
                         const child = children.find(c => c.id === a.childId);
                         const questionnaire = questionnaires.find(q => q.childId === a.childId);
-                        return <AssessmentGrid key={a.id} assessment={a} child={child} questionnaire={questionnaire} />
+                        return <AssessmentGrid key={a.id} assessment={a} child={child} questionnaire={questionnaire} onViewQuestionnaire={handleViewQuestionnaire} />
                     })}
                 </TabsContent>
+
+                {/* Questionnaires Tab - Assessment Questionnaires + Parent Intake Forms */}
                 <TabsContent value="questionnaires" className="space-y-4">
-                    {questionnaires.length > 0 ? (
-                        questionnaires.map(q => <QuestionnaireView key={q.id} questionnaire={q} />)
-                    ) : (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>No Questionnaires Found</CardTitle>
-                                <CardDescription>Parents will fill out an intake questionnaire for their children.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-muted-foreground">Once a parent submits a questionnaire, it will appear here.</p>
-                            </CardContent>
-                        </Card>
-                    )}
+                    <Tabs defaultValue="assessment-questionnaires" className="space-y-4">
+                        <TabsList>
+                            <TabsTrigger value="assessment-questionnaires">
+                                <ClipboardList className="mr-2 h-4 w-4" />
+                                Assessment Questionnaires
+                            </TabsTrigger>
+                            <TabsTrigger value="parent-intake">
+                                <FileQuestion className="mr-2 h-4 w-4" />
+                                Parent Intake Forms
+                            </TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="assessment-questionnaires">
+                            {activeQuestionnaireType ? (
+                                <QuestionnaireFlow
+                                    assessmentType={activeQuestionnaireType}
+                                    childId={children[0]?.id || 'default-child'}
+                                    respondentId="current-clinician"
+                                    onBack={handleBackToSelector}
+                                    onComplete={handleQuestionnaireComplete}
+                                />
+                            ) : (
+                                <QuestionnaireSelector
+                                    onSelect={handleSelectQuestionnaire}
+                                    preSelectedType={preSelectedType}
+                                />
+                            )}
+                        </TabsContent>
+
+                        <TabsContent value="parent-intake" className="space-y-4">
+                            {questionnaires.length > 0 ? (
+                                questionnaires.map(q => <QuestionnaireView key={q.id} questionnaire={q} />)
+                            ) : (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>No Questionnaires Found</CardTitle>
+                                        <CardDescription>Parents will fill out an intake questionnaire for their children.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-muted-foreground">Once a parent submits a questionnaire, it will appear here.</p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </TabsContent>
+                    </Tabs>
                 </TabsContent>
+
                 <TabsContent value="messages" className="space-y-4">
                     <Card>
-                         <CardHeader>
+                        <CardHeader>
                             <CardTitle>Parent Communication</CardTitle>
                             <CardDescription>View and respond to messages from parents.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-col gap-4">
                                 {mockMessages.map(message => (
-                                     <div key={message.id} className="flex items-start gap-4 p-4 border rounded-lg">
+                                    <div key={message.id} className="flex items-start gap-4 p-4 border rounded-lg">
                                         <Avatar>
                                             <AvatarImage src={message.from === 'user-1' ? 'https://picsum.photos/seed/avatar1/100/100' : 'https://picsum.photos/seed/avatar2/100/100'} />
                                             <AvatarFallback>{message.from === 'user-1' ? 'CR' : 'P'}</AvatarFallback>
@@ -158,7 +228,7 @@ export function ClinicianDashboardClient({
                                             <p className="font-semibold">{message.subject}</p>
                                             <p className="text-sm text-muted-foreground">{message.body}</p>
                                         </div>
-                                     </div>
+                                    </div>
                                 ))}
                             </div>
                         </CardContent>

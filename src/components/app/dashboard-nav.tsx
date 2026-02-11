@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: Added Questionaries navigation item for clinician sidebar
+// Outcome: Clinicians can navigate to Questionaries section from the sidebar
+// Short Description: Dashboard navigation component with role-based nav items including Questionaries
+/////////////////////////////////////////////////////////////
+
 'use client';
 
 import Link from 'next/link';
@@ -32,6 +39,7 @@ const getNavItems = (role: 'Admin' | 'Clinician' | 'Parent' | 'Unknown') => {
         { href: '/clinician/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { href: '/clinician/dashboard#children', label: 'Assigned Children', icon: Baby },
         { href: '/clinician/dashboard#assessments', label: 'Assessments', icon: Stethoscope },
+        { href: '/clinician/dashboard#questionnaires', label: 'Questionaries', icon: FileQuestion },
         { href: '/clinician/dashboard#messages', label: 'Messages', icon: MessageSquare },
       ];
     case 'Parent':

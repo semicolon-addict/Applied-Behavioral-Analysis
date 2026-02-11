@@ -1,0 +1,78 @@
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: PostgreSQL database schema for questionnaire management
+// Outcome: Database tables for templates, domains, questions, sessions, and responses
+// Short Description: Prisma schema defining the questionnaire data model with proper relations
+/////////////////////////////////////////////////////////////
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model QuestionnaireTemplate {
+  id             String   @id @default(uuid())
+  assessmentType String   @unique
+  title          String
+  description    String?
+  domains        Domain[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Domain {
+  id         String                @id @default(uuid())
+  name       String
+  sortOrder  Int
+  templateId String
+  template   QuestionnaireTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  questions  Question[]
+
+  @@index([templateId])
+}
+
+model Question {
+  id           String     @id @default(uuid())
+  questionText String
+  responseType String     @default("dropdown")
+  options      String[]
+  sortOrder    Int
+  domainId     String
+  domain       Domain     @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  responses    Response[]
+
+  @@index([domainId])
+}
+
+model QuestionnaireSession {
+  id             String     @id @default(uuid())
+  assessmentType String
+  childId        String
+  respondentId   String
+  status         String     @default("in-progress")
+  responses      Response[]
+  createdAt      DateTime   @default(now())
+  completedAt    DateTime?
+  updatedAt      DateTime   @updatedAt
+
+  @@index([childId])
+  @@index([assessmentType])
+}
+
+model Response {
+  id         String               @id @default(uuid())
+  answer     String
+  sessionId  String
+  session    QuestionnaireSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question             @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+
+  @@unique([sessionId, questionId])
+  @@index([sessionId])
+}

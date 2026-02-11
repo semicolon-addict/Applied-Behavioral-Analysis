@@ -1,0 +1,35 @@
+{
+    "name": "behaveassess-server",
+    "version": "1.0.0",
+    "description": "Express API server for BehaveAssess questionnaire management",
+    "main": "dist/index.js",
+    "scripts": {
+        "dev": "ts-node src/index.ts",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "seed": "ts-node src/scripts/seed-db.ts",
+        "parse": "ts-node src/scripts/parse-assessments.ts",
+        "prisma:generate": "prisma generate",
+        "prisma:migrate": "prisma migrate dev",
+        "prisma:studio": "prisma studio"
+    },
+    "dependencies": {
+        "@prisma/client": "^6.4.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^4.21.2",
+        "mammoth": "^1.9.0",
+        "pdf-parse": "^1.1.1",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/node": "^22.19.11",
+        "@types/pdf-parse": "^1.1.4",
+        "@types/uuid": "^9.0.8",
+        "prisma": "^6.4.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.3"
+    }
+}
