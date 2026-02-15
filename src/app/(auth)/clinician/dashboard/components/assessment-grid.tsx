@@ -14,16 +14,17 @@ import { FileText } from "lucide-react";
 import { jsPDF } from "jspdf";
 
 type AssessmentGridProps = {
-  assessment: Assessment;
-  child?: Child;
-  questionnaire?: Questionnaire;
+    assessment: Assessment;
+    child?: Child;
+    questionnaire?: Questionnaire;
+    onViewQuestionnaire?: (assessmentType: string) => void;
 };
 
 const getScoreColor = (score: number) => {
-  if (score >= 8) return "bg-green-200 text-green-900";
-  if (score >= 4) return "bg-yellow-100 text-yellow-900";
-  if (score >= 0) return "bg-red-100 text-red-900";
-  return "bg-gray-50";
+    if (score >= 8) return "bg-green-200 text-green-900";
+    if (score >= 4) return "bg-yellow-100 text-yellow-900";
+    if (score >= 0) return "bg-red-100 text-red-900";
+    return "bg-gray-50";
 };
 
 const getDomainsForType = (type: AssessmentType): Domain[] | AfllsProtocol[] => {
@@ -40,11 +41,11 @@ const isAfllsProtocol = (data: any[]): data is AfllsProtocol[] => {
 }
 
 
-export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentGridProps) {
+export function AssessmentGrid({ assessment, child, questionnaire, onViewQuestionnaire }: AssessmentGridProps) {
     const firestore = useFirestore();
     const { user } = useUser();
     const assessmentData = getDomainsForType(assessment.type);
-    
+
     const [scores, setScores] = useState<Map<string, number | null>>(new Map());
     const [selectedTask, setSelectedTask] = useState<{ domain: Domain, task: Task, score: number | null } | null>(null);
 
@@ -74,9 +75,9 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
         } else if (validatedScore !== null) {
             updatedScoresArray.push({ domain: domainName, task: taskName, score: validatedScore });
         }
-        
+
         if (!firestore || !child || !assessment.id || !user) return;
-        
+
         const assessmentRef = doc(firestore, `users/${child.parentId}/children/${child.id}/assessments/${assessment.id}`);
 
         setDocumentNonBlocking(assessmentRef, { scores: updatedScoresArray }, { merge: true });
@@ -121,10 +122,10 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
                 if (value) {
                     doc.setFont('helvetica', 'bold');
                     doc.text(label, 15, y);
-                    y+=5;
+                    y += 5;
                     doc.setFont('helvetica', 'normal');
                     const lines = doc.splitTextToSize(String(value), 180);
-                     if (y + (lines.length * 5) > 280) { // check for page break
+                    if (y + (lines.length * 5) > 280) { // check for page break
                         doc.addPage();
                         y = 20;
                     }
@@ -143,7 +144,7 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
         doc.setFontSize(16);
         doc.text("Assessment Scores", 15, y);
         y += 10;
-        
+
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         const tableHeaders = ["Domain", "Task", "Score"];
@@ -156,7 +157,7 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
         doc.setFont('helvetica', 'normal');
         y += 5;
 
-        assessment.scores.sort((a,b) => a.domain.localeCompare(b.domain) || a.task.localeCompare(b.task)).forEach(score => {
+        assessment.scores.sort((a, b) => a.domain.localeCompare(b.domain) || a.task.localeCompare(b.task)).forEach(score => {
             if (y > 270) {
                 doc.addPage();
                 y = 20;
@@ -172,7 +173,7 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
             const domainLines = doc.splitTextToSize(score.domain, tableColumnWidths[0] - 5);
             const taskLines = doc.splitTextToSize(score.task, tableColumnWidths[1] - 5);
             const scoreText = String(score.score);
-            
+
             const maxLines = Math.max(domainLines.length, taskLines.length);
 
             doc.text(domainLines, 15, y);
@@ -188,7 +189,7 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
     const renderGrid = (domains: Domain[], gridTitle?: string) => {
         const maxTasks = Math.max(1, ...domains.map(d => d.tasks.length));
         return (
-             <Card className="mb-6">
+            <Card className="mb-6">
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         <div>
@@ -201,76 +202,84 @@ export function AssessmentGrid({ assessment, child, questionnaire }: AssessmentG
                                 Child: {child?.name} | Date: {new Date(assessment.date).toLocaleDateString()}
                             </CardDescription>
                         </div>
-                         <Button onClick={handleGenerateReport} variant="outline" size="sm">
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate Report
-                        </Button>
+                        <div className="flex gap-2">
+                            {onViewQuestionnaire && (
+                                <Button onClick={() => onViewQuestionnaire(assessment.type)} variant="outline" size="sm">
+                                    <FileText className="mr-2 h-4 w-4" />
+                                    View Questionnaire
+                                </Button>
+                            )}
+                            <Button onClick={handleGenerateReport} variant="outline" size="sm">
+                                <FileText className="mr-2 h-4 w-4" />
+                                Generate Report
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
                     <div className="overflow-x-auto">
-                    <Table className="border">
-                        <TableHeader>
-                        <TableRow>
-                            <TableHead className="font-bold border-r min-w-[200px]">Domain</TableHead>
-                            {Array.from({ length: maxTasks }, (_, i) => (
-                            <TableHead key={i} className="text-center min-w-[60px]">{i + 1}</TableHead>
-                            ))}
-                        </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                        {domains.map((domain) => (
-                            <TableRow key={domain.name}>
-                            <TableCell className="font-medium border-r">{domain.name}</TableCell>
-                            {Array.from({ length: maxTasks }, (_, i) => {
-                                const task = domain.tasks[i];
-                                if (!task) {
-                                    return <TableCell key={i} className="bg-muted/50"></TableCell>
-                                }
+                        <Table className="border">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="font-bold border-r min-w-[200px]">Domain</TableHead>
+                                    {Array.from({ length: maxTasks }, (_, i) => (
+                                        <TableHead key={i} className="text-center min-w-[60px]">{i + 1}</TableHead>
+                                    ))}
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {domains.map((domain) => (
+                                    <TableRow key={domain.name}>
+                                        <TableCell className="font-medium border-r">{domain.name}</TableCell>
+                                        {Array.from({ length: maxTasks }, (_, i) => {
+                                            const task = domain.tasks[i];
+                                            if (!task) {
+                                                return <TableCell key={i} className="bg-muted/50"></TableCell>
+                                            }
 
-                                const score = scores.get(`${domain.name}-${task.name}`);
-                                
-                                return (
-                                    <TableCell 
-                                        key={i} 
-                                        className={cn(
-                                            "p-1 text-center font-bold cursor-pointer hover:bg-muted-foreground/20", 
-                                            score !== undefined && score !== null ? getScoreColor(score) : 'bg-gray-50'
-                                        )}
-                                        onClick={() => openTaskDialog(domain, task)}
-                                    >
-                                        <div className="w-14 h-10 flex items-center justify-center">
-                                            {score ?? ''}
-                                        </div>
-                                    </TableCell>
-                                );
-                            })}
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                    </Table>
+                                            const score = scores.get(`${domain.name}-${task.name}`);
+
+                                            return (
+                                                <TableCell
+                                                    key={i}
+                                                    className={cn(
+                                                        "p-1 text-center font-bold cursor-pointer hover:bg-muted-foreground/20",
+                                                        score !== undefined && score !== null ? getScoreColor(score) : 'bg-gray-50'
+                                                    )}
+                                                    onClick={() => openTaskDialog(domain, task)}
+                                                >
+                                                    <div className="w-14 h-10 flex items-center justify-center">
+                                                        {score ?? ''}
+                                                    </div>
+                                                </TableCell>
+                                            );
+                                        })}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </div>
                 </CardContent>
             </Card>
         )
     }
 
-  return (
-    <>
-        {isAfllsProtocol(assessmentData) 
-            ? (assessmentData as AfllsProtocol[]).map(protocol => React.cloneElement(renderGrid(protocol.domains, `${assessment.type} - ${protocol.protocolName}`), { key: protocol.protocolName }))
-            : renderGrid(assessmentData as Domain[])
-        }
-        {selectedTask && (
-            <TaskDialog 
-                isOpen={!!selectedTask}
-                onClose={() => setSelectedTask(null)}
-                domain={selectedTask.domain}
-                task={selectedTask.task}
-                score={selectedTask.score}
-                onSave={handleScoreChange}
-            />
-        )}
-    </>
-  );
+    return (
+        <>
+            {isAfllsProtocol(assessmentData)
+                ? (assessmentData as AfllsProtocol[]).map(protocol => React.cloneElement(renderGrid(protocol.domains, `${assessment.type} - ${protocol.protocolName}`), { key: protocol.protocolName }))
+                : renderGrid(assessmentData as Domain[])
+            }
+            {selectedTask && (
+                <TaskDialog
+                    isOpen={!!selectedTask}
+                    onClose={() => setSelectedTask(null)}
+                    domain={selectedTask.domain}
+                    task={selectedTask.task}
+                    score={selectedTask.score}
+                    onSave={handleScoreChange}
+                />
+            )}
+        </>
+    );
 }

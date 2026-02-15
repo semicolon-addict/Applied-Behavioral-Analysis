@@ -20,7 +20,69 @@ export type Child = {
   clinicianId: string;
 };
 
-export type AssessmentType = 'ABLLS-R' | 'AFLLS' | 'DAYC-2';
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: New assessment questionnaire types for PostgreSQL integration
+// Outcome: TypeScript types for questionnaire templates, sessions, and responses
+// Short Description: Added questionnaire-related types and Behavior-Therapy to AssessmentType
+/////////////////////////////////////////////////////////////
+
+export type AssessmentType = 'ABLLS-R' | 'AFLLS' | 'DAYC-2' | 'Behavior-Therapy';
+
+// Assessment question (from parsed PDF, stored in PostgreSQL)
+export type AssessmentQuestion = {
+  id: string;
+  questionText: string;
+  responseType: 'dropdown' | 'text' | 'scale';
+  options: string[];
+  sortOrder: number;
+};
+
+// Domain with its questions
+export type QuestionnaireDomain = {
+  id: string;
+  name: string;
+  sortOrder: number;
+  questions: AssessmentQuestion[];
+};
+
+// Full questionnaire template (per assessment type)
+export type AssessmentQuestionnaire = {
+  id: string;
+  assessmentType: string;
+  title: string;
+  description: string | null;
+  domains: QuestionnaireDomain[];
+};
+
+// Template summary (for selector cards)
+export type QuestionnaireTemplateSummary = {
+  id: string;
+  assessmentType: string;
+  title: string;
+  description: string | null;
+  totalQuestions: number;
+  domains: { id: string; name: string; questionCount: number }[];
+};
+
+// User's questionnaire session
+export type QuestionnaireSession = {
+  id: string;
+  assessmentType: string;
+  childId: string;
+  respondentId: string;
+  status: 'in-progress' | 'completed';
+  createdAt: string;
+  completedAt: string | null;
+  responses: QuestionnaireResponseEntry[];
+};
+
+// Individual response entry
+export type QuestionnaireResponseEntry = {
+  id: string;
+  questionId: string;
+  answer: string;
+};
 
 export type AssessmentScore = {
   domain: string;
@@ -29,7 +91,7 @@ export type AssessmentScore = {
 };
 
 export type Assessment = {
-  id:string;
+  id: string;
   childId: string;
   type: AssessmentType;
   date: string;
