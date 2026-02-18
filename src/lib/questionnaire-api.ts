@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////
 // Author: Shashank Kakad
 // Inputs: API client for questionnaire backend endpoints
-// Outcome: Frontend can fetch templates, manage sessions, and save responses via Express API
-// Short Description: Fetch wrapper for PostgreSQL-backed questionnaire REST API
+// Outcome: Frontend can fetch templates, manage sessions, save responses, and download VB-mapped Excel reports
+// Short Description: Fetch wrapper for PostgreSQL-backed questionnaire REST API with Excel export
 /////////////////////////////////////////////////////////////
 
 import type {
@@ -86,4 +86,45 @@ export async function getSessionsForChild(
     const params = new URLSearchParams({ childId });
     if (assessmentType) params.append('assessmentType', assessmentType);
     return fetchApi<QuestionnaireSession[]>(`/api/questionnaires/sessions?${params}`);
+}
+
+// Download VB-mapped Excel report for a completed session
+export async function downloadExcelReport(sessionId: string): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/questionnaires/sessions/${sessionId}/export`);
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Failed to generate Excel report' }));
+        throw new Error(error.error || `Export failed: ${response.status}`);
+    }
+
+    // Get filename from Content-Disposition header if available
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let filename = `ABLLS_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    
+    if (contentDisposition) {
+        const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+        if (matches && matches[1]) {
+            filename = matches[1];
+        }
+    }
+
+    // Download the file
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+}
+
+// Fetch normalized VB mapping rows for validation/debugging
+export async function getVBExport(
+    sessionId: string
+): Promise<Array<{ question: string; score: number; max: number; normalized: number }>> {
+    return fetchApi<Array<{ question: string; score: number; max: number; normalized: number }>>(
+        `/api/questionnaires/sessions/${sessionId}/vb-export`
+    );
 }

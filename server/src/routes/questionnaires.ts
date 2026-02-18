@@ -1,15 +1,60 @@
 ///////////////////////////////////////////////////
 // Author: Shashank Kakad
 // Inputs: REST API routes for questionnaire templates, sessions, and responses
-// Outcome: Full CRUD operations for questionnaire management via Express router
-// Short Description: API endpoints for fetching templates, managing sessions, and saving responses
+// Outcome: Full CRUD operations for questionnaire management via Express router, including Excel export
+// Short Description: API endpoints for fetching templates, managing sessions, saving responses, and generating VB-mapped Excel reports
 /////////////////////////////////////////////////////////////
 
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
+import { calculateVBScoring } from '../services/scoring-service';
+import { generateABLLSExcel } from '../services/excel-export-service';
 
 const router = Router();
 const prisma = new PrismaClient();
+
+const exampleImageBySkillCode = new Map<string, string>();
+
+function initializeExampleImageMap() {
+    try {
+        const candidateDirs = [
+            path.resolve(__dirname, '..', '..', '..', 'public', 'examples'),
+            path.resolve(process.cwd(), '..', 'public', 'examples'),
+            path.resolve(process.cwd(), 'public', 'examples'),
+        ];
+        const examplesDir = candidateDirs.find((dir) => fs.existsSync(dir));
+        if (!examplesDir) return;
+
+        if (!fs.existsSync(examplesDir)) return;
+
+        const files = fs.readdirSync(examplesDir).filter((file) => file.toLowerCase().endsWith('.png'));
+        files.forEach((file) => {
+            const baseName = path.parse(file).name;
+            const isCriteria = baseName.toLowerCase().endsWith('-criteria');
+            const skillCode = isCriteria ? baseName.slice(0, -'-criteria'.length) : baseName;
+            if (!skillCode) return;
+
+            const imagePath = `/examples/${file}`;
+            if (!exampleImageBySkillCode.has(skillCode) || !isCriteria) {
+                exampleImageBySkillCode.set(skillCode, imagePath);
+            }
+        });
+    } catch (error) {
+        console.warn('Failed to initialize example image map:', error);
+    }
+}
+
+initializeExampleImageMap();
+
+function resolveExampleImage(skillCode?: string | null, existingImage?: string | null): string | null {
+    if (existingImage) return existingImage;
+    if (!skillCode) return null;
+    const normalizedSkillCode = skillCode.trim();
+    if (!normalizedSkillCode) return null;
+    return exampleImageBySkillCode.get(normalizedSkillCode) || null;
+}
 
 // GET /api/questionnaires/templates
 // List all questionnaire templates (with domain/question counts)
@@ -71,7 +116,18 @@ router.get('/templates/:assessmentType', async (req: Request, res: Response) => 
             return;
         }
 
-        res.json(template);
+        const templateWithExampleImages = {
+            ...template,
+            domains: template.domains.map((domain) => ({
+                ...domain,
+                questions: domain.questions.map((question) => ({
+                    ...question,
+                    exampleImage: resolveExampleImage(question.skillCode, question.exampleImage),
+                })),
+            })),
+        };
+
+        res.json(templateWithExampleImages);
     } catch (error) {
         console.error('Error fetching template:', error);
         res.status(500).json({ error: 'Failed to fetch template' });
@@ -231,6 +287,42 @@ router.patch('/sessions/:sessionId/complete', async (req: Request, res: Response
     } catch (error) {
         console.error('Error completing session:', error);
         res.status(500).json({ error: 'Failed to complete session' });
+    }
+});
+
+// GET /api/questionnaires/sessions/:sessionId/vb-export
+// Return normalized VB export rows for validation/debugging
+router.get('/sessions/:sessionId/vb-export', async (req: Request, res: Response) => {
+    try {
+        const sessionId = req.params.sessionId as string;
+        const gradingResult = await calculateVBScoring(sessionId);
+        res.json(gradingResult.vbExport);
+    } catch (error) {
+        console.error('Error generating VB export JSON:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to generate VB export JSON' });
+    }
+});
+
+// GET /api/questionnaires/sessions/:sessionId/export
+// Generate and download VB-mapped Excel report for a completed session
+router.get('/sessions/:sessionId/export', async (req: Request, res: Response) => {
+    try {
+        const sessionId = req.params.sessionId as string;
+        const gradingResult = await calculateVBScoring(sessionId);
+        const workbook = await generateABLLSExcel(gradingResult);
+        const excelBuffer = await workbook.xlsx.writeBuffer();
+        const output = Buffer.isBuffer(excelBuffer) ? excelBuffer : Buffer.from(excelBuffer as ArrayBuffer);
+
+        const safeAssessmentType = gradingResult.assessmentType.replace(/[^a-zA-Z0-9_-]/g, '_');
+        const datePart = gradingResult.completedAt.toISOString().slice(0, 10);
+        const fileName = `${safeAssessmentType}_${gradingResult.childId}_${datePart}.xlsx`;
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+        res.send(output);
+    } catch (error) {
+        console.error('Error generating Excel export:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to generate Excel export' });
     }
 });
 
