@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: Login form with Apps Script backend validation and Super Admin role support
+// Outcome: Users authenticate via Google Sheets and are redirected to role-specific dashboards
+// Short Description: Enhanced login page with dual auth (Apps Script + Firebase) and role-based routing
+/////////////////////////////////////////////////////////////
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,6 +30,7 @@ import { Baby } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getUserRole } from '@/lib/auth';
 import { useFirestore } from '@/firebase/provider';
+import { loginUser, getDashboardUrl } from '@/lib/sheets-auth';
 
 
 const formSchema = z.object({
@@ -37,6 +45,7 @@ export default function LoginPage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,51 +58,61 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user && !isUserLoading && !isRedirecting) {
-        setIsRedirecting(true);
-        getUserRole(firestore, user.uid).then(role => {
-            let dashboardUrl = '/login';
-            switch (role) {
-                case 'Admin':
-                    dashboardUrl = '/admin/dashboard';
-                    break;
-                case 'Clinician':
-                    dashboardUrl = '/clinician/dashboard';
-                    break;
-                case 'Parent':
-                    dashboardUrl = '/parent/dashboard';
-                    break;
-            }
-            router.push(dashboardUrl);
-        }).catch(error => {
-            toast({
-                variant: "destructive",
-                title: 'Routing Error',
-                description: 'Could not determine user role.',
-            });
-            setIsRedirecting(false);
+      setIsRedirecting(true);
+      getUserRole(firestore, user.uid).then(role => {
+        if (!role) {
+          toast({
+            variant: "destructive",
+            title: 'Routing Error',
+            description: 'Could not determine user role. Please contact support.',
+          });
+          setIsRedirecting(false);
+          return;
+        }
+        const dashboardUrl = getDashboardUrl(role);
+        router.push(dashboardUrl);
+      }).catch(error => {
+        toast({
+          variant: "destructive",
+          title: 'Routing Error',
+          description: 'Could not determine user role.',
         });
+        setIsRedirecting(false);
+      });
     }
   }, [user, isUserLoading, firestore, router, toast, isRedirecting]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
     try {
+      // Step 1: Validate credentials against Google Sheet
+      const sheetResult = await loginUser(values.email, values.password);
+
+      if (!sheetResult.success) {
+        throw new Error(sheetResult.error || 'Login failed');
+      }
+
+      // Step 2: Sign in to Firebase for session management
       initiateEmailSignIn(auth, values.email, values.password);
+
       toast({
-        title: 'Login Attempted',
-        description: "Please wait while we log you in.",
+        title: 'Login Successful',
+        description: `Welcome back! Redirecting to your dashboard...`,
       });
     } catch (error: any) {
-       toast({
+      toast({
         variant: "destructive",
         title: 'Login Failed',
         description: error.message,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-       <div className="absolute top-4 left-4">
+      <div className="absolute top-4 left-4">
         <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
           <Baby className="w-7 h-7 text-primary" />
           <span>ABA Assessments</span>
@@ -135,8 +154,8 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isRedirecting || isUserLoading}>
-                {isRedirecting || isUserLoading ? 'Logging in...' : 'Login'}
+              <Button type="submit" className="w-full" disabled={isRedirecting || isUserLoading || isSubmitting}>
+                {isRedirecting || isUserLoading ? 'Logging in...' : isSubmitting ? 'Validating...' : 'Login'}
               </Button>
             </form>
           </Form>

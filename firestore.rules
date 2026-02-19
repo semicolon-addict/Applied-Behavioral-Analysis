@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: Updated Firestore rules with Super Admin role support
+// Outcome: Super Admin users have full system access alongside existing Admin role
+// Short Description: Added isSuperAdmin() function and updated access rules for Super Admin RBAC
+/////////////////////////////////////////////////////////////
+
 /**
  * @file Firebase Security Rules for ABA Assessments Platform
  *
@@ -10,6 +17,7 @@
  *  - /users/{userId}/children/{childId}/questionnaires/{questionnaireId}: Stores child questionnaire data.
  *  - /abllsr_data/{abllsrDataId}: Stores ABLLS-R assessment data.
  * @key_security_decisions
+ *  - Super Admins have full system access including user and role management.
  *  - Clinicians can read/write data for children they are assigned to.
  *  - Parents (owners) can read/write data for their own children.
  *  - Admins have read access to most data for oversight but limited write access.
@@ -29,6 +37,10 @@ service cloud.firestore {
     function isAdmin() {
       return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
+
+    function isSuperAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Super Admin';
+    }
     
     function isClinician() {
         // Check if the requesting user has the 'Clinician' role.
@@ -41,48 +53,48 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
-      allow list: if isAdmin();
+      allow read, write: if isOwner(userId) || isAdmin() || isSuperAdmin();
+      allow list: if isAdmin() || isSuperAdmin();
     }
 
     match /roles_admin/{userId} {
-      allow get: if isAdmin();
-      allow list: if false;
-      allow create: if isAdmin();
-      allow update: if false;
-      allow delete: if false;
+      allow get: if isAdmin() || isSuperAdmin();
+      allow list: if isSuperAdmin();
+      allow create: if isAdmin() || isSuperAdmin();
+      allow update: if isSuperAdmin();
+      allow delete: if isSuperAdmin();
     }
 
     match /users/{userId}/children/{childId} {
       // Parents can access their own children's data.
       // Assigned clinicians can access the children's data they are assigned to.
-      // Admins can read for oversight.
-      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
-      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
-      allow write: if isOwner(userId) || isClinicianAssignedToChild(userId, childId);
+      // Admins and Super Admins can read for oversight.
+      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin() || isSuperAdmin();
+      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin() || isSuperAdmin();
+      allow write: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isSuperAdmin();
     }
 
     match /users/{userId}/children/{childId}/assessments/{assessmentId} {
       // Parents can access their own children's assessments.
       // Assigned clinicians can access assessments for children they are assigned to.
-      // Admins can read for oversight.
-      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
-      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
-      allow write: if isOwner(userId) || isClinicianAssignedToChild(userId, childId);
+      // Admins and Super Admins can read for oversight.
+      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin() || isSuperAdmin();
+      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin() || isSuperAdmin();
+      allow write: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isSuperAdmin();
     }
 
     match /users/{userId}/children/{childId}/questionnaires/{questionnaireId} {
       // Parents can create their own children's questionnaires.
-      // Assigned clinicians and admins can read them.
-      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
-      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin();
-      allow create: if isOwner(userId);
-      allow update, delete: if false;
+      // Assigned clinicians, admins, and Super Admins can read them.
+      allow read: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin() || isSuperAdmin();
+      allow list: if isOwner(userId) || isClinicianAssignedToChild(userId, childId) || isAdmin() || isSuperAdmin();
+      allow create: if isOwner(userId) || isSuperAdmin();
+      allow update, delete: if isSuperAdmin();
     }
 
     match /abllsr_data/{abllsrDataId} {
-      allow read, write: if isAdmin();
-      allow list: if isAdmin();
+      allow read, write: if isAdmin() || isSuperAdmin();
+      allow list: if isAdmin() || isSuperAdmin();
     }
   }
 }

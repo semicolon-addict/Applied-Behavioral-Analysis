@@ -1,6 +1,12 @@
 
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: Added Super Admin role to UserRole type
+// Outcome: System now supports Parent, Clinician, Super Admin, and Admin roles
+// Short Description: Extended UserRole union type with Super Admin for RBAC
+/////////////////////////////////////////////////////////////
 
-export type UserRole = 'Admin' | 'Clinician' | 'Parent';
+export type UserRole = 'Admin' | 'Clinician' | 'Parent' | 'Super Admin';
 
 export type User = {
   id: string;

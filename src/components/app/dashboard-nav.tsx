@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////
 // Author: Shashank Kakad
-// Inputs: Added Questionaries navigation item for clinician sidebar
-// Outcome: Clinicians can navigate to Questionaries section from the sidebar
-// Short Description: Dashboard navigation component with role-based nav items including Questionaries
+// Inputs: Dashboard navigation with Super Admin role support and user management
+// Outcome: Sidebar shows role-appropriate navigation items including Super Admin with user management
+// Short Description: Enhanced dashboard-nav with Super Admin nav items and role-based menu
 /////////////////////////////////////////////////////////////
 
 'use client';
@@ -21,15 +21,19 @@ import {
   MessageSquare,
   Settings,
   HeartHandshake,
-  FileQuestion
+  FileQuestion,
+  Shield,
+  UserCog
 } from 'lucide-react';
 
-const getNavItems = (role: 'Admin' | 'Clinician' | 'Parent' | 'Unknown') => {
+const getNavItems = (role: 'Admin' | 'Super Admin' | 'Clinician' | 'Parent' | 'Unknown') => {
   switch (role) {
+    case 'Super Admin':
     case 'Admin':
       return [
         { href: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard },
         { href: '/admin/dashboard#users', label: 'Manage Users', icon: Users },
+        { href: '/admin/dashboard#roles', label: 'Role Management', icon: UserCog },
         { href: '/admin/dashboard#analytics', label: 'Analytics', icon: BarChart3 },
         { href: '/admin/dashboard#reports', label: 'All Reports', icon: FileText },
         { href: '/admin/dashboard#settings', label: 'Settings', icon: Settings },
