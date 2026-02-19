@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////
+// Author: Shashank Kakad
+// Inputs: Updated role resolution to include Super Admin
+// Outcome: getUserRole now supports Parent, Clinician, Admin, and Super Admin roles
+// Short Description: Enhanced role lookup with Super Admin support from Firestore user docs
+/////////////////////////////////////////////////////////////
+
 'use client';
 
 import { doc, getDoc, Firestore } from 'firebase/firestore';
@@ -10,6 +17,7 @@ export async function getUserRole(firestore: Firestore, uid: string): Promise<Us
     if (userDoc.exists()) {
         const userData = userDoc.data();
         // If the user document has a role, return it immediately.
+        // Supports: Parent, Clinician, Super Admin, Admin
         if (userData.role) {
             return userData.role as UserRole;
         }
@@ -21,7 +29,7 @@ export async function getUserRole(firestore: Firestore, uid: string): Promise<Us
     if (adminDoc.exists()) {
         return 'Admin';
     }
-    
+
     // If no role is found in either place, return null.
     return null;
 }

@@ -1,14 +1,15 @@
 ///////////////////////////////////////////////////
 // Author: Shashank Kakad
-// Inputs: Express server setup with CORS, JSON parsing, and questionnaire routes
-// Outcome: API server running on configurable port for questionnaire CRUD operations
-// Short Description: Main Express server entry point with middleware and route registration
+// Inputs: Express server setup with CORS, JSON parsing, auth routes, and questionnaire routes
+// Outcome: API server with auth endpoints and questionnaire CRUD operations
+// Short Description: Main Express server entry point with auth routes and middleware registration
 /////////////////////////////////////////////////////////////
 
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { questionnaireRoutes } from './routes/questionnaires';
+import { authRoutes } from './routes/auth';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/questionnaires', questionnaireRoutes);
 
 // Health check
