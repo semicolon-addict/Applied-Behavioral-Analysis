@@ -1,6 +1,8 @@
 
 "use client"
 
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { User, Questionnaire } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +14,17 @@ import { FileText, PlusCircle, Users, Activity, BarChart, FileQuestion } from "l
 import { QuestionnaireView } from "@/components/app/questionnaire-view";
 
 export function AdminDashboardClient({ users, questionnaires }: { users: User[], questionnaires: Questionnaire[] }) {
+    const searchParams = useSearchParams();
+    const [activeTab, setActiveTab] = useState("overview");
+
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        const allowedTabs = new Set(["overview", "users", "questionnaires", "analytics"]);
+        if (tab && allowedTabs.has(tab)) {
+            setActiveTab(tab);
+        }
+    }, [searchParams]);
+
     const totalUsers = users.length;
     const totalClinicians = users.filter(u => u.role === 'Clinician').length;
     const totalParents = users.filter(u => u.role === 'Parent').length;
@@ -21,13 +34,13 @@ export function AdminDashboardClient({ users, questionnaires }: { users: User[],
             <div className="flex items-center justify-between space-y-2">
                 <h2 className="text-3xl font-bold tracking-tight">Admin Dashboard</h2>
                 <div className="flex items-center space-x-2">
-                    <Button>
+                    <Button disabled title="Report downloads are not configured yet.">
                         <FileText className="mr-2 h-4 w-4" />
-                        Download Reports
+                        Download Reports (Soon)
                     </Button>
                 </div>
             </div>
-            <Tabs defaultValue="overview" className="space-y-4">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="overview">
                         <Activity className="mr-2 h-4 w-4" />
@@ -90,8 +103,8 @@ export function AdminDashboardClient({ users, questionnaires }: { users: User[],
                                 <CardTitle>User Management</CardTitle>
                                 <CardDescription>View and manage all user accounts.</CardDescription>
                             </div>
-                            <Button size="sm">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Add User
+                            <Button size="sm" disabled title="User creation flow is not configured yet.">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add User (Soon)
                             </Button>
                         </CardHeader>
                         <CardContent>

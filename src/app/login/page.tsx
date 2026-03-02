@@ -23,14 +23,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { useAuth, useUser } from '@/firebase';
-import { initiateEmailSignIn } from '@/firebase/non-blocking-login';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Baby } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getUserRole } from '@/lib/auth';
 import { useFirestore } from '@/firebase/provider';
-import { loginUser, getDashboardUrl } from '@/lib/sheets-auth';
+import { loginUser, getDashboardUrl, getSession } from '@/lib/sheets-auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 const formSchema = z.object({
@@ -60,7 +60,8 @@ export default function LoginPage() {
     if (user && !isUserLoading && !isRedirecting) {
       setIsRedirecting(true);
       getUserRole(firestore, user.uid).then(role => {
-        if (!role) {
+        const resolvedRole = role || getSession()?.role || null;
+        if (!resolvedRole) {
           toast({
             variant: "destructive",
             title: 'Routing Error',
@@ -69,9 +70,10 @@ export default function LoginPage() {
           setIsRedirecting(false);
           return;
         }
-        const dashboardUrl = getDashboardUrl(role);
+
+        const dashboardUrl = getDashboardUrl(resolvedRole);
         router.push(dashboardUrl);
-      }).catch(error => {
+      }).catch(() => {
         toast({
           variant: "destructive",
           title: 'Routing Error',
@@ -93,7 +95,7 @@ export default function LoginPage() {
       }
 
       // Step 2: Sign in to Firebase for session management
-      initiateEmailSignIn(auth, values.email, values.password);
+      await signInWithEmailAndPassword(auth, values.email, values.password);
 
       toast({
         title: 'Login Successful',

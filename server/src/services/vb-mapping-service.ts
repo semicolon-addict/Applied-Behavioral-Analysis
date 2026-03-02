@@ -9,7 +9,7 @@ export const VB_BASE_UNITS = 4;
 export const VB_FILLED_CHAR = 'X';
 export const VB_EMPTY_CHAR = '_';
 
-export type VBSupportedMax = 2 | 4;
+export type VBSupportedMax = 2 | 4 | 5;
 
 export type VBExportRow = {
     question: string;
@@ -26,7 +26,10 @@ export type VBMappingResult = VBExportRow & {
 };
 
 export function resolveVBMax(rawMax?: number | null): VBSupportedMax {
-    return rawMax === 2 ? 2 : 4;
+    if (rawMax === 2 || rawMax === 4 || rawMax === 5) {
+        return rawMax;
+    }
+    return 4;
 }
 
 export function clampVBScore(rawScore: number | null | undefined, max: VBSupportedMax): number {
@@ -37,7 +40,11 @@ export function clampVBScore(rawScore: number | null | undefined, max: VBSupport
 }
 
 export function normalizeVBScore(score: number, max: VBSupportedMax): number {
-    return max === 2 ? score * 2 : score;
+    if (max === 4) return score;
+    const normalized = Math.round((score / max) * VB_BASE_UNITS);
+    if (normalized < 0) return 0;
+    if (normalized > VB_BASE_UNITS) return VB_BASE_UNITS;
+    return normalized;
 }
 
 export function mapQuestionToVB(question: string, rawScore: number | null | undefined, rawMax?: number | null): VBMappingResult {

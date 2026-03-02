@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////
 // Author: Shashank Kakad
 // Inputs: Client-side route guard for authenticated and role-based access
 // Outcome: Unauthenticated users are redirected to login, unauthorized roles to their own dashboard
@@ -12,7 +12,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
 import { useFirestore } from '@/firebase/provider';
 import { getUserRole } from '@/lib/auth';
-import { getDashboardUrl } from '@/lib/sheets-auth';
+import { getDashboardUrl, getSession } from '@/lib/sheets-auth';
 import { UserRole } from '@/types';
 
 interface RouteGuardProps {
@@ -25,8 +25,8 @@ interface RouteGuardProps {
  * 2. User's role matches the current route section (admin/clinician/parent)
  * 
  * Redirects:
- * - Not authenticated → /login
- * - Wrong role → correct dashboard for their role
+ * - Not authenticated -> /login
+ * - Wrong role -> correct dashboard for their role
  */
 export function RouteGuard({ children }: RouteGuardProps) {
     const { user, isUserLoading } = useUser();
@@ -40,8 +40,6 @@ export function RouteGuard({ children }: RouteGuardProps) {
         async function checkAuth() {
             // Wait for Firebase auth to initialize
             if (isUserLoading) return;
-
-            // If not authenticated, redirect to login
             if (!user) {
                 setIsChecking(false);
                 router.push('/login');
@@ -50,10 +48,16 @@ export function RouteGuard({ children }: RouteGuardProps) {
 
             try {
                 // Get user's role from Firestore
-                const role = await getUserRole(firestore, user.uid);
+                let role = await getUserRole(firestore, user.uid);
+                if (!role) {
+                    const session = getSession();
+                    if (session?.role) {
+                        role = session.role;
+                    }
+                }
 
                 if (!role) {
-                    // No role found — redirect to login
+                    // No role found - redirect to login
                     router.push('/login');
                     setIsChecking(false);
                     return;
@@ -63,7 +67,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
                 const requiredRole = getRequiredRole(pathname);
 
                 if (requiredRole && !isRoleAllowed(role, requiredRole)) {
-                    // User doesn't have permission for this route — redirect to their dashboard
+                    // User does not have permission for this route - redirect to their dashboard
                     const correctDashboard = getDashboardUrl(role);
                     router.push(correctDashboard);
                     setIsChecking(false);
@@ -126,3 +130,5 @@ function isRoleAllowed(userRole: UserRole, requiredRole: string): boolean {
     if (userRole === requiredRole) return true;
     return false;
 }
+
+

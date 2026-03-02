@@ -16,7 +16,7 @@ export async function generateABLLSExcel(gradingResult: VBGradingResult): Promis
     const workbook = new ExcelJS.Workbook();
 
     // Set workbook properties
-    workbook.creator = 'ABLLS Assessment System';
+    workbook.creator = `${gradingResult.assessmentType} Assessment System`;
     workbook.created = new Date();
     workbook.modified = new Date();
     workbook.lastPrinted = new Date();
@@ -34,7 +34,10 @@ export async function generateABLLSExcel(gradingResult: VBGradingResult): Promis
     ];
 
     // Title
-    const titleRow = summarySheet.addRow(['ABLLS Assessment Report']);
+    const reportTitle = gradingResult.assessmentType === 'AFLLS' 
+        ? 'AFLS Assessment Report' 
+        : `${gradingResult.assessmentType} Assessment Report`;
+    const titleRow = summarySheet.addRow([reportTitle]);
     titleRow.font = { size: 18, bold: true, color: { argb: 'FFDC143C' } }; // Red title
     titleRow.height = 30;
     summarySheet.mergeCells('A1:B1');

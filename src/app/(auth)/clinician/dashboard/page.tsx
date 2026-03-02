@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function ClinicianDashboardPage() {
-  const assignedChildren = mockChildren.filter(c => c.clinicianId === 'user-1');
+  const assignedChildren = mockChildren;
   const questionnaires: Questionnaire[] = mockQuestionnaires;
   
   return <ClinicianDashboardClient children={assignedChildren} assessments={mockAssessments} questionnaires={questionnaires} />;

@@ -8,51 +8,54 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { getSession } from '@/lib/sheets-auth';
 import {
   LayoutDashboard,
   Users,
   BarChart3,
-  FileText,
-  Stethoscope,
-  Baby,
   MessageSquare,
-  Settings,
-  HeartHandshake,
   FileQuestion,
-  Shield,
-  UserCog
+  ClipboardList,
 } from 'lucide-react';
 
-const getNavItems = (role: 'Admin' | 'Super Admin' | 'Clinician' | 'Parent' | 'Unknown') => {
+type Role = 'Admin' | 'Super Admin' | 'Clinician' | 'Parent' | 'Unknown';
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  tab?: string;
+  hash?: string;
+};
+
+const getNavItems = (role: Role): NavItem[] => {
   switch (role) {
     case 'Super Admin':
     case 'Admin':
       return [
-        { href: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard },
-        { href: '/admin/dashboard#users', label: 'Manage Users', icon: Users },
-        { href: '/admin/dashboard#roles', label: 'Role Management', icon: UserCog },
-        { href: '/admin/dashboard#analytics', label: 'Analytics', icon: BarChart3 },
-        { href: '/admin/dashboard#reports', label: 'All Reports', icon: FileText },
-        { href: '/admin/dashboard#settings', label: 'Settings', icon: Settings },
+        { href: '/admin/dashboard?tab=overview', label: 'Overview', icon: LayoutDashboard, tab: 'overview' },
+        { href: '/admin/dashboard?tab=users', label: 'Manage Users', icon: Users, tab: 'users' },
+        { href: '/admin/dashboard?tab=questionnaires', label: 'Questionnaires', icon: FileQuestion, tab: 'questionnaires' },
+        { href: '/admin/dashboard?tab=analytics', label: 'Analytics', icon: BarChart3, tab: 'analytics' },
       ];
     case 'Clinician':
       return [
-        { href: '/clinician/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { href: '/clinician/dashboard#children', label: 'Assigned Children', icon: Baby },
-        { href: '/clinician/dashboard#assessments', label: 'Assessments', icon: Stethoscope },
-        { href: '/clinician/dashboard#questionnaires', label: 'Questionaries', icon: FileQuestion },
-        { href: '/clinician/dashboard#messages', label: 'Messages', icon: MessageSquare },
+        { href: '/clinician/dashboard?tab=dashboard', label: 'Dashboard', icon: LayoutDashboard, tab: 'dashboard' },
+        { href: '/clinician/dashboard?tab=ablls-r', label: 'ABLLS-R', icon: ClipboardList, tab: 'ablls-r' },
+        { href: '/clinician/dashboard?tab=aflls', label: 'AFLS', icon: ClipboardList, tab: 'aflls' },
+        { href: '/clinician/dashboard?tab=dayc-2', label: 'DAYC-2', icon: ClipboardList, tab: 'dayc-2' },
+        { href: '/clinician/dashboard?tab=questionnaires', label: 'Questionnaires', icon: FileQuestion, tab: 'questionnaires' },
+        { href: '/clinician/dashboard?tab=messages', label: 'Messages', icon: MessageSquare, tab: 'messages' },
       ];
     case 'Parent':
       return [
         { href: '/parent/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { href: '/parent/dashboard#progress', label: 'Child Progress', icon: BarChart3 },
-        { href: '/parent/dashboard#feedback', label: 'Clinician Feedback', icon: MessageSquare },
-        { href: '/parent/dashboard#questionnaire', label: 'Questionnaire', icon: FileQuestion },
-        { href: '/parent/dashboard#profile', label: 'My Profile', icon: Users },
+        { href: '/parent/dashboard#progress', label: 'Child Progress', icon: BarChart3, hash: '#progress' },
+        { href: '/parent/dashboard#feedback', label: 'Clinician Feedback', icon: MessageSquare, hash: '#feedback' },
+        { href: '/parent/dashboard#questionnaire', label: 'Intake Form', icon: FileQuestion, hash: '#questionnaire' },
+        { href: '/parent/dashboard#profile', label: 'My Profile', icon: Users, hash: '#profile' },
       ];
     default:
       return [];
@@ -61,15 +64,37 @@ const getNavItems = (role: 'Admin' | 'Super Admin' | 'Clinician' | 'Parent' | 'U
 
 export function DashboardNav() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [currentHash, setCurrentHash] = useState('');
+  const [sessionRole, setSessionRole] = useState<Role>('Unknown');
 
-  const getRole = () => {
+  useEffect(() => {
+    const updateHash = () => {
+      setCurrentHash(typeof window !== 'undefined' ? window.location.hash : '');
+    };
+
+    updateHash();
+    window.addEventListener('hashchange', updateHash);
+    return () => window.removeEventListener('hashchange', updateHash);
+  }, []);
+
+  useEffect(() => {
+    const role = getSession()?.role;
+    if (role === 'Super Admin' || role === 'Admin' || role === 'Clinician' || role === 'Parent') {
+      setSessionRole(role);
+    } else {
+      setSessionRole('Unknown');
+    }
+  }, [pathname]);
+
+  const getRole = (): Role => {
     if (pathname.startsWith('/admin')) return 'Admin';
     if (pathname.startsWith('/clinician')) return 'Clinician';
     if (pathname.startsWith('/parent')) return 'Parent';
     return 'Unknown';
   };
 
-  const role = getRole();
+  const role = sessionRole !== 'Unknown' ? sessionRole : getRole();
   const navItems = getNavItems(role);
 
   if (navItems.length === 0) return null;
@@ -78,7 +103,15 @@ export function DashboardNav() {
     <nav className="grid items-start gap-2">
       {navItems.map((item, index) => {
         const Icon = item.icon;
-        const isActive = pathname === item.href;
+        const currentTab = searchParams.get('tab');
+        const defaultTab = pathname.startsWith('/admin') ? 'overview' : pathname.startsWith('/clinician') ? 'dashboard' : null;
+        const tabToCompare = currentTab || defaultTab;
+        const targetPath = item.href.split('?')[0].split('#')[0];
+        const isActive =
+          (item.tab && pathname === targetPath && tabToCompare === item.tab) ||
+          (item.hash && pathname === targetPath && currentHash === item.hash) ||
+          (!item.tab && !item.hash && pathname === item.href);
+
         return (
           <Link key={index} href={item.href}>
             <Button

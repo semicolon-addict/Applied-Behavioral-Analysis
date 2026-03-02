@@ -36,14 +36,21 @@ model Domain {
 }
 
 model Question {
-  id           String     @id @default(uuid())
-  questionText String
-  responseType String     @default("dropdown")
-  options      String[]
-  sortOrder    Int
-  domainId     String
-  domain       Domain     @relation(fields: [domainId], references: [id], onDelete: Cascade)
-  responses    Response[]
+  id            String     @id @default(uuid())
+  skillCode     String?
+  questionText  String
+  taskName      String?
+  taskObjective String?
+  examples      String?
+  criteria      String?
+  scoreType     String?
+  exampleImage  String?
+  responseType  String     @default("dropdown")
+  options       String[]
+  sortOrder     Int
+  domainId      String
+  domain        Domain     @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  responses     Response[]
 
   @@index([domainId])
 }

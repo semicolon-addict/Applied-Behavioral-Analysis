@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VB-MAPP — Level 2 — Milestones (18–30 months)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;background:#fff}
+.wrap{max-width:1600px;margin:0 auto;padding:12px 14px}
+
+.nav-bar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;
+  padding:6px 8px;background:#f0f4ff;border:1px solid #c5d0e6;border-radius:4px}
+.nav-link{font-size:8pt;padding:4px 10px;border:1px solid #aab;border-radius:3px;
+  text-decoration:none;color:#333;background:#fff;white-space:nowrap}
+.nav-link:hover{background:#e8edf5}
+.nav-link.active{background:#1a56db;color:#fff;border-color:#1a56db;font-weight:bold}
+
+.toolbar{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f5f5;
+  border:1px solid #ddd;border-radius:4px;margin-bottom:12px;flex-wrap:wrap}
+.pb{width:22px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer}
+.pb.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+.cbtn{font-size:8pt;padding:3px 8px;border:1px solid #999;border-radius:3px;cursor:pointer;background:#fff}
+.cbtn:hover{background:#eee}
+.bigT{font-size:13pt;font-weight:normal;text-align:center}
+.subT{font-size:10.5pt;font-weight:normal;text-align:center;margin-bottom:6px}
+.fline{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:3px}
+.fl label{font-size:9pt;white-space:nowrap}
+.fl input{border:none;border-bottom:1px solid #444;outline:none;font-size:9pt;padding:1px 2px;background:transparent}
+
+.gscroll{overflow-x:auto;margin-top:5px}
+table.g{border-collapse:collapse;table-layout:fixed}
+td.lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid #000;background:#f0f0f0;
+  font-size:5.8pt;font-weight:bold;text-align:center;vertical-align:middle;padding:0;white-space:nowrap}
+td.inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid #000;background:#fff;
+  cursor:pointer;padding:0;user-select:none;position:relative}
+td.inp[colspan="2"]{width:10mm;min-width:10mm}
+td.inp[colspan="4"]{width:20mm;min-width:20mm}
+td.inp:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.88)}
+td.off-lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
+td.off-inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
+td.gap{width:3mm;min-width:3mm;border:none;background:#fff;padding:0}
+td.ltr-hdr{font-weight:bold;font-size:9.5pt;text-align:center;
+  border:1px solid #111;background:#fff;height:17px;padding:0}
+td.name-hdr{font-size:5.8pt;line-height:1.25;text-align:center;
+  border:1px solid #222;background:#f0f0f0;padding:2px 1px}
+td.foot-cell{border:1px solid #666;border-top:2px solid #333;background:#ebebeb;
+  font-size:7pt;font-weight:bold;text-align:center;vertical-align:top;padding:2px 1px;line-height:1.3}
+.foot-name{font-size:5.5pt;font-weight:normal}
+
+.c0{background:#fff!important}.c1{background:#c0c0c0!important}
+.c2{background:#ffff00!important}.c3{background:#ffa500!important}
+.c4{background:#00cc44!important}
+.ndot{position:absolute;top:1px;right:1px;width:4px;height:4px;border-radius:50%;
+  background:#1a56db;display:none;pointer-events:none}
+#tip{display:none;position:fixed;background:#fffde7;border:1px solid #bbb;
+  padding:4px 8px;font-size:8pt;border-radius:3px;z-index:9999;
+  pointer-events:none;max-width:300px;white-space:pre-wrap;line-height:1.4}
+#vbStickyStatus{
+  position:fixed;right:12px;bottom:12px;z-index:9999;
+  font-size:11px;font-weight:bold;padding:6px 10px;border-radius:6px;
+  color:#14532d;background:#dcfce7;border:1px solid #86efac;
+  box-shadow:0 2px 6px rgba(0,0,0,.1)
+}
+.dm-toolbar{margin-bottom:4px}
+.dm-pal{width:40px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer;display:inline-block}
+.dm-pal.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+@media print{
+  .toolbar,.nav-bar{display:none}
+  #vbStickyStatus{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="nav-bar">
+    <a class="nav-link" href="grid-level1.html?autoload=latest&storageKey=vbmapp_grid_payload">Level 1 — Milestones (0–18 months)</a>
+    <a class="nav-link active" href="grid-level2.html?autoload=latest&storageKey=vbmapp_grid_payload">Level 2 — Milestones (18–30 months)</a>
+    <a class="nav-link" href="grid-level3.html?autoload=latest&storageKey=vbmapp_grid_payload">Level 3 — Milestones (30–48 months)</a>
+    <a class="nav-link" href="grid-barriers.html?autoload=latest&storageKey=vbmapp_grid_payload">Barriers Assessment</a>
+    <a class="nav-link" href="grid-transitions.html?autoload=latest&storageKey=vbmapp_grid_payload">Transition Assessment</a>
+</div>
+
+<div class="toolbar">
+  <span style="font-size:8pt;font-weight:bold">Color:</span>
+  <div class="pb c0 sel" data-c="0" title="White / Clear"></div>
+  <div class="pb c1" data-c="1" title="Gray"></div>
+  <div class="pb c2" data-c="2" title="Yellow"></div>
+  <div class="pb c3" data-c="3" title="Orange"></div>
+  <div class="pb c4" data-c="4" title="Green"></div>
+  <button class="cbtn" id="clrAll">Clear All</button>
+  <span style="font-size:7.5pt;color:#14532d;font-weight:bold">VB-MAPP Level 2 — Milestones (18–30 months)</span>
+  <span id="mockStatus" style="font-size:7.5pt;color:#0b6b2a;font-weight:bold">Status: not loaded</span>
+  <span style="font-size:7.5pt;color:#555">Click = apply color &nbsp;|&nbsp; Dbl-click = add note</span>
+</div>
+<div class="toolbar dm-toolbar">
+  <span style="font-size:8pt;font-weight:bold">Domain VB Color:</span>
+  <select id="domainSelect" style="font-size:8pt;padding:2px 4px"></select>
+  <div class="dm-pal" data-pal="red" title="Red (default)" style="background:linear-gradient(90deg,#7f1d1d,#fca5a5)"></div>
+  <div class="dm-pal" data-pal="blue" title="Blue" style="background:linear-gradient(90deg,#1e3a5f,#93c5fd)"></div>
+  <div class="dm-pal" data-pal="green" title="Green" style="background:linear-gradient(90deg,#14532d,#86efac)"></div>
+  <div class="dm-pal" data-pal="purple" title="Purple" style="background:linear-gradient(90deg,#581c87,#d8b4fe)"></div>
+  <div class="dm-pal" data-pal="amber" title="Amber" style="background:linear-gradient(90deg,#78350f,#fcd34d)"></div>
+  <div class="dm-pal" data-pal="teal" title="Teal" style="background:linear-gradient(90deg,#134e4a,#5eead4)"></div>
+</div>
+
+<div class="bigT">Verbal Behavior Milestones Assessment and Placement Program</div>
+<div class="subT">Level 2 — Milestones (18–30 months) — 12 Domains · 123 Questions</div>
+<div class="fline" style="margin-top:6px">
+  <div class="fl"><label>Child: <input type="text" style="width:190px" id="p1s"/></label></div>
+  <div class="fl"><label>Assessor: <input type="text" style="width:140px" id="p1a"/></label></div>
+  <div class="fl"><label>Date: <input type="text" style="width:90px" id="p1d"/></label></div>
+</div>
+
+<div class="gscroll"><table class="g"><tbody>
+<tr>
+  <td class="ltr-hdr" colspan="5">MAND</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">TACT</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">LISTENER</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">VPMTS</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">PLAY</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">SOCIAL</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">IMITATION</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">ECHOIC</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">LRFFC</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">IV</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">GROUP</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">LING</td>
+</tr>
+<tr>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Mand</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Tact</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Listener Responding</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">VP-MTS</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Independent Play</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Social Behavior</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Motor Imitation</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Echoic</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">LRFFC</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Intraverbal</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Group/Classroom</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Linguistic Structure</td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-10e</td>
+  <td class="inp" colspan="1" data-k="TACT-10e-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-10e-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-10e-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-10d</td>
+  <td class="inp" colspan="1" data-k="TACT-10d-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-10d-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-10d-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-10e</td>
+  <td class="inp" colspan="1" data-k="LISTENER-10e-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-10e-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-10e-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10f</td>
+  <td class="inp" colspan="1" data-k="MAND-10f-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10f-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10f-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-10c</td>
+  <td class="inp" colspan="1" data-k="TACT-10c-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-10c-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-10c-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-10d</td>
+  <td class="inp" colspan="1" data-k="LISTENER-10d-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-10d-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-10d-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10e</td>
+  <td class="inp" colspan="1" data-k="MAND-10e-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10e-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10e-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-10b</td>
+  <td class="inp" colspan="1" data-k="TACT-10b-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-10b-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-10b-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-10c</td>
+  <td class="inp" colspan="1" data-k="LISTENER-10c-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-10c-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-10c-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10d</td>
+  <td class="inp" colspan="1" data-k="MAND-10d-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10d-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10d-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-10a</td>
+  <td class="inp" colspan="1" data-k="TACT-10a-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-10a-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-10a-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-10b</td>
+  <td class="inp" colspan="1" data-k="LISTENER-10b-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-10b-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-10b-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10c</td>
+  <td class="inp" colspan="1" data-k="MAND-10c-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10c-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10c-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-10M</td>
+  <td class="inp" colspan="1" data-k="TACT-10M-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-10M-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-10M-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-10a</td>
+  <td class="inp" colspan="1" data-k="LISTENER-10a-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-10a-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-10a-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10b</td>
+  <td class="inp" colspan="1" data-k="MAND-10b-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10b-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10b-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-9d</td>
+  <td class="inp" colspan="1" data-k="TACT-9d-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-9d-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-9d-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-10M</td>
+  <td class="inp" colspan="1" data-k="LISTENER-10M-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-10M-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-10M-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10a</td>
+  <td class="inp" colspan="1" data-k="MAND-10a-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10a-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10a-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-9c</td>
+  <td class="inp" colspan="1" data-k="TACT-9c-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-9c-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-9c-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-9d</td>
+  <td class="inp" colspan="1" data-k="LISTENER-9d-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-9d-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-9d-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-10M</td>
+  <td class="inp" colspan="1" data-k="MAND-10M-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-10M-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-10M-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-9b</td>
+  <td class="inp" colspan="1" data-k="TACT-9b-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-9b-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-9b-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-9c</td>
+  <td class="inp" colspan="1" data-k="LISTENER-9c-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-9c-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-9c-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-9f</td>
+  <td class="inp" colspan="1" data-k="MAND-9f-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-9f-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-9f-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-9a</td>
+  <td class="inp" colspan="1" data-k="TACT-9a-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-9a-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-9a-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-9b</td>
+  <td class="inp" colspan="1" data-k="LISTENER-9b-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-9b-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-9b-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-9e</td>
+  <td class="inp" colspan="1" data-k="MAND-9e-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-9e-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-9e-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-9M</td>
+  <td class="inp" colspan="1" data-k="TACT-9M-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-9M-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-9M-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-9a</td>
+  <td class="inp" colspan="1" data-k="LISTENER-9a-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-9a-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-9a-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-9M</td>
+  <td class="inp" colspan="1" data-k="MAND-9M-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-9M-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-9M-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-8d</td>
+  <td class="inp" colspan="1" data-k="TACT-8d-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-8d-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-8d-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-9M</td>
+  <td class="inp" colspan="1" data-k="LISTENER-9M-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-9M-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-9M-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-8M</td>
+  <td class="inp" colspan="1" data-k="MAND-8M-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-8M-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-8M-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-8c</td>
+  <td class="inp" colspan="1" data-k="TACT-8c-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-8c-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-8c-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-8d</td>
+  <td class="inp" colspan="1" data-k="LISTENER-8d-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-8d-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-8d-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7g</td>
+  <td class="inp" colspan="1" data-k="MAND-7g-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7g-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7g-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-8b</td>
+  <td class="inp" colspan="1" data-k="TACT-8b-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-8b-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-8b-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-8c</td>
+  <td class="inp" colspan="1" data-k="LISTENER-8c-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-8c-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-8c-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7f</td>
+  <td class="inp" colspan="1" data-k="MAND-7f-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7f-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7f-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-8a</td>
+  <td class="inp" colspan="1" data-k="TACT-8a-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-8a-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-8a-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-8b</td>
+  <td class="inp" colspan="1" data-k="LISTENER-8b-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-8b-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-8b-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7e</td>
+  <td class="inp" colspan="1" data-k="MAND-7e-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7e-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7e-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-8M</td>
+  <td class="inp" colspan="1" data-k="TACT-8M-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-8M-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-8M-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-8a</td>
+  <td class="inp" colspan="1" data-k="LISTENER-8a-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-8a-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-8a-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7d</td>
+  <td class="inp" colspan="1" data-k="MAND-7d-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7d-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7d-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-7e</td>
+  <td class="inp" colspan="1" data-k="TACT-7e-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-7e-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-7e-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-8M</td>
+  <td class="inp" colspan="1" data-k="LISTENER-8M-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-8M-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-8M-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7c</td>
+  <td class="inp" colspan="1" data-k="MAND-7c-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7c-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7c-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-7d</td>
+  <td class="inp" colspan="1" data-k="TACT-7d-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-7d-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-7d-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-7d</td>
+  <td class="inp" colspan="1" data-k="LISTENER-7d-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-7d-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-7d-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7b</td>
+  <td class="inp" colspan="1" data-k="MAND-7b-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7b-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7b-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-7c</td>
+  <td class="inp" colspan="1" data-k="TACT-7c-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-7c-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-7c-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-7c</td>
+  <td class="inp" colspan="1" data-k="LISTENER-7c-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-7c-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-7c-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7a</td>
+  <td class="inp" colspan="1" data-k="MAND-7a-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7a-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7a-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-7b</td>
+  <td class="inp" colspan="1" data-k="TACT-7b-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-7b-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-7b-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-7b</td>
+  <td class="inp" colspan="1" data-k="LISTENER-7b-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-7b-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-7b-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-7M</td>
+  <td class="inp" colspan="1" data-k="MAND-7M-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-7M-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-7M-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-7a</td>
+  <td class="inp" colspan="1" data-k="TACT-7a-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-7a-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-7a-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-7a</td>
+  <td class="inp" colspan="1" data-k="LISTENER-7a-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-7a-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-7a-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-6e</td>
+  <td class="inp" colspan="1" data-k="MAND-6e-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-6e-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-6e-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-7M</td>
+  <td class="inp" colspan="1" data-k="TACT-7M-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-7M-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-7M-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-7M</td>
+  <td class="inp" colspan="1" data-k="LISTENER-7M-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-7M-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-7M-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-6d</td>
+  <td class="inp" colspan="1" data-k="MAND-6d-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-6d-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-6d-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-6d</td>
+  <td class="inp" colspan="1" data-k="TACT-6d-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-6d-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-6d-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-6d</td>
+  <td class="inp" colspan="1" data-k="LISTENER-6d-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-6d-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-6d-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">VPMTS-10M</td>
+  <td class="inp" colspan="1" data-k="VPMTS-10M-0" data-domain="VPMTS" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="VPMTS-10M-half" data-domain="VPMTS" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="VPMTS-10M-1" data-domain="VPMTS" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">PLAY-10M</td>
+  <td class="inp" colspan="1" data-k="PLAY-10M-0" data-domain="PLAY" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="PLAY-10M-half" data-domain="PLAY" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="PLAY-10M-1" data-domain="PLAY" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SOCIAL-10M</td>
+  <td class="inp" colspan="1" data-k="SOCIAL-10M-0" data-domain="SOCIAL" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="SOCIAL-10M-half" data-domain="SOCIAL" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SOCIAL-10M-1" data-domain="SOCIAL" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IMITATION-10M</td>
+  <td class="inp" colspan="1" data-k="IMITATION-10M-0" data-domain="IMITATION" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IMITATION-10M-half" data-domain="IMITATION" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IMITATION-10M-1" data-domain="IMITATION" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">ECHOIC-10M</td>
+  <td class="inp" colspan="1" data-k="ECHOIC-10M-0" data-domain="ECHOIC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="ECHOIC-10M-half" data-domain="ECHOIC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="ECHOIC-10M-1" data-domain="ECHOIC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LRFFC-10M</td>
+  <td class="inp" colspan="1" data-k="LRFFC-10M-0" data-domain="LRFFC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LRFFC-10M-half" data-domain="LRFFC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LRFFC-10M-1" data-domain="LRFFC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IV-10M</td>
+  <td class="inp" colspan="1" data-k="IV-10M-0" data-domain="IV" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IV-10M-half" data-domain="IV" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IV-10M-1" data-domain="IV" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GROUP-10M</td>
+  <td class="inp" colspan="1" data-k="GROUP-10M-0" data-domain="GROUP" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="GROUP-10M-half" data-domain="GROUP" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GROUP-10M-1" data-domain="GROUP" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LING-10M</td>
+  <td class="inp" colspan="1" data-k="LING-10M-0" data-domain="LING" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LING-10M-half" data-domain="LING" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LING-10M-1" data-domain="LING" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-6c</td>
+  <td class="inp" colspan="1" data-k="MAND-6c-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-6c-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-6c-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-6c</td>
+  <td class="inp" colspan="1" data-k="TACT-6c-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-6c-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-6c-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-6c</td>
+  <td class="inp" colspan="1" data-k="LISTENER-6c-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-6c-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-6c-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">VPMTS-9M</td>
+  <td class="inp" colspan="1" data-k="VPMTS-9M-0" data-domain="VPMTS" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="VPMTS-9M-half" data-domain="VPMTS" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="VPMTS-9M-1" data-domain="VPMTS" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">PLAY-9M</td>
+  <td class="inp" colspan="1" data-k="PLAY-9M-0" data-domain="PLAY" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="PLAY-9M-half" data-domain="PLAY" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="PLAY-9M-1" data-domain="PLAY" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SOCIAL-9M</td>
+  <td class="inp" colspan="1" data-k="SOCIAL-9M-0" data-domain="SOCIAL" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="SOCIAL-9M-half" data-domain="SOCIAL" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SOCIAL-9M-1" data-domain="SOCIAL" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IMITATION-9M</td>
+  <td class="inp" colspan="1" data-k="IMITATION-9M-0" data-domain="IMITATION" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IMITATION-9M-half" data-domain="IMITATION" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IMITATION-9M-1" data-domain="IMITATION" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">ECHOIC-9M</td>
+  <td class="inp" colspan="1" data-k="ECHOIC-9M-0" data-domain="ECHOIC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="ECHOIC-9M-half" data-domain="ECHOIC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="ECHOIC-9M-1" data-domain="ECHOIC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LRFFC-9M</td>
+  <td class="inp" colspan="1" data-k="LRFFC-9M-0" data-domain="LRFFC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LRFFC-9M-half" data-domain="LRFFC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LRFFC-9M-1" data-domain="LRFFC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IV-9M</td>
+  <td class="inp" colspan="1" data-k="IV-9M-0" data-domain="IV" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IV-9M-half" data-domain="IV" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IV-9M-1" data-domain="IV" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GROUP-9M</td>
+  <td class="inp" colspan="1" data-k="GROUP-9M-0" data-domain="GROUP" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="GROUP-9M-half" data-domain="GROUP" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GROUP-9M-1" data-domain="GROUP" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LING-9M</td>
+  <td class="inp" colspan="1" data-k="LING-9M-0" data-domain="LING" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LING-9M-half" data-domain="LING" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LING-9M-1" data-domain="LING" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-6b</td>
+  <td class="inp" colspan="1" data-k="MAND-6b-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-6b-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-6b-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-6b</td>
+  <td class="inp" colspan="1" data-k="TACT-6b-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-6b-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-6b-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-6b</td>
+  <td class="inp" colspan="1" data-k="LISTENER-6b-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-6b-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-6b-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">VPMTS-8M</td>
+  <td class="inp" colspan="1" data-k="VPMTS-8M-0" data-domain="VPMTS" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="VPMTS-8M-half" data-domain="VPMTS" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="VPMTS-8M-1" data-domain="VPMTS" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">PLAY-8M</td>
+  <td class="inp" colspan="1" data-k="PLAY-8M-0" data-domain="PLAY" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="PLAY-8M-half" data-domain="PLAY" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="PLAY-8M-1" data-domain="PLAY" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SOCIAL-8M</td>
+  <td class="inp" colspan="1" data-k="SOCIAL-8M-0" data-domain="SOCIAL" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="SOCIAL-8M-half" data-domain="SOCIAL" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SOCIAL-8M-1" data-domain="SOCIAL" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IMITATION-8M</td>
+  <td class="inp" colspan="1" data-k="IMITATION-8M-0" data-domain="IMITATION" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IMITATION-8M-half" data-domain="IMITATION" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IMITATION-8M-1" data-domain="IMITATION" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">ECHOIC-8M</td>
+  <td class="inp" colspan="1" data-k="ECHOIC-8M-0" data-domain="ECHOIC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="ECHOIC-8M-half" data-domain="ECHOIC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="ECHOIC-8M-1" data-domain="ECHOIC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LRFFC-8M</td>
+  <td class="inp" colspan="1" data-k="LRFFC-8M-0" data-domain="LRFFC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LRFFC-8M-half" data-domain="LRFFC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LRFFC-8M-1" data-domain="LRFFC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IV-8M</td>
+  <td class="inp" colspan="1" data-k="IV-8M-0" data-domain="IV" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IV-8M-half" data-domain="IV" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IV-8M-1" data-domain="IV" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GROUP-8M</td>
+  <td class="inp" colspan="1" data-k="GROUP-8M-0" data-domain="GROUP" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="GROUP-8M-half" data-domain="GROUP" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GROUP-8M-1" data-domain="GROUP" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LING-8M</td>
+  <td class="inp" colspan="1" data-k="LING-8M-0" data-domain="LING" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LING-8M-half" data-domain="LING" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LING-8M-1" data-domain="LING" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-6a</td>
+  <td class="inp" colspan="1" data-k="MAND-6a-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-6a-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-6a-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-6a</td>
+  <td class="inp" colspan="1" data-k="TACT-6a-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-6a-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-6a-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-6a</td>
+  <td class="inp" colspan="1" data-k="LISTENER-6a-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-6a-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-6a-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">VPMTS-7M</td>
+  <td class="inp" colspan="1" data-k="VPMTS-7M-0" data-domain="VPMTS" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="VPMTS-7M-half" data-domain="VPMTS" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="VPMTS-7M-1" data-domain="VPMTS" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">PLAY-7M</td>
+  <td class="inp" colspan="1" data-k="PLAY-7M-0" data-domain="PLAY" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="PLAY-7M-half" data-domain="PLAY" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="PLAY-7M-1" data-domain="PLAY" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SOCIAL-7M</td>
+  <td class="inp" colspan="1" data-k="SOCIAL-7M-0" data-domain="SOCIAL" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="SOCIAL-7M-half" data-domain="SOCIAL" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SOCIAL-7M-1" data-domain="SOCIAL" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IMITATION-7M</td>
+  <td class="inp" colspan="1" data-k="IMITATION-7M-0" data-domain="IMITATION" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IMITATION-7M-half" data-domain="IMITATION" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IMITATION-7M-1" data-domain="IMITATION" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">ECHOIC-7M</td>
+  <td class="inp" colspan="1" data-k="ECHOIC-7M-0" data-domain="ECHOIC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="ECHOIC-7M-half" data-domain="ECHOIC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="ECHOIC-7M-1" data-domain="ECHOIC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LRFFC-7M</td>
+  <td class="inp" colspan="1" data-k="LRFFC-7M-0" data-domain="LRFFC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LRFFC-7M-half" data-domain="LRFFC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LRFFC-7M-1" data-domain="LRFFC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IV-7M</td>
+  <td class="inp" colspan="1" data-k="IV-7M-0" data-domain="IV" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IV-7M-half" data-domain="IV" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IV-7M-1" data-domain="IV" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GROUP-7M</td>
+  <td class="inp" colspan="1" data-k="GROUP-7M-0" data-domain="GROUP" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="GROUP-7M-half" data-domain="GROUP" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GROUP-7M-1" data-domain="GROUP" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LING-7M</td>
+  <td class="inp" colspan="1" data-k="LING-7M-0" data-domain="LING" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LING-7M-half" data-domain="LING" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LING-7M-1" data-domain="LING" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MAND-6M</td>
+  <td class="inp" colspan="1" data-k="MAND-6M-0" data-domain="MAND" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="MAND-6M-half" data-domain="MAND" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MAND-6M-1" data-domain="MAND" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">TACT-6M</td>
+  <td class="inp" colspan="1" data-k="TACT-6M-0" data-domain="TACT" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="TACT-6M-half" data-domain="TACT" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="TACT-6M-1" data-domain="TACT" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LISTENER-6M</td>
+  <td class="inp" colspan="1" data-k="LISTENER-6M-0" data-domain="LISTENER" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LISTENER-6M-half" data-domain="LISTENER" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LISTENER-6M-1" data-domain="LISTENER" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">VPMTS-6M</td>
+  <td class="inp" colspan="1" data-k="VPMTS-6M-0" data-domain="VPMTS" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="VPMTS-6M-half" data-domain="VPMTS" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="VPMTS-6M-1" data-domain="VPMTS" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">PLAY-6M</td>
+  <td class="inp" colspan="1" data-k="PLAY-6M-0" data-domain="PLAY" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="PLAY-6M-half" data-domain="PLAY" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="PLAY-6M-1" data-domain="PLAY" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SOCIAL-6M</td>
+  <td class="inp" colspan="1" data-k="SOCIAL-6M-0" data-domain="SOCIAL" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="SOCIAL-6M-half" data-domain="SOCIAL" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SOCIAL-6M-1" data-domain="SOCIAL" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IMITATION-6M</td>
+  <td class="inp" colspan="1" data-k="IMITATION-6M-0" data-domain="IMITATION" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IMITATION-6M-half" data-domain="IMITATION" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IMITATION-6M-1" data-domain="IMITATION" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">ECHOIC-6M</td>
+  <td class="inp" colspan="1" data-k="ECHOIC-6M-0" data-domain="ECHOIC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="ECHOIC-6M-half" data-domain="ECHOIC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="ECHOIC-6M-1" data-domain="ECHOIC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LRFFC-6M</td>
+  <td class="inp" colspan="1" data-k="LRFFC-6M-0" data-domain="LRFFC" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LRFFC-6M-half" data-domain="LRFFC" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LRFFC-6M-1" data-domain="LRFFC" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">IV-6M</td>
+  <td class="inp" colspan="1" data-k="IV-6M-0" data-domain="IV" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="IV-6M-half" data-domain="IV" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="IV-6M-1" data-domain="IV" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GROUP-6M</td>
+  <td class="inp" colspan="1" data-k="GROUP-6M-0" data-domain="GROUP" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="GROUP-6M-half" data-domain="GROUP" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GROUP-6M-1" data-domain="GROUP" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LING-6M</td>
+  <td class="inp" colspan="1" data-k="LING-6M-0" data-domain="LING" data-score="0" data-option="Not met / Not observed" title="0: Not met / Not observed" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="1" data-k="LING-6M-half" data-domain="LING" data-score="0.5" data-option="Partially met / Emerging" title="0.5: Partially met / Emerging" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LING-6M-1" data-domain="LING" data-score="1" data-option="Met / Mastered" title="1: Met / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr class="foot-row">
+  <td class="foot-cell" colspan="5"><b>MAND</b><br><span class="foot-name">Mand</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>TACT</b><br><span class="foot-name">Tact</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>LISTENER</b><br><span class="foot-name">Listener Responding</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>VPMTS</b><br><span class="foot-name">VP-MTS</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>PLAY</b><br><span class="foot-name">Independent Play</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>SOCIAL</b><br><span class="foot-name">Social Behavior</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>IMITATION</b><br><span class="foot-name">Motor Imitation</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>ECHOIC</b><br><span class="foot-name">Echoic</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>LRFFC</b><br><span class="foot-name">LRFFC</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>IV</b><br><span class="foot-name">Intraverbal</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>GROUP</b><br><span class="foot-name">Group/Classroom</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>LING</b><br><span class="foot-name">Linguistic Structure</span></td>
+</tr>
+</tbody></table></div>
+
+
+</div>
+<div id="tip"></div>
+<div id="vbStickyStatus">VB: not loaded</div>
+
+<!-- Manual color + notes -->
+<script>
+let ac=0; const st={};
+document.querySelectorAll('.pb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.pb').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); ac=+b.dataset.c;
+  });
+});
+document.getElementById('clrAll').addEventListener('click',()=>{
+  if(!confirm('Clear all colors and notes?'))return;
+  document.querySelectorAll('td.inp').forEach(t=>{
+    t.className='inp';
+    const d=t.querySelector('.ndot'); if(d) d.style.display='none';
+    delete st[t.dataset.k];
+  });
+  save();
+});
+function applyColor(td){
+  const k=td.dataset.k;
+  if(!st[k])st[k]={};
+  st[k].ci=ac; td.className='inp c'+ac;
+  const d=td.querySelector('.ndot');
+  if(d&&(st[k]||{}).note) d.style.display='block';
+  save();
+}
+window.applyColor=applyColor;
+document.addEventListener('dblclick',e=>{
+  const t=e.target.closest('td.inp'); if(!t)return;
+  const k=t.dataset.k;
+  const cur=(st[k]||{}).note||'';
+  const lbl=k.replace(/-[\d.]+$/,'').replace(/-half$/,'');
+  const note=prompt('Note for '+lbl+':',cur);
+  if(note===null)return;
+  if(!st[k])st[k]={};
+  st[k].note=note.trim();
+  let d=t.querySelector('.ndot');
+  if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
+  d.style.display=note.trim()?'block':'none';
+  save();
+});
+const tip=document.getElementById('tip');
+document.addEventListener('mouseover',e=>{
+  const t=e.target.closest('td.inp');
+  if(!t){tip.style.display='none';return;}
+  const k=t.dataset.k;
+  const note=(st[k]||{}).note;
+  const option=t.dataset.option||'';
+  const score=t.dataset.score||'';
+  let txt=option?'Score '+score+': '+option:'';
+  if(note) txt+=(txt?'\n\nNote: ':'Note: ')+note;
+  if(!txt){tip.style.display='none';return;}
+  tip.textContent=txt; tip.style.display='block';
+});
+document.addEventListener('mousemove',e=>{
+  tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+10)+'px';
+});
+document.addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||!e.relatedTarget.closest('td.inp')) tip.style.display='none';
+});
+function save(){
+  const fields={};
+  document.querySelectorAll('input[type=text]').forEach((inp,i)=>fields[i]=inp.value);
+  try{localStorage.setItem('vbmapp_level2_v1',JSON.stringify({st,fields}));}catch(e){}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem('vbmapp_level2_v1'); if(!raw)return;
+    const p=JSON.parse(raw);
+    if(p.fields) document.querySelectorAll('input[type=text]').forEach((inp,i)=>{
+      if(p.fields[i]) inp.value=p.fields[i];
+    });
+    if(p.st){
+      Object.assign(st,p.st);
+      Object.entries(st).forEach(([k,v])=>{
+        const t=document.querySelector('td.inp[data-k="'+k+'"]'); if(!t)return;
+        if(v.ci!==undefined) t.className='inp c'+v.ci;
+        if(v.note){
+          let d=t.querySelector('.ndot');
+          if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
+          d.style.display='block';
+        }
+      });
+    }
+  }catch(e){}
+}
+document.querySelectorAll('input[type=text]').forEach(inp=>inp.addEventListener('input',save));
+load();
+</script>
+
+<!-- VB Mapping Engine -->
+<script>
+const VB_BASE = 4;
+const VB_GRADIENT = ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'];
+const VB_EMPTY = '#ffffff';
+const VB_PALETTES = {
+  red:    ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'],
+  blue:   ['#1e3a5f', '#2563eb', '#60a5fa', '#93c5fd'],
+  green:  ['#14532d', '#16a34a', '#4ade80', '#86efac'],
+  purple: ['#581c87', '#9333ea', '#c084fc', '#d8b4fe'],
+  amber:  ['#78350f', '#d97706', '#fbbf24', '#fcd34d'],
+  teal:   ['#134e4a', '#0d9488', '#2dd4bf', '#5eead4'],
+};
+const GRID_DOMAINS = [{"code":"MAND","name":"Mand"},{"code":"TACT","name":"Tact"},{"code":"LISTENER","name":"Listener Responding"},{"code":"VPMTS","name":"VP-MTS"},{"code":"PLAY","name":"Independent Play"},{"code":"SOCIAL","name":"Social Behavior"},{"code":"IMITATION","name":"Motor Imitation"},{"code":"ECHOIC","name":"Echoic"},{"code":"LRFFC","name":"LRFFC"},{"code":"IV","name":"Intraverbal"},{"code":"GROUP","name":"Group/Classroom"},{"code":"LING","name":"Linguistic Structure"}];
+const domainColorMap = {};
+const DOMAIN_COLOR_KEY = 'vbmapp_level2_domainColors';
+
+function getGradientForDomain(domainCode) {
+  const palName = domainColorMap[domainCode] || 'red';
+  return VB_PALETTES[palName] || VB_PALETTES.red;
+}
+function saveDomainColors() {
+  try { localStorage.setItem(DOMAIN_COLOR_KEY, JSON.stringify(domainColorMap)); } catch(e) {}
+}
+function loadDomainColors() {
+  try {
+    const raw = localStorage.getItem(DOMAIN_COLOR_KEY);
+    if (raw) Object.assign(domainColorMap, JSON.parse(raw));
+  } catch(e) {}
+}
+loadDomainColors();
+
+const domainSelect = document.getElementById('domainSelect');
+GRID_DOMAINS.forEach(d => {
+  const opt = document.createElement('option');
+  opt.value = d.code;
+  opt.textContent = d.code + ' — ' + d.name;
+  domainSelect.appendChild(opt);
+});
+
+let selectedPalette = domainColorMap[GRID_DOMAINS[0]?.code] || 'red';
+document.querySelectorAll('.dm-pal').forEach(swatch => {
+  if (swatch.dataset.pal === selectedPalette) swatch.classList.add('sel');
+  swatch.addEventListener('click', () => {
+    document.querySelectorAll('.dm-pal').forEach(s => s.classList.remove('sel'));
+    swatch.classList.add('sel');
+    selectedPalette = swatch.dataset.pal;
+    const domCode = domainSelect.value;
+    if (domCode) {
+      domainColorMap[domCode] = selectedPalette;
+      saveDomainColors();
+      repaintVBFromStorage();
+    }
+  });
+});
+
+domainSelect.addEventListener('change', () => {
+  const pal = domainColorMap[domainSelect.value] || 'red';
+  document.querySelectorAll('.dm-pal').forEach(s => {
+    s.classList.toggle('sel', s.dataset.pal === pal);
+  });
+  selectedPalette = pal;
+});
+
+function repaintVBFromStorage() {
+  const params = new URLSearchParams(window.location.search || '');
+  const sk = params.get('storageKey') || 'vbmapp_grid_payload';
+  try {
+    const raw = window.localStorage.getItem(sk);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed.answers && parsed.scoreMap) paintVB(parsed.answers, parsed.scoreMap);
+  } catch(e) {}
+}
+
+function resolveVBMax(rawMax) {
+  if (rawMax <= 2) return 2;  // 0-1 and 0-2 → paired mode
+  return 4;
+}
+
+function clampVBScore(score, max) {
+  const n = Number.isFinite(Number(score)) ? Number(score) : 0;
+  return Math.max(0, Math.min(n, max));
+}
+
+function normalizeVBScore(score, max) {
+  if (max <= 1) return score * 4;  // 0-1: score 1 → 4
+  if (max === 2) return score * 2;  // 0-2: score 2 → 4
+  return score;                     // 0-4: direct
+}
+
+/**
+ * Map a single question answer to VB fill state.
+ * For VB-MAPP milestones (0-1 with 0/0.5/1):
+ *   score 0   → no cells filled
+ *   score 0.5 → first cell filled (partial)
+ *   score 1   → both/all cells filled (mastered)
+ * For barriers (0-4): standard right-aligned fill
+ * For transitions (1-5): special handling (rawMax=5)
+ */
+function mapQuestionToVB(question, rawScore, rawMax) {
+  // Transitions (1-5): rawMax=5, scores 1-5
+  if (rawMax === 5) {
+    const score = Math.max(0, Math.min(Number(rawScore) || 0, 5));
+    // Map 1-5 directly to 5 fill slots
+    const filledSlots = [];
+    for (let i = 1; i <= 5; i++) {
+      filledSlots.push(i <= score);
+    }
+    return { question, score, max: 5, filledSlots, isTransition: true };
+  }
+
+  const max = resolveVBMax(rawMax);
+  const score = clampVBScore(rawScore, max);
+  const normalized = normalizeVBScore(score, max);
+  const threshold = VB_BASE - normalized + 1;
+  const filledMap = [false, false, false, false];
+
+  for (let i = 1; i <= VB_BASE; i++) {
+    if (i >= threshold) filledMap[i - 1] = true;
+  }
+
+  return {
+    question, score, max, normalized, threshold, filledMap,
+    pairedFillMap: [filledMap[0] || filledMap[1], filledMap[2] || filledMap[3]],
+    isTransition: false,
+  };
+}
+
+function mapAnswersToVB(answers, scoreMap) {
+  const keys = Array.from(new Set([...Object.keys(scoreMap || {}), ...Object.keys(answers || {})]));
+  return keys
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .map((q) => mapQuestionToVB(q, answers?.[q] ?? 0, scoreMap?.[q] ?? 1));
+}
+
+function buildScoreTypeMapFromGrid() {
+  const scoreMap = {};
+  document.querySelectorAll('td.inp[data-k][data-score]').forEach((cell) => {
+    const key = cell.getAttribute('data-k') || '';
+    // Support "CODE-1", "CODE-half", "CODE-0.5" etc.
+    const parts = key.split('-');
+    // The question id is everything before the last segment
+    const scorePart = parts[parts.length - 1];
+    const q = key.substring(0, key.length - scorePart.length - 1);
+    const score = scorePart === 'half' ? 0.5 : Number(cell.getAttribute('data-score') || '0');
+    if (!q || score <= 0) return;
+    scoreMap[q] = Math.max(scoreMap[q] || 0, score);
+  });
+  return scoreMap;
+}
+
+function hydrateVBDataAttributes() {
+  document.querySelectorAll('td.inp[data-k]').forEach((cell) => {
+    if (!cell.getAttribute('data-vb')) {
+      cell.setAttribute('data-vb', cell.getAttribute('data-k'));
+    }
+  });
+}
+
+/**
+ * Get all scoring cells for a question, sorted by score ascending.
+ * Handles the "-half" suffix used for 0.5 milestone cells.
+ */
+function getQuestionCells(questionId) {
+  // Match cells whose data-k starts with "questionId-"
+  const allInp = Array.from(document.querySelectorAll('td.inp[data-k]'));
+  const cells = allInp.filter(c => {
+    const k = c.getAttribute('data-k') || '';
+    return k === questionId + '-0' || k === questionId + '-half' ||
+           k === questionId + '-1' || k === questionId + '-2' ||
+           k === questionId + '-3' || k === questionId + '-4' ||
+           k === questionId + '-5' ||
+           k.startsWith(questionId + '-');
+  });
+  return cells.sort((a, b) => {
+    const sa = a.getAttribute('data-k').endsWith('-half') ? 0.5 : Number(a.getAttribute('data-score') || '0');
+    const sb = b.getAttribute('data-k').endsWith('-half') ? 0.5 : Number(b.getAttribute('data-score') || '0');
+    return sa - sb;
+  });
+}
+
+function paintVB(answers, scoreMap) {
+  const resolvedScoreMap = scoreMap || buildScoreTypeMapFromGrid();
+  const mappedRows = mapAnswersToVB(answers || {}, resolvedScoreMap);
+  let paintedCount = 0;
+  let firstFilledCell = null;
+
+  mappedRows.forEach((row) => {
+    const cells = getQuestionCells(row.question);
+    if (cells.length === 0) return;
+    const domCode = (cells[0] && cells[0].getAttribute('data-domain')) || '';
+    const gradient = getGradientForDomain(domCode);
+
+    // Clear all cells first
+    cells.forEach((cell) => {
+      cell.classList.remove('c0', 'c1', 'c2', 'c3', 'c4', 'vb-filled', 'vb-empty');
+      cell.classList.add('vb-empty');
+      cell.style.background = VB_EMPTY;
+    });
+
+    // Transitions (1-5): 5 cells, fill left-to-right up to score
+    if (row.isTransition && row.filledSlots) {
+      for (let i = 0; i < Math.min(5, cells.length); i++) {
+        if (row.filledSlots[i]) {
+          cells[i].classList.remove('vb-empty');
+          cells[i].classList.add('vb-filled');
+          cells[i].style.background = gradient[Math.min(i, 3)];
+          if (!firstFilledCell) firstFilledCell = cells[i];
+          paintedCount++;
+        }
+      }
+      return;
+    }
+
+    // Milestones (0-1 with 0/0.5/1): 3 cells (score 0, 0.5, 1)
+    if (row.max === 2 && cells.length === 3) {
+      if (row.score >= 0.5) {
+        cells[0].classList.remove('vb-empty');
+        cells[0].classList.add('vb-filled');
+        cells[0].style.background = gradient[0];
+        if (!firstFilledCell) firstFilledCell = cells[0];
+        paintedCount++;
+        cells[1].classList.remove('vb-empty');
+        cells[1].classList.add('vb-filled');
+        cells[1].style.background = gradient[1];
+        paintedCount++;
+      }
+      if (row.score >= 1) {
+        cells[2].classList.remove('vb-empty');
+        cells[2].classList.add('vb-filled');
+        cells[2].style.background = gradient[3];
+        paintedCount++;
+      }
+      return;
+    }
+
+    // Barriers (0-4): standard 4-cell fill
+    if (cells.length >= 4) {
+      for (let i = 0; i < Math.min(4, cells.length); i++) {
+        if (row.filledMap && row.filledMap[i]) {
+          cells[i].classList.remove('vb-empty');
+          cells[i].classList.add('vb-filled');
+          cells[i].style.background = gradient[i];
+          if (!firstFilledCell) firstFilledCell = cells[i];
+          paintedCount++;
+        }
+      }
+      return;
+    }
+
+    // Fallback: paired fill (2-cell 0-1)
+    if (row.max === 2 && cells.length >= 2) {
+      if (row.pairedFillMap[0]) {
+        cells[0].classList.remove('vb-empty');
+        cells[0].classList.add('vb-filled');
+        cells[0].style.background = gradient[0];
+        if (!firstFilledCell) firstFilledCell = cells[0];
+        paintedCount++;
+      }
+      if (row.pairedFillMap[1]) {
+        cells[1].classList.remove('vb-empty');
+        cells[1].classList.add('vb-filled');
+        cells[1].style.background = gradient[3];
+        paintedCount++;
+      }
+      return;
+    }
+
+    // Single-cell fallback
+    if (cells.length === 1 && row.score > 0) {
+      cells[0].classList.remove('vb-empty');
+      cells[0].classList.add('vb-filled');
+      cells[0].style.background = gradient[3];
+      if (!firstFilledCell) firstFilledCell = cells[0];
+      paintedCount++;
+    }
+  });
+
+  const status = document.getElementById('mockStatus');
+  if (status) {
+    status.textContent = 'Status: loaded ' + mappedRows.length + ' questions, painted ' + paintedCount + ' cells';
+    status.style.color = '#0b6b2a';
+  }
+  const sticky = document.getElementById('vbStickyStatus');
+  if (sticky) {
+    sticky.textContent = 'VB loaded (' + paintedCount + ' cells)';
+    sticky.style.color = '#14532d';
+    sticky.style.background = '#dcfce7';
+    sticky.style.borderColor = '#86efac';
+  }
+  if (firstFilledCell) {
+    firstFilledCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return mappedRows;
+}
+
+function loadExportedPayloadFromStorage() {
+  const params = new URLSearchParams(window.location.search || '');
+  const mode = params.get('autoload');
+  if (mode !== 'latest' && mode !== '1' && mode !== 'true') return false;
+
+  const storageKey = params.get('storageKey') || 'vbmapp_grid_payload';
+
+  try {
+    const raw = window.localStorage.getItem(storageKey);
+    if (!raw) return false;
+
+    const parsed = JSON.parse(raw);
+    const answers = parsed && parsed.answers;
+    const scoreMap = parsed && parsed.scoreMap;
+
+    if (!answers || !scoreMap || typeof answers !== 'object' || typeof scoreMap !== 'object') return false;
+
+    const rows = paintVB(answers, scoreMap);
+    if (!rows || rows.length === 0) return false;
+
+    const status = document.getElementById('mockStatus');
+    if (status) {
+      status.textContent = 'Status: autoloaded export (' + rows.length + ' questions)';
+      status.style.color = '#0b6b2a';
+    }
+    const sticky = document.getElementById('vbStickyStatus');
+    if (sticky) {
+      sticky.textContent = 'VB autoloaded from export';
+      sticky.style.color = '#14532d';
+      sticky.style.background = '#dcfce7';
+      sticky.style.borderColor = '#86efac';
+    }
+    return true;
+  } catch (err) {
+    console.warn('Failed to autoload export payload:', err);
+    return false;
+  }
+}
+
+hydrateVBDataAttributes();
+const autoloaded = loadExportedPayloadFromStorage();
+if (!autoloaded) {
+  console.log('No autoload payload found. Use file upload or questionnaire export.');
+}
+console.log('VB-MAPP Grid level2 ready');
+</script>
+</body>
+</html>

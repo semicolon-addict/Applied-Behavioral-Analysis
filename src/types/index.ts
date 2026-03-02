@@ -33,12 +33,19 @@ export type Child = {
 // Short Description: Added questionnaire-related types and Behavior-Therapy to AssessmentType
 /////////////////////////////////////////////////////////////
 
-export type AssessmentType = 'ABLLS-R' | 'AFLLS' | 'DAYC-2' | 'Behavior-Therapy';
+export type AssessmentType = 'ABLLS-R' | 'AFLLS' | 'DAYC-2' | 'Behavior-Therapy' | 'VB-MAPP';
 
 // Assessment question (from parsed PDF, stored in PostgreSQL)
 export type AssessmentQuestion = {
   id: string;
+  skillCode?: string;
   questionText: string;
+  taskName?: string;
+  taskObjective?: string;
+  examples?: string;
+  exampleImage?: string;
+  criteria?: string;
+  scoreType?: string;
   responseType: 'dropdown' | 'text' | 'scale';
   options: string[];
   sortOrder: number;
