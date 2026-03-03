@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////
 // Author: Shashank Kakad
 // Inputs: QuestionnaireSelector component for displaying assessment questionnaire cards
 // Outcome: Card grid showing available questionnaires with question counts and completion status
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileQuestion, ClipboardList, Brain, Heart, BookOpen, Loader2 } from 'lucide-react';
+import { FileQuestion, ClipboardList, Brain, Heart, BookOpen, BarChart2, Loader2 } from 'lucide-react';
 import { QuestionnaireTemplateSummary } from '@/types';
 import { getTemplates } from '@/lib/questionnaire-api';
 
@@ -25,6 +25,7 @@ const assessmentIcons: Record<string, React.ElementType> = {
     'AFLLS': BookOpen,
     'DAYC-2': ClipboardList,
     'Behavior-Therapy': Heart,
+    'VB-MAPP': BarChart2,
 };
 
 const assessmentColors: Record<string, string> = {
@@ -32,6 +33,7 @@ const assessmentColors: Record<string, string> = {
     'AFLLS': 'border-l-green-500',
     'DAYC-2': 'border-l-purple-500',
     'Behavior-Therapy': 'border-l-rose-500',
+    'VB-MAPP': 'border-l-teal-500',
 };
 
 export function QuestionnaireSelector({ onSelect, preSelectedType }: QuestionnaireSelectorProps) {
@@ -143,10 +145,10 @@ export function QuestionnaireSelector({ onSelect, preSelectedType }: Questionnai
                                 )}
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-muted-foreground">
-                                        {template.domains.length} domains · {template.totalQuestions} questions
+                                        {template.domains.length} domains | {template.totalQuestions} questions
                                     </span>
                                     <Button variant="outline" size="sm">
-                                        Start →
+                                        Start {'->'}
                                     </Button>
                                 </div>
                             </CardContent>

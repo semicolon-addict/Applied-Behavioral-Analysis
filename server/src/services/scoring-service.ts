@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////
 // Author: Shashank Kakad
 // Inputs: Session ID with completed responses
 // Outcome: VB-MAPP aligned scoring with domain breakdowns and proficiency levels
@@ -51,11 +51,13 @@ export interface VBGradingResult {
 
 /**
  * Extract numeric score from answer string
- * Examples: "2 - Independent" → 2, "0 - Not observed" → 0
+ * Examples: "2 - Independent" -> 2, "0 - Not observed" -> 0
  */
 function extractNumericScore(answerString: string): number {
-    const match = answerString.match(/^(\d+)/);
-    return match ? parseInt(match[1], 10) : 0;
+    const match = answerString.match(/^(\d+(?:\.\d+)?)/);
+    if (!match) return 0;
+    const parsed = Number.parseFloat(match[1]);
+    return Number.isFinite(parsed) ? parsed : 0;
 }
 
 /**
@@ -71,20 +73,48 @@ function getProficiencyLevel(percentage: number): 'Emerging' | 'Developing' | 'P
 /**
  * Get maximum possible score for a question based on scoreType or options length
  */
-function getMaxScore(scoreType: string | null | undefined, optionsCount?: number): number {
-    // If scoreType is provided, parse it
-    if (scoreType) {
-        const match = scoreType.match(/0-(\d+)/);
-        if (match) return parseInt(match[1], 10);
+function getMaxScore(scoreType: string | null | undefined, options?: string[]): number {
+    // Parse scoreType patterns such as 0-2, 0-4, 1-5, etc.
+    if (scoreType && scoreType.trim().length > 0) {
+        const normalized = scoreType.trim();
+        const rangeMatch = normalized.match(/(\d+)\s*-\s*(\d+)/);
+        if (rangeMatch) {
+            const min = Number.parseFloat(rangeMatch[1]);
+            const max = Number.parseFloat(rangeMatch[2]);
+            if (Number.isFinite(min) && Number.isFinite(max) && max >= min) {
+                return max;
+            }
+        }
+
+        const maxOnlyMatch = normalized.match(/max\s*:?\s*(\d+(?:\.\d+)?)/i);
+        if (maxOnlyMatch) {
+            const parsed = Number.parseFloat(maxOnlyMatch[1]);
+            if (Number.isFinite(parsed) && parsed > 0) {
+                return parsed;
+            }
+        }
     }
-    
-    // Fallback: infer from options count (excluding 0th option if present)
-    // Example: 3 options after filtering 0 → max score is 2 (options: 1, 2, 3 but scores are 0, 1, 2)
-    if (optionsCount !== undefined && optionsCount > 0) {
-        return optionsCount - 1; // -1 because scores start from 0
+
+    // Infer from explicit option labels first (e.g., "1 - ..." to "5 - ..." => max 5).
+    if (options && options.length > 0) {
+        let maxFromOptions = 0;
+        for (const option of options) {
+            const match = option.trim().match(/^(\d+(?:\.\d+)?)/);
+            if (!match) continue;
+            const parsed = Number.parseFloat(match[1]);
+            if (Number.isFinite(parsed)) {
+                maxFromOptions = Math.max(maxFromOptions, parsed);
+            }
+        }
+        if (maxFromOptions > 0) {
+            return maxFromOptions;
+        }
+
+        // Last resort when options are unlabeled.
+        return Math.max(1, options.length - 1);
     }
-    
-    // Default to 4 if neither is provided
+
+    // Default to 4 if neither is provided.
     return 4;
 }
 
@@ -127,7 +157,7 @@ export async function calculateVBScoring(sessionId: string): Promise<VBGradingRe
         throw new Error(`Template not found for assessment type: ${session.assessmentType}`);
     }
 
-    // Create a map of questionId → response
+    // Create a map of questionId -> response
     const responseMap = new Map<string, string>();
     session.responses.forEach((response) => {
         responseMap.set(response.questionId, response.answer);
@@ -144,8 +174,8 @@ export async function calculateVBScoring(sessionId: string): Promise<VBGradingRe
 
         for (const question of domain.questions) {
             const answer = responseMap.get(question.id);
-            const scoreType = (question as any).scoreType; // Cast to any to handle potential missing field
-            const maxScore = getMaxScore(scoreType, question.options.length);
+            const scoreType = question.scoreType; // Now a proper field in Prisma schema
+            const maxScore = getMaxScore(scoreType, question.options);
             const rawNumericScore = answer ? extractNumericScore(answer) : 0;
             const clampedNumericScore = Math.max(0, Math.min(rawNumericScore, Math.max(0, maxScore)));
             const vbMapping = mapQuestionToVB(question.skillCode || question.id, rawNumericScore, maxScore);
@@ -205,3 +235,4 @@ export async function calculateVBScoring(sessionId: string): Promise<VBGradingRe
         vbExport: toVBExportRows(vbMappings),
     };
 }
+

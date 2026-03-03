@@ -43,7 +43,11 @@ export function ParentDashboardClient({
     }
 
     if (questionnaires.length === 0) {
-        return <QuestionnaireForm child={child} onFormSubmit={onQuestionnaireSubmit} />;
+        return (
+            <div id="questionnaire">
+                <QuestionnaireForm child={child} onFormSubmit={onQuestionnaireSubmit} />
+            </div>
+        );
     }
     
     return (
@@ -51,6 +55,7 @@ export function ParentDashboardClient({
             <div className="flex items-center justify-between space-y-2">
                 <h2 className="text-3xl font-bold tracking-tight">Parent Dashboard</h2>
             </div>
+            <div id="questionnaire" className="sr-only" />
             <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
                 <div className="lg:col-span-2 space-y-6">
                     <Card id="progress">
@@ -90,10 +95,10 @@ export function ParentDashboardClient({
                             <CardTitle>Child Details</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2 text-sm">
-                            <p><strong>Name:</strong> {child.name}</p>
+                             <p><strong>Name:</strong> {child.name}</p>
                             <p><strong>Date of Birth:</strong> {new Date(child.dob).toLocaleDateString()}</p>
                             <p><strong>Diagnosis:</strong> {child.diagnosis}</p>
-                             <p><strong>Assigned Clinician:</strong> Dr. Evelyn Reed</p>
+                             <p><strong>Assigned Clinician ID:</strong> {child.clinicianId}</p>
                              <Button variant="outline" className="mt-4 w-full">Update Information</Button>
                         </CardContent>
                     </Card>
@@ -107,10 +112,10 @@ export function ParentDashboardClient({
                                  <div key={message.id} className="flex items-start gap-3 p-3 border rounded-lg bg-accent/50">
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage src={'https://picsum.photos/seed/avatar1/100/100'} />
-                                        <AvatarFallback>CR</AvatarFallback>
+                                        <AvatarFallback>C</AvatarFallback>
                                     </Avatar>
                                     <div className="grid gap-0.5">
-                                        <p className="font-semibold text-sm">Dr. Evelyn Reed</p>
+                                        <p className="font-semibold text-sm">Clinician ({message.from})</p>
                                         <p className="text-xs text-muted-foreground">{message.body}</p>
                                     </div>
                                  </div>

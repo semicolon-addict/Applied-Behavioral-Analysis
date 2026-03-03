@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AFLS Grid — Home Skills</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;background:#fff}
+.wrap{max-width:1600px;margin:0 auto;padding:12px 14px}
+.toolbar{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f5f5;
+  border:1px solid #ddd;border-radius:4px;margin-bottom:12px;flex-wrap:wrap}
+.pb{width:22px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer}
+.pb.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+.cbtn{font-size:8pt;padding:3px 8px;border:1px solid #999;border-radius:3px;cursor:pointer;background:#fff}
+.cbtn:hover{background:#eee}
+.bigT{font-size:13pt;font-weight:normal;text-align:center}
+.subT{font-size:10.5pt;font-weight:normal;text-align:center;margin-bottom:6px}
+.fline{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:3px}
+.fl label{font-size:9pt;white-space:nowrap}
+.fl input{border:none;border-bottom:1px solid #444;outline:none;font-size:9pt;padding:1px 2px;background:transparent}
+.nav-bar{display:flex;align-items:center;gap:6px;padding:4px 10px;font-size:9pt;
+  background:#f0fdf4;border:1px solid #86efac;border-radius:4px;margin-bottom:8px}
+.gscroll{overflow-x:auto;margin-top:5px}
+table.g{border-collapse:collapse;table-layout:fixed}
+td.lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid #000;background:#f0f0f0;
+  font-size:5.8pt;font-weight:bold;text-align:center;vertical-align:middle;padding:0;white-space:nowrap}
+td.inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid #000;background:#fff;
+  cursor:pointer;padding:0;user-select:none;position:relative}
+.score1{background:#7f1d1d!important}
+.score2{background:#b91c1c!important}
+.score3{background:#ef4444!important}
+.score4{background:#fca5a5!important}
+.inp.vb-filled{}
+.inp.vb-empty{background:#fff!important}
+td.inp[colspan="2"]{width:10mm;min-width:10mm}
+td.inp[colspan="4"]{width:20mm;min-width:20mm}
+td.inp:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.88)}
+td.off-lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
+td.off-inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
+td.gap{width:3mm;min-width:3mm;border:none;background:#fff;padding:0}
+td.ltr-hdr{font-weight:bold;font-size:9.5pt;text-align:center;
+  border:1px solid #111;background:#fff;height:17px;padding:0}
+td.name-hdr{font-size:5.8pt;line-height:1.25;text-align:center;
+  border:1px solid #222;background:#f0f0f0;padding:2px 1px}
+td.foot-cell{border:1px solid #666;border-top:2px solid #333;background:#ebebeb;
+  font-size:7pt;font-weight:bold;text-align:center;vertical-align:top;padding:2px 1px;line-height:1.3}
+.foot-name{font-size:5.5pt;font-weight:normal}
+.c0{background:#fff!important}.c1{background:#c0c0c0!important}
+.c2{background:#ffff00!important}.c3{background:#ffa500!important}
+.c4{background:#00cc44!important}
+.ndot{position:absolute;top:1px;right:1px;width:4px;height:4px;border-radius:50%;
+  background:#1a56db;display:none;pointer-events:none}
+#tip{display:none;position:fixed;background:#fffde7;border:1px solid #bbb;
+  padding:4px 8px;font-size:8pt;border-radius:3px;z-index:9999;
+  pointer-events:none;max-width:260px;white-space:pre-wrap;line-height:1.4}
+#vbStickyStatus{
+  position:fixed;right:12px;bottom:12px;z-index:9999;
+  font-size:11px;font-weight:bold;padding:6px 10px;border-radius:6px;
+  color:#14532d;background:#dcfce7;border:1px solid #86efac;
+  box-shadow:0 2px 6px rgba(0,0,0,.1)
+}
+.dm-toolbar{margin-bottom:4px}
+.dm-pal{width:40px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer;display:inline-block}
+.dm-pal.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+@media print{
+  .toolbar,.nav-bar{display:none}
+  #vbStickyStatus{display:none}
+  td.lbl{width:14mm;min-width:14mm;height:5mm}
+  td.inp{width:5mm;min-width:5mm;height:5mm}
+  td.inp[colspan="2"]{width:10mm;min-width:10mm}
+  td.inp[colspan="4"]{width:20mm;min-width:20mm}
+  td.off-lbl{width:14mm;min-width:14mm;height:5mm}
+  td.off-inp{width:5mm;min-width:5mm;height:5mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="toolbar">
+  <span style="font-size:8pt;font-weight:bold">Color:</span>
+  <div class="pb c0 sel" data-c="0" title="White / Clear"></div>
+  <div class="pb c1" data-c="1" title="Gray"></div>
+  <div class="pb c2" data-c="2" title="Yellow"></div>
+  <div class="pb c3" data-c="3" title="Orange"></div>
+  <div class="pb c4" data-c="4" title="Green"></div>
+  <button class="cbtn" id="clrAll">Clear All</button>
+  <span style="font-size:7.5pt;color:#14532d;font-weight:bold">AFLS Grid v1</span>
+  <span id="mockStatus" style="font-size:7.5pt;color:#0b6b2a;font-weight:bold">Status: not loaded</span>
+  <span style="font-size:7.5pt;color:#555">Click = apply color &nbsp;|&nbsp; Dbl-click = add note</span>
+</div>
+<div class="toolbar dm-toolbar">
+  <span style="font-size:8pt;font-weight:bold">Domain VB Color:</span>
+  <select id="domainSelect" style="font-size:8pt;padding:2px 4px"></select>
+  <div class="dm-pal" data-pal="red" title="Red (default)" style="background:linear-gradient(90deg,#7f1d1d,#fca5a5)"></div>
+  <div class="dm-pal" data-pal="blue" title="Blue" style="background:linear-gradient(90deg,#1e3a5f,#93c5fd)"></div>
+  <div class="dm-pal" data-pal="green" title="Green" style="background:linear-gradient(90deg,#14532d,#86efac)"></div>
+  <div class="dm-pal" data-pal="purple" title="Purple" style="background:linear-gradient(90deg,#581c87,#d8b4fe)"></div>
+  <div class="dm-pal" data-pal="amber" title="Amber" style="background:linear-gradient(90deg,#78350f,#fcd34d)"></div>
+  <div class="dm-pal" data-pal="teal" title="Teal" style="background:linear-gradient(90deg,#134e4a,#5eead4)"></div>
+</div>
+
+<div class="nav-bar">
+  <span style="font-size:8pt;font-weight:bold">AFLS Protocols:</span> <a href="grid-basic-living.html?autoload=latest&storageKey=afls_grid_payload" style="color:#1a56db;text-decoration:none;font-weight:bold">BLS</a> &nbsp;|&nbsp; <span style="font-weight:bold;color:#0b6b2a;text-decoration:underline">Home</span> &nbsp;|&nbsp; <a href="grid-community.html?autoload=latest&storageKey=afls_grid_payload" style="color:#1a56db;text-decoration:none;font-weight:bold">CPS</a> &nbsp;|&nbsp; <a href="grid-school.html?autoload=latest&storageKey=afls_grid_payload" style="color:#1a56db;text-decoration:none;font-weight:bold">School</a>
+</div>
+
+<div class="bigT">Assessment of Functional Living Skills</div>
+<div class="subT">Home Skills — 8 Domains · 231 Questions</div>
+<div class="fline" style="margin-top:6px">
+  <div class="fl"><label>Student: <input type="text" style="width:190px" id="p1s"/></label></div>
+  <div class="fl"><label>Assessor: <input type="text" style="width:140px" id="p1a"/></label></div>
+  <div class="fl"><label>Date: <input type="text" style="width:90px" id="p1d"/></label></div>
+</div>
+
+<div class="gscroll"><table class="g"><tbody>
+<tr>
+  <td class="ltr-hdr" colspan="5">MH</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">CL</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">HC</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">DS</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">HM</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">LS</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">KT</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">CG</td>
+</tr>
+<tr>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Meal &amp; Food Handling</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Clothing &amp; Laundry</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Household Chores</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Domestic Skills</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Home Maintenance</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Leisure Skills</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Kitchen Skills</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Caregiver Skills</td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG43</td>
+  <td class="inp" colspan="2" data-k="CG43-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG43-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG42</td>
+  <td class="inp" colspan="2" data-k="CG42-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG42-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT37</td>
+  <td class="inp" data-k="KT37-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT37-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT37-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT37-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG41</td>
+  <td class="inp" colspan="2" data-k="CG41-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG41-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT36</td>
+  <td class="inp" data-k="KT36-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT36-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT36-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT36-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG40</td>
+  <td class="inp" data-k="CG40-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG40-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG40-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG40-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT35</td>
+  <td class="inp" data-k="KT35-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT35-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT35-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT35-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG39</td>
+  <td class="inp" data-k="CG39-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG39-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG39-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG39-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM35</td>
+  <td class="inp" data-k="HM35-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM35-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM35-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM35-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT34</td>
+  <td class="inp" data-k="KT34-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT34-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT34-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT34-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG38</td>
+  <td class="inp" colspan="2" data-k="CG38-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG38-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC34</td>
+  <td class="inp" data-k="HC34-1" data-domain="HC" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC34-2" data-domain="HC" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC34-3" data-domain="HC" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC34-4" data-domain="HC" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM34</td>
+  <td class="inp" data-k="HM34-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM34-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM34-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM34-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT33</td>
+  <td class="inp" data-k="KT33-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT33-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT33-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT33-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG35</td>
+  <td class="inp" data-k="CG35-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG35-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG35-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG35-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC33</td>
+  <td class="inp" data-k="HC33-1" data-domain="HC" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC33-2" data-domain="HC" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC33-3" data-domain="HC" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC33-4" data-domain="HC" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM33</td>
+  <td class="inp" colspan="2" data-k="HM33-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM33-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT32</td>
+  <td class="inp" data-k="KT32-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT32-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT32-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT32-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG34</td>
+  <td class="inp" data-k="CG34-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG34-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG34-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG34-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC32</td>
+  <td class="inp" colspan="2" data-k="HC32-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC32-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM32</td>
+  <td class="inp" colspan="2" data-k="HM32-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM32-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT31</td>
+  <td class="inp" data-k="KT31-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT31-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT31-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT31-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG33</td>
+  <td class="inp" data-k="CG33-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG33-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG33-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG33-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC31</td>
+  <td class="inp" colspan="2" data-k="HC31-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC31-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM31</td>
+  <td class="inp" colspan="2" data-k="HM31-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM31-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT30</td>
+  <td class="inp" data-k="KT30-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT30-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT30-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT30-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG32</td>
+  <td class="inp" colspan="2" data-k="CG32-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG32-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC30</td>
+  <td class="inp" colspan="2" data-k="HC30-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC30-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM30</td>
+  <td class="inp" colspan="2" data-k="HM30-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM30-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT29</td>
+  <td class="inp" colspan="2" data-k="KT29-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT29-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG31</td>
+  <td class="inp" data-k="CG31-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG31-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG31-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG31-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL30</td>
+  <td class="inp" colspan="2" data-k="CL30-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL30-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC29</td>
+  <td class="inp" colspan="2" data-k="HC29-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC29-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM29</td>
+  <td class="inp" colspan="2" data-k="HM29-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM29-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT28</td>
+  <td class="inp" data-k="KT28-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT28-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT28-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT28-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG30</td>
+  <td class="inp" colspan="2" data-k="CG30-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG30-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL29</td>
+  <td class="inp" colspan="2" data-k="CL29-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL29-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC28</td>
+  <td class="inp" colspan="2" data-k="HC28-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC28-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM28</td>
+  <td class="inp" colspan="2" data-k="HM28-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM28-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT27</td>
+  <td class="inp" colspan="2" data-k="KT27-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT27-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG28</td>
+  <td class="inp" colspan="2" data-k="CG28-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG28-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL28</td>
+  <td class="inp" colspan="2" data-k="CL28-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL28-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC27</td>
+  <td class="inp" colspan="2" data-k="HC27-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC27-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM27</td>
+  <td class="inp" colspan="2" data-k="HM27-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM27-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT26</td>
+  <td class="inp" colspan="2" data-k="KT26-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT26-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG27</td>
+  <td class="inp" colspan="2" data-k="CG27-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG27-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH29</td>
+  <td class="inp" colspan="2" data-k="MH29-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH29-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL27</td>
+  <td class="inp" colspan="2" data-k="CL27-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL27-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC26</td>
+  <td class="inp" colspan="2" data-k="HC26-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC26-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM26</td>
+  <td class="inp" colspan="2" data-k="HM26-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM26-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT25</td>
+  <td class="inp" data-k="KT25-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT25-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT25-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT25-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG26</td>
+  <td class="inp" data-k="CG26-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG26-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG26-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG26-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH28</td>
+  <td class="inp" colspan="2" data-k="MH28-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH28-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL26</td>
+  <td class="inp" colspan="2" data-k="CL26-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL26-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC25</td>
+  <td class="inp" colspan="2" data-k="HC25-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC25-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM25</td>
+  <td class="inp" colspan="2" data-k="HM25-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM25-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS25</td>
+  <td class="inp" colspan="2" data-k="LS25-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS25-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT24</td>
+  <td class="inp" colspan="2" data-k="KT24-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT24-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG25</td>
+  <td class="inp" colspan="2" data-k="CG25-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG25-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH26</td>
+  <td class="inp" colspan="2" data-k="MH26-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH26-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL25</td>
+  <td class="inp" colspan="2" data-k="CL25-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL25-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC24</td>
+  <td class="inp" colspan="2" data-k="HC24-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC24-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM24</td>
+  <td class="inp" data-k="HM24-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM24-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM24-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM24-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS24</td>
+  <td class="inp" colspan="2" data-k="LS24-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS24-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT23</td>
+  <td class="inp" data-k="KT23-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT23-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT23-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT23-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG24</td>
+  <td class="inp" data-k="CG24-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG24-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG24-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG24-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH25</td>
+  <td class="inp" colspan="2" data-k="MH25-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH25-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL24</td>
+  <td class="inp" colspan="2" data-k="CL24-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL24-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC23</td>
+  <td class="inp" colspan="2" data-k="HC23-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC23-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM23</td>
+  <td class="inp" data-k="HM23-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM23-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM23-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM23-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS23</td>
+  <td class="inp" colspan="2" data-k="LS23-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS23-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT22</td>
+  <td class="inp" data-k="KT22-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT22-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT22-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT22-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG23</td>
+  <td class="inp" colspan="2" data-k="CG23-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG23-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH24</td>
+  <td class="inp" colspan="2" data-k="MH24-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH24-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL23</td>
+  <td class="inp" colspan="2" data-k="CL23-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL23-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC22</td>
+  <td class="inp" colspan="2" data-k="HC22-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC22-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM22</td>
+  <td class="inp" data-k="HM22-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM22-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM22-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM22-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS22</td>
+  <td class="inp" colspan="2" data-k="LS22-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS22-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT21</td>
+  <td class="inp" colspan="2" data-k="KT21-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT21-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG22</td>
+  <td class="inp" data-k="CG22-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG22-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG22-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG22-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH23</td>
+  <td class="inp" colspan="2" data-k="MH23-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH23-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL21</td>
+  <td class="inp" colspan="2" data-k="CL21-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL21-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC21</td>
+  <td class="inp" colspan="2" data-k="HC21-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC21-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM21</td>
+  <td class="inp" data-k="HM21-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM21-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM21-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM21-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS21</td>
+  <td class="inp" colspan="2" data-k="LS21-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS21-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT20</td>
+  <td class="inp" colspan="2" data-k="KT20-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT20-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG21</td>
+  <td class="inp" data-k="CG21-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG21-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG21-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG21-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH22</td>
+  <td class="inp" colspan="2" data-k="MH22-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH22-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL20</td>
+  <td class="inp" colspan="2" data-k="CL20-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL20-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC20</td>
+  <td class="inp" colspan="2" data-k="HC20-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC20-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS18</td>
+  <td class="inp" data-k="DS18-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS18-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS18-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS18-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM20</td>
+  <td class="inp" data-k="HM20-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM20-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM20-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM20-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS20</td>
+  <td class="inp" data-k="LS20-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS20-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS20-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS20-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT19</td>
+  <td class="inp" colspan="2" data-k="KT19-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT19-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG20</td>
+  <td class="inp" data-k="CG20-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG20-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG20-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG20-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH21</td>
+  <td class="inp" colspan="2" data-k="MH21-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH21-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL19</td>
+  <td class="inp" colspan="2" data-k="CL19-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL19-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC19</td>
+  <td class="inp" colspan="2" data-k="HC19-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC19-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS17</td>
+  <td class="inp" colspan="2" data-k="DS17-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS17-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM19</td>
+  <td class="inp" data-k="HM19-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM19-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM19-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM19-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS19</td>
+  <td class="inp" colspan="2" data-k="LS19-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS19-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT17</td>
+  <td class="inp" data-k="KT17-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT17-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT17-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT17-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG19</td>
+  <td class="inp" colspan="2" data-k="CG19-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG19-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH20</td>
+  <td class="inp" colspan="2" data-k="MH20-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH20-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL18</td>
+  <td class="inp" colspan="2" data-k="CL18-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL18-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC18</td>
+  <td class="inp" data-k="HC18-1" data-domain="HC" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC18-2" data-domain="HC" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC18-3" data-domain="HC" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC18-4" data-domain="HC" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS16</td>
+  <td class="inp" data-k="DS16-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS16-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS16-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS16-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM18</td>
+  <td class="inp" colspan="2" data-k="HM18-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM18-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS18</td>
+  <td class="inp" colspan="2" data-k="LS18-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS18-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT16</td>
+  <td class="inp" colspan="2" data-k="KT16-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT16-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG18</td>
+  <td class="inp" data-k="CG18-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG18-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG18-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG18-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH18</td>
+  <td class="inp" colspan="2" data-k="MH18-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH18-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL17</td>
+  <td class="inp" data-k="CL17-1" data-domain="CL" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL17-2" data-domain="CL" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL17-3" data-domain="CL" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL17-4" data-domain="CL" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC17</td>
+  <td class="inp" colspan="2" data-k="HC17-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC17-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS15</td>
+  <td class="inp" colspan="2" data-k="DS15-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS15-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM17</td>
+  <td class="inp" data-k="HM17-1" data-domain="HM" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM17-2" data-domain="HM" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM17-3" data-domain="HM" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HM17-4" data-domain="HM" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS17</td>
+  <td class="inp" data-k="LS17-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS17-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS17-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS17-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT15</td>
+  <td class="inp" colspan="2" data-k="KT15-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT15-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG16</td>
+  <td class="inp" data-k="CG16-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG16-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG16-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG16-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH15</td>
+  <td class="inp" colspan="2" data-k="MH15-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH15-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL16</td>
+  <td class="inp" colspan="2" data-k="CL16-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL16-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC16</td>
+  <td class="inp" colspan="2" data-k="HC16-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC16-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS14</td>
+  <td class="inp" colspan="2" data-k="DS14-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS14-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM16</td>
+  <td class="inp" colspan="2" data-k="HM16-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM16-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS16</td>
+  <td class="inp" colspan="2" data-k="LS16-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS16-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT14</td>
+  <td class="inp" data-k="KT14-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT14-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT14-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT14-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG15</td>
+  <td class="inp" colspan="2" data-k="CG15-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG15-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH14</td>
+  <td class="inp" colspan="2" data-k="MH14-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH14-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL15</td>
+  <td class="inp" colspan="2" data-k="CL15-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL15-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC14</td>
+  <td class="inp" data-k="HC14-1" data-domain="HC" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC14-2" data-domain="HC" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC14-3" data-domain="HC" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC14-4" data-domain="HC" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS13</td>
+  <td class="inp" colspan="2" data-k="DS13-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS13-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM15</td>
+  <td class="inp" colspan="2" data-k="HM15-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM15-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS15</td>
+  <td class="inp" colspan="2" data-k="LS15-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS15-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT13</td>
+  <td class="inp" data-k="KT13-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT13-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT13-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT13-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG14</td>
+  <td class="inp" colspan="2" data-k="CG14-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG14-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH13</td>
+  <td class="inp" colspan="2" data-k="MH13-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH13-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL14</td>
+  <td class="inp" colspan="2" data-k="CL14-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL14-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC13</td>
+  <td class="inp" colspan="2" data-k="HC13-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC13-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS12</td>
+  <td class="inp" colspan="2" data-k="DS12-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS12-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM14</td>
+  <td class="inp" colspan="2" data-k="HM14-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM14-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS14</td>
+  <td class="inp" data-k="LS14-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS14-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS14-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS14-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT12</td>
+  <td class="inp" data-k="KT12-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT12-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT12-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT12-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG13</td>
+  <td class="inp" data-k="CG13-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG13-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG13-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG13-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH12</td>
+  <td class="inp" colspan="2" data-k="MH12-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH12-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL13</td>
+  <td class="inp" colspan="2" data-k="CL13-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL13-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC12</td>
+  <td class="inp" colspan="2" data-k="HC12-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC12-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS11</td>
+  <td class="inp" colspan="2" data-k="DS11-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS11-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM13</td>
+  <td class="inp" colspan="2" data-k="HM13-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM13-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS12</td>
+  <td class="inp" data-k="LS12-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS12-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS12-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS12-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT11</td>
+  <td class="inp" data-k="KT11-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT11-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT11-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT11-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG12</td>
+  <td class="inp" data-k="CG12-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG12-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG12-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG12-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH11</td>
+  <td class="inp" colspan="2" data-k="MH11-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH11-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL12</td>
+  <td class="inp" colspan="2" data-k="CL12-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL12-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC11</td>
+  <td class="inp" colspan="2" data-k="HC11-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC11-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS10</td>
+  <td class="inp" data-k="DS10-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS10-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS10-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS10-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM12</td>
+  <td class="inp" colspan="2" data-k="HM12-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM12-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS11</td>
+  <td class="inp" data-k="LS11-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS11-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS11-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS11-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT10</td>
+  <td class="inp" data-k="KT10-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT10-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT10-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT10-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG11</td>
+  <td class="inp" data-k="CG11-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG11-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG11-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG11-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH10</td>
+  <td class="inp" colspan="2" data-k="MH10-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH10-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL11</td>
+  <td class="inp" data-k="CL11-1" data-domain="CL" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL11-2" data-domain="CL" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL11-3" data-domain="CL" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL11-4" data-domain="CL" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC10</td>
+  <td class="inp" colspan="2" data-k="HC10-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC10-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS9</td>
+  <td class="inp" colspan="2" data-k="DS9-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS9-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM10</td>
+  <td class="inp" colspan="2" data-k="HM10-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM10-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS10</td>
+  <td class="inp" data-k="LS10-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS10-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS10-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS10-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT9</td>
+  <td class="inp" data-k="KT9-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT9-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT9-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT9-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG10</td>
+  <td class="inp" data-k="CG10-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG10-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG10-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG10-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH9</td>
+  <td class="inp" colspan="2" data-k="MH9-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH9-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL10</td>
+  <td class="inp" colspan="2" data-k="CL10-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL10-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC8</td>
+  <td class="inp" colspan="2" data-k="HC8-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC8-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS8</td>
+  <td class="inp" data-k="DS8-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS8-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS8-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS8-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM9</td>
+  <td class="inp" colspan="2" data-k="HM9-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM9-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS9</td>
+  <td class="inp" colspan="2" data-k="LS9-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS9-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT8</td>
+  <td class="inp" data-k="KT8-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT8-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT8-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT8-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG9</td>
+  <td class="inp" colspan="2" data-k="CG9-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG9-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH8</td>
+  <td class="inp" colspan="2" data-k="MH8-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH8-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL8</td>
+  <td class="inp" colspan="2" data-k="CL8-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL8-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC7</td>
+  <td class="inp" colspan="2" data-k="HC7-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC7-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS7</td>
+  <td class="inp" data-k="DS7-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS7-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS7-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS7-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM8</td>
+  <td class="inp" colspan="2" data-k="HM8-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM8-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS8</td>
+  <td class="inp" colspan="2" data-k="LS8-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS8-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT7</td>
+  <td class="inp" colspan="2" data-k="KT7-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT7-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG8</td>
+  <td class="inp" data-k="CG8-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG8-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG8-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG8-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH7</td>
+  <td class="inp" colspan="2" data-k="MH7-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH7-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL7</td>
+  <td class="inp" colspan="2" data-k="CL7-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL7-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC6</td>
+  <td class="inp" colspan="2" data-k="HC6-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC6-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS6</td>
+  <td class="inp" data-k="DS6-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS6-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS6-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS6-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM6</td>
+  <td class="inp" colspan="2" data-k="HM6-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM6-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS7</td>
+  <td class="inp" data-k="LS7-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS7-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS7-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS7-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT6</td>
+  <td class="inp" colspan="2" data-k="KT6-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT6-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG7</td>
+  <td class="inp" data-k="CG7-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG7-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG7-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG7-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH5</td>
+  <td class="inp" colspan="2" data-k="MH5-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH5-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL5</td>
+  <td class="inp" data-k="CL5-1" data-domain="CL" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL5-2" data-domain="CL" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL5-3" data-domain="CL" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CL5-4" data-domain="CL" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC5</td>
+  <td class="inp" colspan="2" data-k="HC5-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC5-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS5</td>
+  <td class="inp" data-k="DS5-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS5-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS5-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS5-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM5</td>
+  <td class="inp" colspan="2" data-k="HM5-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM5-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS5</td>
+  <td class="inp" colspan="2" data-k="LS5-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS5-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT5</td>
+  <td class="inp" data-k="KT5-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT5-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT5-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT5-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG5</td>
+  <td class="inp" colspan="2" data-k="CG5-1" data-domain="CG" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CG5-2" data-domain="CG" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH4</td>
+  <td class="inp" data-k="MH4-1" data-domain="MH" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="MH4-2" data-domain="MH" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="MH4-3" data-domain="MH" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="MH4-4" data-domain="MH" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL4</td>
+  <td class="inp" colspan="2" data-k="CL4-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL4-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC4</td>
+  <td class="inp" colspan="2" data-k="HC4-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC4-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS4</td>
+  <td class="inp" data-k="DS4-1" data-domain="DS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS4-2" data-domain="DS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS4-3" data-domain="DS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="DS4-4" data-domain="DS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM4</td>
+  <td class="inp" colspan="2" data-k="HM4-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM4-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS4</td>
+  <td class="inp" data-k="LS4-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS4-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS4-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS4-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT4</td>
+  <td class="inp" data-k="KT4-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT4-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT4-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT4-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG4</td>
+  <td class="inp" data-k="CG4-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG4-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG4-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG4-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH3</td>
+  <td class="inp" colspan="2" data-k="MH3-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH3-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL3</td>
+  <td class="inp" colspan="2" data-k="CL3-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL3-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC3</td>
+  <td class="inp" data-k="HC3-1" data-domain="HC" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC3-2" data-domain="HC" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC3-3" data-domain="HC" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC3-4" data-domain="HC" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS3</td>
+  <td class="inp" colspan="2" data-k="DS3-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS3-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM3</td>
+  <td class="inp" colspan="2" data-k="HM3-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM3-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS3</td>
+  <td class="inp" colspan="2" data-k="LS3-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS3-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT3</td>
+  <td class="inp" data-k="KT3-1" data-domain="KT" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT3-2" data-domain="KT" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT3-3" data-domain="KT" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="KT3-4" data-domain="KT" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG3</td>
+  <td class="inp" data-k="CG3-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG3-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG3-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG3-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH2</td>
+  <td class="inp" colspan="2" data-k="MH2-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH2-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL2</td>
+  <td class="inp" colspan="2" data-k="CL2-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL2-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC2</td>
+  <td class="inp" colspan="2" data-k="HC2-1" data-domain="HC" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HC2-2" data-domain="HC" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS2</td>
+  <td class="inp" colspan="2" data-k="DS2-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS2-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM2</td>
+  <td class="inp" colspan="2" data-k="HM2-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM2-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS2</td>
+  <td class="inp" data-k="LS2-1" data-domain="LS" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS2-2" data-domain="LS" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS2-3" data-domain="LS" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="LS2-4" data-domain="LS" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT2</td>
+  <td class="inp" colspan="2" data-k="KT2-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT2-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG2</td>
+  <td class="inp" data-k="CG2-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG2-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG2-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG2-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">MH1</td>
+  <td class="inp" colspan="2" data-k="MH1-1" data-domain="MH" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="MH1-2" data-domain="MH" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CL1</td>
+  <td class="inp" colspan="2" data-k="CL1-1" data-domain="CL" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="CL1-2" data-domain="CL" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HC1</td>
+  <td class="inp" data-k="HC1-1" data-domain="HC" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC1-2" data-domain="HC" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC1-3" data-domain="HC" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="HC1-4" data-domain="HC" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">DS1</td>
+  <td class="inp" colspan="2" data-k="DS1-1" data-domain="DS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="DS1-2" data-domain="DS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">HM1</td>
+  <td class="inp" colspan="2" data-k="HM1-1" data-domain="HM" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="HM1-2" data-domain="HM" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">LS1</td>
+  <td class="inp" colspan="2" data-k="LS1-1" data-domain="LS" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="LS1-2" data-domain="LS" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">KT1</td>
+  <td class="inp" colspan="2" data-k="KT1-1" data-domain="KT" data-score="1" data-option="Emerging / Partial" title="Emerging / Partial" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="KT1-2" data-domain="KT" data-score="2" data-option="Mastered / Independent" title="Mastered / Independent" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">CG1</td>
+  <td class="inp" data-k="CG1-1" data-domain="CG" data-score="1" data-option="Performs with full prompts" title="Performs with full prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG1-2" data-domain="CG" data-score="2" data-option="Performs with partial prompts" title="Performs with partial prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG1-3" data-domain="CG" data-score="3" data-option="Performs with minimal prompts" title="Performs with minimal prompts" onclick="applyColor(this)"></td>
+  <td class="inp" data-k="CG1-4" data-domain="CG" data-score="4" data-option="Performs independently / Mastered" title="Performs independently / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr class="foot-row">
+  <td class="foot-cell" colspan="5"><b>MH</b><br><span class="foot-name">Meal &amp; Food Handling</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>CL</b><br><span class="foot-name">Clothing &amp; Laundry</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>HC</b><br><span class="foot-name">Household Chores</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>DS</b><br><span class="foot-name">Domestic Skills</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>HM</b><br><span class="foot-name">Home Maintenance</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>LS</b><br><span class="foot-name">Leisure Skills</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>KT</b><br><span class="foot-name">Kitchen Skills</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>CG</b><br><span class="foot-name">Caregiver Skills</span></td>
+</tr>
+</tbody></table></div>
+
+
+</div>
+<div id="tip"></div>
+<div id="vbStickyStatus">VB: not loaded</div>
+
+<!-- Manual color + notes (same as ABLLS grid.html) -->
+<script>
+let ac=0; const st={};
+document.querySelectorAll('.pb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.pb').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); ac=+b.dataset.c;
+  });
+});
+document.getElementById('clrAll').addEventListener('click',()=>{
+  if(!confirm('Clear all colors and notes?'))return;
+  document.querySelectorAll('td.inp').forEach(t=>{
+    t.className='inp';
+    const d=t.querySelector('.ndot'); if(d) d.style.display='none';
+    delete st[t.dataset.k];
+  });
+  save();
+});
+function applyColor(td){
+  const k=td.dataset.k;
+  if(!st[k])st[k]={};
+  st[k].ci=ac; td.className='inp c'+ac;
+  const d=td.querySelector('.ndot');
+  if(d&&(st[k]||{}).note) d.style.display='block';
+  save();
+}
+window.applyColor=applyColor;
+document.addEventListener('dblclick',e=>{
+  const t=e.target.closest('td.inp'); if(!t)return;
+  const k=t.dataset.k;
+  const cur=(st[k]||{}).note||'';
+  const lbl=k.replace(/-\d+$/,'');
+  const note=prompt('Note for '+lbl+':',cur);
+  if(note===null)return;
+  if(!st[k])st[k]={};
+  st[k].note=note.trim();
+  let d=t.querySelector('.ndot');
+  if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
+  d.style.display=note.trim()?'block':'none';
+  save();
+});
+const tip=document.getElementById('tip');
+document.addEventListener('mouseover',e=>{
+  const t=e.target.closest('td.inp');
+  if(!t){tip.style.display='none';return;}
+  const k=t.dataset.k;
+  const note=(st[k]||{}).note;
+  const option=t.dataset.option||'';
+  const score=t.dataset.score||'';
+  let txt=option?'Score '+score+': '+option:'';
+  if(note) txt+=(txt?'\n\nNote: ':'Note: ')+note;
+  if(!txt){tip.style.display='none';return;}
+  tip.textContent=txt; tip.style.display='block';
+});
+document.addEventListener('mousemove',e=>{
+  tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+10)+'px';
+});
+document.addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||!e.relatedTarget.closest('td.inp')) tip.style.display='none';
+});
+function save(){
+  const fields={};
+  document.querySelectorAll('input[type=text]').forEach((inp,i)=>fields[i]=inp.value);
+  try{localStorage.setItem('afls_home_v1',JSON.stringify({st,fields}));}catch(e){}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem('afls_home_v1'); if(!raw)return;
+    const p=JSON.parse(raw);
+    if(p.fields) document.querySelectorAll('input[type=text]').forEach((inp,i)=>{
+      if(p.fields[i]) inp.value=p.fields[i];
+    });
+    if(p.st){
+      Object.assign(st,p.st);
+      Object.entries(st).forEach(([k,v])=>{
+        const t=document.querySelector('td.inp[data-k="'+k+'"]'); if(!t)return;
+        if(v.ci!==undefined) t.className='inp c'+v.ci;
+        if(v.note){
+          let d=t.querySelector('.ndot');
+          if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
+          d.style.display='block';
+        }
+      });
+    }
+  }catch(e){}
+}
+document.querySelectorAll('input[type=text]').forEach(inp=>inp.addEventListener('input',save));
+load();
+</script>
+
+<!-- VB Mapping Engine (same logic as ABLLS grid.html) -->
+<script>
+const VB_BASE = 4;
+const VB_GRADIENT = ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'];
+const VB_EMPTY = '#ffffff';
+const VB_PALETTES = {
+  red:    ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'],
+  blue:   ['#1e3a5f', '#2563eb', '#60a5fa', '#93c5fd'],
+  green:  ['#14532d', '#16a34a', '#4ade80', '#86efac'],
+  purple: ['#581c87', '#9333ea', '#c084fc', '#d8b4fe'],
+  amber:  ['#78350f', '#d97706', '#fbbf24', '#fcd34d'],
+  teal:   ['#134e4a', '#0d9488', '#2dd4bf', '#5eead4'],
+};
+const GRID_DOMAINS = [{"code":"MH","name":"Meal & Food Handling"},{"code":"CL","name":"Clothing & Laundry"},{"code":"HC","name":"Household Chores"},{"code":"DS","name":"Domestic Skills"},{"code":"HM","name":"Home Maintenance"},{"code":"LS","name":"Leisure Skills"},{"code":"KT","name":"Kitchen Skills"},{"code":"CG","name":"Caregiver Skills"}];
+const domainColorMap = {};
+const DOMAIN_COLOR_KEY = 'afls_home_domainColors';
+
+function getGradientForDomain(domainCode) {
+  const palName = domainColorMap[domainCode] || 'red';
+  return VB_PALETTES[palName] || VB_PALETTES.red;
+}
+function saveDomainColors() {
+  try { localStorage.setItem(DOMAIN_COLOR_KEY, JSON.stringify(domainColorMap)); } catch(e) {}
+}
+function loadDomainColors() {
+  try {
+    const raw = localStorage.getItem(DOMAIN_COLOR_KEY);
+    if (raw) Object.assign(domainColorMap, JSON.parse(raw));
+  } catch(e) {}
+}
+loadDomainColors();
+
+// Populate domain select
+const domainSelect = document.getElementById('domainSelect');
+GRID_DOMAINS.forEach(d => {
+  const opt = document.createElement('option');
+  opt.value = d.code;
+  opt.textContent = d.code + ' — ' + d.name;
+  domainSelect.appendChild(opt);
+});
+
+// Palette swatch selection
+let selectedPalette = domainColorMap[GRID_DOMAINS[0]?.code] || 'red';
+document.querySelectorAll('.dm-pal').forEach(swatch => {
+  if (swatch.dataset.pal === selectedPalette) swatch.classList.add('sel');
+  swatch.addEventListener('click', () => {
+    document.querySelectorAll('.dm-pal').forEach(s => s.classList.remove('sel'));
+    swatch.classList.add('sel');
+    selectedPalette = swatch.dataset.pal;
+    const domCode = domainSelect.value;
+    if (domCode) {
+      domainColorMap[domCode] = selectedPalette;
+      saveDomainColors();
+      repaintVBFromStorage();
+    }
+  });
+});
+
+domainSelect.addEventListener('change', () => {
+  const pal = domainColorMap[domainSelect.value] || 'red';
+  document.querySelectorAll('.dm-pal').forEach(s => {
+    s.classList.toggle('sel', s.dataset.pal === pal);
+  });
+  selectedPalette = pal;
+});
+
+function repaintVBFromStorage() {
+  const params = new URLSearchParams(window.location.search || '');
+  const sk = params.get('storageKey') || 'afls_grid_payload';
+  try {
+    const raw = window.localStorage.getItem(sk);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed.answers && parsed.scoreMap) paintVB(parsed.answers, parsed.scoreMap);
+  } catch(e) {}
+}
+
+function resolveVBMax(rawMax) {
+  if (rawMax <= 2) return 2;  // 0-1 and 0-2 both use paired (2-cell) mode
+  return 4;
+}
+
+function clampVBScore(score, max) {
+  const n = Number.isFinite(Number(score)) ? Number(score) : 0;
+  return Math.max(0, Math.min(n, max));
+}
+
+function normalizeVBScore(score, max) {
+  if (max <= 1) return score * 4;  // 0-1: score 1 → 4 (fills both paired cells)
+  if (max === 2) return score * 2;  // 0-2: score 2 → 4
+  return score;                     // 0-4: direct
+}
+
+function mapQuestionToVB(question, rawScore, rawMax) {
+  const max = resolveVBMax(rawMax);
+  const score = clampVBScore(rawScore, max);
+  const normalized = normalizeVBScore(score, max);
+  const threshold = VB_BASE - normalized + 1;
+  const filledMap = [false, false, false, false];
+  const filledUnits = [];
+
+  for (let i = 1; i <= VB_BASE; i++) {
+    if (i >= threshold) {
+      filledMap[i - 1] = true;
+      filledUnits.push(i);
+    }
+  }
+
+  return {
+    question,
+    score,
+    max,
+    normalized,
+    threshold,
+    filledUnits,
+    filledMap,
+    pairedFillMap: [filledMap[0] || filledMap[1], filledMap[2] || filledMap[3]],
+  };
+}
+
+function mapAnswersToVB(answers, scoreMap) {
+  const keys = Array.from(new Set([...Object.keys(scoreMap || {}), ...Object.keys(answers || {})]));
+  return keys
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .map((q) => mapQuestionToVB(q, answers?.[q] ?? 0, scoreMap?.[q]));
+}
+
+function buildScoreTypeMapFromGrid() {
+  const scoreMap = {};
+  document.querySelectorAll('td.inp[data-k][data-score]').forEach((cell) => {
+    const key = cell.getAttribute('data-k') || '';
+    const q = key.split('-')[0];
+    const score = Number(cell.getAttribute('data-score') || '0');
+    if (!q || score <= 0) return;
+    scoreMap[q] = Math.max(scoreMap[q] || 0, score);
+  });
+  Object.keys(scoreMap).forEach((q) => {
+    scoreMap[q] = resolveVBMax(scoreMap[q]);
+  });
+  return scoreMap;
+}
+
+function hydrateVBDataAttributes() {
+  document.querySelectorAll('td.inp[data-k]').forEach((cell) => {
+    if (!cell.getAttribute('data-vb')) {
+      cell.setAttribute('data-vb', cell.getAttribute('data-k'));
+    }
+  });
+}
+
+function getQuestionCells(questionId) {
+  const vbCells = Array.from(document.querySelectorAll('td.inp[data-vb^="' + questionId + '-"]'));
+  const source = vbCells.length > 0 ? vbCells : Array.from(document.querySelectorAll('td.inp[data-k^="' + questionId + '-"]'));
+  return source
+    .sort((a, b) => {
+      const sa = Number(a.getAttribute('data-score') || '0');
+      const sb = Number(b.getAttribute('data-score') || '0');
+      return sa - sb;
+    });
+}
+
+function paintVB(answers, scoreMap) {
+  const resolvedScoreMap = scoreMap || buildScoreTypeMapFromGrid();
+  const mappedRows = mapAnswersToVB(answers || {}, resolvedScoreMap);
+  let paintedCount = 0;
+  let firstFilledCell = null;
+
+  mappedRows.forEach((row) => {
+    const cells = getQuestionCells(row.question);
+    if (cells.length === 0) return;
+    const domCode = (cells[0] && cells[0].getAttribute('data-domain')) || '';
+    const gradient = getGradientForDomain(domCode);
+
+    cells.forEach((cell) => {
+      cell.classList.remove('c0', 'c1', 'c2', 'c3', 'c4', 'vb-filled', 'vb-empty');
+      cell.classList.add('vb-empty');
+      cell.style.background = VB_EMPTY;
+    });
+
+    if (cells.length === 1) {
+      if (row.score > 0) {
+        cells[0].classList.remove('vb-empty');
+        cells[0].classList.add('vb-filled');
+        cells[0].style.background = gradient[3];
+        if (!firstFilledCell) firstFilledCell = cells[0];
+        paintedCount++;
+      }
+      return;
+    }
+
+    if (row.max === 2 && cells.length >= 2) {
+      if (row.pairedFillMap[0]) {
+        cells[0].classList.remove('vb-empty');
+        cells[0].classList.add('vb-filled');
+        cells[0].style.background = gradient[0];
+        if (!firstFilledCell) firstFilledCell = cells[0];
+        paintedCount++;
+      }
+      if (row.pairedFillMap[1]) {
+        cells[1].classList.remove('vb-empty');
+        cells[1].classList.add('vb-filled');
+        cells[1].style.background = gradient[3];
+        if (!firstFilledCell) firstFilledCell = cells[1];
+        paintedCount++;
+      }
+      return;
+    }
+
+    for (let i = 0; i < Math.min(4, cells.length); i++) {
+      if (row.filledMap[i]) {
+        cells[i].classList.remove('vb-empty');
+        cells[i].classList.add('vb-filled');
+        cells[i].style.background = gradient[i];
+        if (!firstFilledCell) firstFilledCell = cells[i];
+        paintedCount++;
+      }
+    }
+  });
+
+  const status = document.getElementById('mockStatus');
+  if (status) {
+    status.textContent = 'Status: loaded ' + mappedRows.length + ' questions, painted ' + paintedCount + ' cells';
+    status.style.color = '#0b6b2a';
+  }
+  const sticky = document.getElementById('vbStickyStatus');
+  if (sticky) {
+    sticky.textContent = 'VB loaded (' + paintedCount + ' cells)';
+    sticky.style.color = '#14532d';
+    sticky.style.background = '#dcfce7';
+    sticky.style.borderColor = '#86efac';
+  }
+  if (firstFilledCell) {
+    firstFilledCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return mappedRows;
+}
+
+function generateVBTable(answers, scoreMap) {
+  const rows = mapAnswersToVB(answers, scoreMap);
+  let html = '<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse;font-family:monospace;font-size:11px">';
+  html += '<tr style="background:#f0f0f0"><th>Question</th><th>Score</th><th>Max</th>';
+  for (let i = 1; i <= VB_BASE; i++) html += '<th style="width:30px">' + i + '</th>';
+  html += '</tr>';
+  rows.forEach(r => {
+    html += '<tr><td>' + r.question + '</td><td>' + r.score + '</td><td>' + r.max + '</td>';
+    for (let i = 0; i < VB_BASE; i++) {
+      const bg = r.filledMap[i] ? VB_GRADIENT[i] : '#fff';
+      html += '<td style="background:' + bg + '"></td>';
+    }
+    html += '</tr>';
+  });
+  html += '</table>';
+  return html;
+}
+
+function downloadVBTable(answers, scoreMap) {
+  const html =
+    '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>VB Mapping Export</title></head><body>' +
+    generateVBTable(answers, scoreMap) +
+    '</body></html>';
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'afls-vb-mapping-export.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function loadExportedPayloadFromStorage() {
+  const params = new URLSearchParams(window.location.search || '');
+  const mode = params.get('autoload');
+  if (mode !== 'latest' && mode !== '1' && mode !== 'true') {
+    return false;
+  }
+
+  const storageKey = params.get('storageKey') || 'afls_grid_payload';
+
+  try {
+    const raw = window.localStorage.getItem(storageKey);
+    if (!raw) return false;
+
+    const parsed = JSON.parse(raw);
+    const answers = parsed && parsed.answers;
+    const scoreMap = parsed && parsed.scoreMap;
+
+    if (!answers || !scoreMap || typeof answers !== 'object' || typeof scoreMap !== 'object') {
+      return false;
+    }
+
+    const rows = paintVB(answers, scoreMap);
+    if (!rows || rows.length === 0) return false;
+
+    const status = document.getElementById('mockStatus');
+    if (status) {
+      status.textContent = 'Status: autoloaded export (' + rows.length + ' questions)';
+      status.style.color = '#0b6b2a';
+    }
+
+    const sticky = document.getElementById('vbStickyStatus');
+    if (sticky) {
+      sticky.textContent = 'VB autoloaded from export';
+      sticky.style.color = '#14532d';
+      sticky.style.background = '#dcfce7';
+      sticky.style.borderColor = '#86efac';
+    }
+
+    return true;
+  } catch (err) {
+    console.warn('Failed to autoload export payload:', err);
+    return false;
+  }
+}
+
+hydrateVBDataAttributes();
+const autoloaded = loadExportedPayloadFromStorage();
+if (!autoloaded) {
+  console.log('No autoload payload found. Use file upload or questionnaire export.');
+}
+console.log('AFLS Grid v1 ready — Home Skills');
+</script>
+</body>
+</html>

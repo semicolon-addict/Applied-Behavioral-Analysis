@@ -32,7 +32,9 @@ export default function ParentDashboardPage() {
   }, [firestore, user, child, questionnaireSubmitted]);
   const { data: questionnaires, isLoading: isLoadingQuestionnaires } = useCollection<Questionnaire>(questionnairesQuery);
 
-  const messages = mockMessages.filter(m => m.to === 'user-2' || m.from === 'user-2');
+  const messages = user
+    ? mockMessages.filter((m) => m.to === user.uid || m.from === user.uid)
+    : [];
 
   const isLoading = isUserLoadingAuth || isLoadingChildren || (childrenData && childrenData.length > 0 && (isLoadingAssessments || isLoadingQuestionnaires));
 

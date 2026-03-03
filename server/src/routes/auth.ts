@@ -27,10 +27,11 @@ router.get('/health', (_req: Request, res: Response) => {
  */
 router.get('/roles', (_req: Request, res: Response) => {
     res.json({
-        roles: ['Parent', 'Clinician', 'Super Admin'],
+        roles: ['Parent', 'Clinician', 'Admin', 'Super Admin'],
         description: {
             'Parent': 'Access limited to personal data and relevant resources',
             'Clinician': 'Access to assigned patient data and clinical functionalities',
+            'Admin': 'Administrative access to user and platform management',
             'Super Admin': 'Full system access, including user and role management'
         }
     });

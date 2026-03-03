@@ -15,8 +15,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useFirestore, setDocumentNonBlocking, useUser } from '@/firebase';
-import { doc, serverTimestamp } from 'firebase/firestore';
+import { useFirestore, useUser } from '@/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Child } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -86,10 +86,14 @@ export function QuestionnaireForm({ child, onFormSubmit }: QuestionnaireFormProp
         parentId: user.uid,
         createdAt: new Date().toISOString(),
     };
-    
-    setDocumentNonBlocking(questionnaireRef, data, { merge: false });
-    toast({ title: 'Success', description: 'Questionnaire submitted successfully!' });
-    onFormSubmit();
+
+    try {
+      await setDoc(questionnaireRef, data, { merge: false });
+      toast({ title: 'Success', description: 'Questionnaire submitted successfully!' });
+      onFormSubmit();
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Submission Failed', description: error.message || 'Could not save questionnaire.' });
+    }
   }
 
   return (
@@ -148,7 +152,7 @@ export function QuestionnaireForm({ child, onFormSubmit }: QuestionnaireFormProp
                 <h2 className="text-lg font-semibold text-accent-foreground border-b pb-2">Goals</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField control={form.control} name="goals" render={({ field }) => (
-                        <FormItem><FormLabel>Family’s Top Goals</FormLabel><FormControl><Textarea rows={3} placeholder="List your main treatment goals..." {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel>Family's Top Goals</FormLabel><FormControl><Textarea rows={3} placeholder="List your main treatment goals..." {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="comments" render={({ field }) => (
                         <FormItem><FormLabel>Additional Comments (Optional)</FormLabel><FormControl><Textarea rows={2} placeholder="Any extra notes or comments..." {...field} /></FormControl><FormMessage /></FormItem>

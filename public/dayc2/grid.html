@@ -1,0 +1,3527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DAYC-2 Grading Grid</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;background:#fff}
+.wrap{max-width:1600px;margin:0 auto;padding:12px 14px}
+.toolbar{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f5f5;
+  border:1px solid #ddd;border-radius:4px;margin-bottom:12px;flex-wrap:wrap}
+.pb{width:22px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer}
+.pb.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+.cbtn{font-size:8pt;padding:3px 8px;border:1px solid #999;border-radius:3px;cursor:pointer;background:#fff}
+.cbtn:hover{background:#eee}
+.bigT{font-size:13pt;font-weight:normal;text-align:center}
+.subT{font-size:10.5pt;font-weight:normal;text-align:center;margin-bottom:6px}
+.fline{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:3px}
+.fl label{font-size:9pt;white-space:nowrap}
+.fl input{border:none;border-bottom:1px solid #444;outline:none;font-size:9pt;padding:1px 2px;background:transparent}
+.gscroll{overflow-x:auto;margin-top:5px}
+table.g{border-collapse:collapse;table-layout:fixed}
+td.lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid #000;background:#f0f0f0;
+  font-size:5.8pt;font-weight:bold;text-align:center;vertical-align:middle;padding:0;white-space:nowrap}
+td.inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid #000;background:#fff;
+  cursor:pointer;padding:0;user-select:none;position:relative}
+.score1{background:#7f1d1d!important}
+.score2{background:#b91c1c!important}
+.score3{background:#ef4444!important}
+.score4{background:#fca5a5!important}
+.inp.vb-filled{}
+.inp.vb-empty{background:#fff!important}
+td.inp[colspan="2"]{width:10mm;min-width:10mm}
+td.inp[colspan="4"]{width:20mm;min-width:20mm}
+td.inp:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.88)}
+td.off-lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
+td.off-inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
+td.gap{width:3mm;min-width:3mm;border:none;background:#fff;padding:0}
+td.ltr-hdr{font-weight:bold;font-size:9.5pt;text-align:center;
+  border:1px solid #111;background:#fff;height:17px;padding:0}
+td.name-hdr{font-size:5.8pt;line-height:1.25;text-align:center;
+  border:1px solid #222;background:#f0f0f0;padding:2px 1px}
+td.foot-cell{border:1px solid #666;border-top:2px solid #333;background:#ebebeb;
+  font-size:7pt;font-weight:bold;text-align:center;vertical-align:top;padding:2px 1px;line-height:1.3}
+.foot-name{font-size:5.5pt;font-weight:normal}
+.c0{background:#fff!important}.c1{background:#c0c0c0!important}
+.c2{background:#ffff00!important}.c3{background:#ffa500!important}
+.c4{background:#00cc44!important}
+.ndot{position:absolute;top:1px;right:1px;width:4px;height:4px;border-radius:50%;
+  background:#1a56db;display:none;pointer-events:none}
+#tip{display:none;position:fixed;background:#fffde7;border:1px solid #bbb;
+  padding:4px 8px;font-size:8pt;border-radius:3px;z-index:9999;
+  pointer-events:none;max-width:260px;white-space:pre-wrap;line-height:1.4}
+#vbStickyStatus{
+  position:fixed;right:12px;bottom:12px;z-index:9999;
+  font-size:11px;font-weight:bold;padding:6px 10px;border-radius:6px;
+  color:#14532d;background:#dcfce7;border:1px solid #86efac;
+  box-shadow:0 2px 6px rgba(0,0,0,.1)
+}
+.dm-toolbar{margin-bottom:4px}
+.dm-pal{width:40px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer;display:inline-block}
+.dm-pal.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+@media print{
+  .toolbar{display:none}
+  #vbStickyStatus{display:none}
+  td.lbl{width:14mm;min-width:14mm;height:5mm}
+  td.inp{width:5mm;min-width:5mm;height:5mm}
+  td.inp[colspan="2"]{width:10mm;min-width:10mm}
+  td.inp[colspan="4"]{width:20mm;min-width:20mm}
+  td.off-lbl{width:14mm;min-width:14mm;height:5mm}
+  td.off-inp{width:5mm;min-width:5mm;height:5mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="toolbar">
+  <span style="font-size:8pt;font-weight:bold">Color:</span>
+  <div class="pb c0 sel" data-c="0" title="White / Clear"></div>
+  <div class="pb c1" data-c="1" title="Gray"></div>
+  <div class="pb c2" data-c="2" title="Yellow"></div>
+  <div class="pb c3" data-c="3" title="Orange"></div>
+  <div class="pb c4" data-c="4" title="Green"></div>
+  <button class="cbtn" id="clrAll">Clear All</button>
+  <span style="font-size:7.5pt;color:#14532d;font-weight:bold">DAYC-2 Grid v1</span>
+  <span id="mockStatus" style="font-size:7.5pt;color:#0b6b2a;font-weight:bold">Status: not loaded</span>
+  <span style="font-size:7.5pt;color:#555">Click = apply color &nbsp;|&nbsp; Dbl-click = add note</span>
+</div>
+<div class="toolbar dm-toolbar">
+  <span style="font-size:8pt;font-weight:bold">Domain VB Color:</span>
+  <select id="domainSelect" style="font-size:8pt;padding:2px 4px"></select>
+  <div class="dm-pal" data-pal="red" title="Red (default)" style="background:linear-gradient(90deg,#7f1d1d,#fca5a5)"></div>
+  <div class="dm-pal" data-pal="blue" title="Blue" style="background:linear-gradient(90deg,#1e3a5f,#93c5fd)"></div>
+  <div class="dm-pal" data-pal="green" title="Green" style="background:linear-gradient(90deg,#14532d,#86efac)"></div>
+  <div class="dm-pal" data-pal="purple" title="Purple" style="background:linear-gradient(90deg,#581c87,#d8b4fe)"></div>
+  <div class="dm-pal" data-pal="amber" title="Amber" style="background:linear-gradient(90deg,#78350f,#fcd34d)"></div>
+  <div class="dm-pal" data-pal="teal" title="Teal" style="background:linear-gradient(90deg,#134e4a,#5eead4)"></div>
+</div>
+
+<div class="bigT">Developmental Assessment of Young Children — 2nd Edition</div>
+<div class="subT">DAYC-2 — 7 Domains · 328 Questions</div>
+<div class="fline" style="margin-top:6px">
+  <div class="fl"><label>Child: <input type="text" style="width:190px" id="p1s"/></label></div>
+  <div class="fl"><label>Assessor: <input type="text" style="width:140px" id="p1a"/></label></div>
+  <div class="fl"><label>Date: <input type="text" style="width:90px" id="p1d"/></label></div>
+</div>
+
+<div class="gscroll"><table class="g"><tbody>
+<tr>
+  <td class="ltr-hdr" colspan="5">COG</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">SE</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">AB</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">GM</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">FM</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">RL</td>
+  <td class="gap"></td>
+  <td class="ltr-hdr" colspan="5">EL</td>
+</tr>
+<tr>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Cognitive</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Social-Emotional</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Adaptive Behavior</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Gross Motor</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Fine Motor</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Receptive Language</td>
+  <td class="gap"></td>
+  <td class="name-hdr" colspan="5" style="white-space:pre-line">Expressive Language</td>
+</tr>
+<tr>
+  <td class="lbl">COG87</td>
+  <td class="inp" colspan="2" data-k="COG87-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG87-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG86</td>
+  <td class="inp" colspan="2" data-k="COG86-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG86-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG85</td>
+  <td class="inp" colspan="2" data-k="COG85-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG85-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG84</td>
+  <td class="inp" colspan="2" data-k="COG84-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG84-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG83</td>
+  <td class="inp" colspan="2" data-k="COG83-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG83-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG82</td>
+  <td class="inp" colspan="2" data-k="COG82-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG82-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG81</td>
+  <td class="inp" colspan="2" data-k="COG81-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG81-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG80</td>
+  <td class="inp" colspan="2" data-k="COG80-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG80-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG79</td>
+  <td class="inp" colspan="2" data-k="COG79-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG79-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG78</td>
+  <td class="inp" colspan="2" data-k="COG78-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG78-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG77</td>
+  <td class="inp" colspan="2" data-k="COG77-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG77-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG76</td>
+  <td class="inp" colspan="2" data-k="COG76-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG76-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG75</td>
+  <td class="inp" colspan="2" data-k="COG75-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG75-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG73</td>
+  <td class="inp" colspan="2" data-k="COG73-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG73-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG72</td>
+  <td class="inp" colspan="2" data-k="COG72-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG72-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG70</td>
+  <td class="inp" colspan="2" data-k="COG70-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG70-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG69</td>
+  <td class="inp" colspan="2" data-k="COG69-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG69-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG68</td>
+  <td class="inp" colspan="2" data-k="COG68-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG68-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG67</td>
+  <td class="inp" colspan="2" data-k="COG67-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG67-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG66</td>
+  <td class="inp" colspan="2" data-k="COG66-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG66-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG65</td>
+  <td class="inp" colspan="2" data-k="COG65-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG65-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG64</td>
+  <td class="inp" colspan="2" data-k="COG64-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG64-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG63</td>
+  <td class="inp" colspan="2" data-k="COG63-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG63-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG62</td>
+  <td class="inp" colspan="2" data-k="COG62-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG62-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG61</td>
+  <td class="inp" colspan="2" data-k="COG61-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG61-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG60</td>
+  <td class="inp" colspan="2" data-k="COG60-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG60-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG59</td>
+  <td class="inp" colspan="2" data-k="COG59-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG59-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG58</td>
+  <td class="inp" colspan="2" data-k="COG58-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG58-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG57</td>
+  <td class="inp" colspan="2" data-k="COG57-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG57-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG56</td>
+  <td class="inp" colspan="2" data-k="COG56-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG56-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG55</td>
+  <td class="inp" colspan="2" data-k="COG55-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG55-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG54</td>
+  <td class="inp" colspan="2" data-k="COG54-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG54-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB85</td>
+  <td class="inp" colspan="2" data-k="AB85-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB85-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG53</td>
+  <td class="inp" colspan="2" data-k="COG53-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG53-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB64</td>
+  <td class="inp" colspan="2" data-k="AB64-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB64-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG52</td>
+  <td class="inp" colspan="2" data-k="COG52-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG52-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB63</td>
+  <td class="inp" colspan="2" data-k="AB63-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB63-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM85</td>
+  <td class="inp" colspan="2" data-k="GM85-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM85-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG51</td>
+  <td class="inp" colspan="2" data-k="COG51-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG51-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB62</td>
+  <td class="inp" colspan="2" data-k="AB62-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB62-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM54</td>
+  <td class="inp" colspan="2" data-k="GM54-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM54-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG50</td>
+  <td class="inp" colspan="2" data-k="COG50-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG50-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB61</td>
+  <td class="inp" colspan="2" data-k="AB61-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB61-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM53</td>
+  <td class="inp" colspan="2" data-k="GM53-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM53-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG49</td>
+  <td class="inp" colspan="2" data-k="COG49-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG49-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB60</td>
+  <td class="inp" colspan="2" data-k="AB60-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB60-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM52</td>
+  <td class="inp" colspan="2" data-k="GM52-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM52-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG48</td>
+  <td class="inp" colspan="2" data-k="COG48-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG48-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB58</td>
+  <td class="inp" colspan="2" data-k="AB58-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB58-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM51</td>
+  <td class="inp" colspan="2" data-k="GM51-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM51-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG47</td>
+  <td class="inp" colspan="2" data-k="COG47-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG47-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB57</td>
+  <td class="inp" colspan="2" data-k="AB57-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB57-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM50</td>
+  <td class="inp" colspan="2" data-k="GM50-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM50-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG46</td>
+  <td class="inp" colspan="2" data-k="COG46-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG46-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB55</td>
+  <td class="inp" colspan="2" data-k="AB55-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB55-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM49</td>
+  <td class="inp" colspan="2" data-k="GM49-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM49-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG45</td>
+  <td class="inp" colspan="2" data-k="COG45-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG45-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB54</td>
+  <td class="inp" colspan="2" data-k="AB54-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB54-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM48</td>
+  <td class="inp" colspan="2" data-k="GM48-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM48-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG44</td>
+  <td class="inp" colspan="2" data-k="COG44-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG44-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB52</td>
+  <td class="inp" colspan="2" data-k="AB52-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB52-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM47</td>
+  <td class="inp" colspan="2" data-k="GM47-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM47-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG43</td>
+  <td class="inp" colspan="2" data-k="COG43-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG43-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB51</td>
+  <td class="inp" colspan="2" data-k="AB51-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB51-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM46</td>
+  <td class="inp" colspan="2" data-k="GM46-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM46-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG42</td>
+  <td class="inp" colspan="2" data-k="COG42-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG42-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB50</td>
+  <td class="inp" colspan="2" data-k="AB50-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB50-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM45</td>
+  <td class="inp" colspan="2" data-k="GM45-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM45-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG41</td>
+  <td class="inp" colspan="2" data-k="COG41-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG41-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB49</td>
+  <td class="inp" colspan="2" data-k="AB49-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB49-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM44</td>
+  <td class="inp" colspan="2" data-k="GM44-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM44-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG40</td>
+  <td class="inp" colspan="2" data-k="COG40-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG40-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB48</td>
+  <td class="inp" colspan="2" data-k="AB48-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB48-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM43</td>
+  <td class="inp" colspan="2" data-k="GM43-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM43-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG39</td>
+  <td class="inp" colspan="2" data-k="COG39-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG39-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB47</td>
+  <td class="inp" colspan="2" data-k="AB47-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB47-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM42</td>
+  <td class="inp" colspan="2" data-k="GM42-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM42-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG38</td>
+  <td class="inp" colspan="2" data-k="COG38-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG38-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE58</td>
+  <td class="inp" colspan="2" data-k="SE58-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE58-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB45</td>
+  <td class="inp" colspan="2" data-k="AB45-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB45-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM41</td>
+  <td class="inp" colspan="2" data-k="GM41-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM41-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+</tr>
+<tr>
+  <td class="lbl">COG37</td>
+  <td class="inp" colspan="2" data-k="COG37-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG37-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE57</td>
+  <td class="inp" colspan="2" data-k="SE57-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE57-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB44</td>
+  <td class="inp" colspan="2" data-k="AB44-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB44-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM39</td>
+  <td class="inp" colspan="2" data-k="GM39-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM39-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL40</td>
+  <td class="inp" colspan="2" data-k="EL40-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL40-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG36</td>
+  <td class="inp" colspan="2" data-k="COG36-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG36-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE56</td>
+  <td class="inp" colspan="2" data-k="SE56-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE56-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB43</td>
+  <td class="inp" colspan="2" data-k="AB43-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB43-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM38</td>
+  <td class="inp" colspan="2" data-k="GM38-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM38-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL39</td>
+  <td class="inp" colspan="2" data-k="EL39-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL39-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG35</td>
+  <td class="inp" colspan="2" data-k="COG35-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG35-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE54</td>
+  <td class="inp" colspan="2" data-k="SE54-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE54-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB42</td>
+  <td class="inp" colspan="2" data-k="AB42-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB42-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM37</td>
+  <td class="inp" colspan="2" data-k="GM37-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM37-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL37</td>
+  <td class="inp" colspan="2" data-k="EL37-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL37-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG34</td>
+  <td class="inp" colspan="2" data-k="COG34-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG34-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE53</td>
+  <td class="inp" colspan="2" data-k="SE53-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE53-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB41</td>
+  <td class="inp" colspan="2" data-k="AB41-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB41-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM36</td>
+  <td class="inp" colspan="2" data-k="GM36-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM36-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL36</td>
+  <td class="inp" colspan="2" data-k="EL36-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL36-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG33</td>
+  <td class="inp" colspan="2" data-k="COG33-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG33-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE52</td>
+  <td class="inp" colspan="2" data-k="SE52-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE52-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB40</td>
+  <td class="inp" colspan="2" data-k="AB40-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB40-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM34</td>
+  <td class="inp" colspan="2" data-k="GM34-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM34-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM33</td>
+  <td class="inp" colspan="2" data-k="FM33-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM33-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL35</td>
+  <td class="inp" colspan="2" data-k="EL35-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL35-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG32</td>
+  <td class="inp" colspan="2" data-k="COG32-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG32-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE51</td>
+  <td class="inp" colspan="2" data-k="SE51-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE51-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB39</td>
+  <td class="inp" colspan="2" data-k="AB39-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB39-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM33</td>
+  <td class="inp" colspan="2" data-k="GM33-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM33-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM32</td>
+  <td class="inp" colspan="2" data-k="FM32-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM32-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL34</td>
+  <td class="inp" colspan="2" data-k="EL34-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL34-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG31</td>
+  <td class="inp" colspan="2" data-k="COG31-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG31-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE50</td>
+  <td class="inp" colspan="2" data-k="SE50-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE50-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB36</td>
+  <td class="inp" colspan="2" data-k="AB36-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB36-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM31</td>
+  <td class="inp" colspan="2" data-k="GM31-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM31-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM31</td>
+  <td class="inp" colspan="2" data-k="FM31-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM31-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL33</td>
+  <td class="inp" colspan="2" data-k="EL33-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL33-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG30</td>
+  <td class="inp" colspan="2" data-k="COG30-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG30-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE49</td>
+  <td class="inp" colspan="2" data-k="SE49-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE49-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB34</td>
+  <td class="inp" colspan="2" data-k="AB34-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB34-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM30</td>
+  <td class="inp" colspan="2" data-k="GM30-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM30-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM30</td>
+  <td class="inp" colspan="2" data-k="FM30-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM30-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="off-lbl"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="off-inp"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL32</td>
+  <td class="inp" colspan="2" data-k="EL32-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL32-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG29</td>
+  <td class="inp" colspan="2" data-k="COG29-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG29-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE48</td>
+  <td class="inp" colspan="2" data-k="SE48-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE48-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB33</td>
+  <td class="inp" colspan="2" data-k="AB33-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB33-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM29</td>
+  <td class="inp" colspan="2" data-k="GM29-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM29-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM29</td>
+  <td class="inp" colspan="2" data-k="FM29-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM29-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL36</td>
+  <td class="inp" colspan="2" data-k="RL36-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL36-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL31</td>
+  <td class="inp" colspan="2" data-k="EL31-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL31-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG28</td>
+  <td class="inp" colspan="2" data-k="COG28-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG28-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE28</td>
+  <td class="inp" colspan="2" data-k="SE28-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE28-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB32</td>
+  <td class="inp" colspan="2" data-k="AB32-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB32-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM28</td>
+  <td class="inp" colspan="2" data-k="GM28-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM28-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM28</td>
+  <td class="inp" colspan="2" data-k="FM28-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM28-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL35</td>
+  <td class="inp" colspan="2" data-k="RL35-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL35-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL30</td>
+  <td class="inp" colspan="2" data-k="EL30-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL30-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG27</td>
+  <td class="inp" colspan="2" data-k="COG27-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG27-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE27</td>
+  <td class="inp" colspan="2" data-k="SE27-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE27-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB31</td>
+  <td class="inp" colspan="2" data-k="AB31-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB31-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM27</td>
+  <td class="inp" colspan="2" data-k="GM27-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM27-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM27</td>
+  <td class="inp" colspan="2" data-k="FM27-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM27-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL33</td>
+  <td class="inp" colspan="2" data-k="RL33-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL33-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL29</td>
+  <td class="inp" colspan="2" data-k="EL29-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL29-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG26</td>
+  <td class="inp" colspan="2" data-k="COG26-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG26-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE26</td>
+  <td class="inp" colspan="2" data-k="SE26-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE26-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB30</td>
+  <td class="inp" colspan="2" data-k="AB30-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB30-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM26</td>
+  <td class="inp" colspan="2" data-k="GM26-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM26-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM26</td>
+  <td class="inp" colspan="2" data-k="FM26-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM26-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL32</td>
+  <td class="inp" colspan="2" data-k="RL32-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL32-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL28</td>
+  <td class="inp" colspan="2" data-k="EL28-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL28-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG25</td>
+  <td class="inp" colspan="2" data-k="COG25-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG25-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE25</td>
+  <td class="inp" colspan="2" data-k="SE25-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE25-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB29</td>
+  <td class="inp" colspan="2" data-k="AB29-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB29-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM25</td>
+  <td class="inp" colspan="2" data-k="GM25-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM25-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM25</td>
+  <td class="inp" colspan="2" data-k="FM25-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM25-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL31</td>
+  <td class="inp" colspan="2" data-k="RL31-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL31-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL27</td>
+  <td class="inp" colspan="2" data-k="EL27-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL27-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG24</td>
+  <td class="inp" colspan="2" data-k="COG24-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG24-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE24</td>
+  <td class="inp" colspan="2" data-k="SE24-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE24-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB28</td>
+  <td class="inp" colspan="2" data-k="AB28-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB28-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM24</td>
+  <td class="inp" colspan="2" data-k="GM24-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM24-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM24</td>
+  <td class="inp" colspan="2" data-k="FM24-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM24-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL30</td>
+  <td class="inp" colspan="2" data-k="RL30-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL30-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL26</td>
+  <td class="inp" colspan="2" data-k="EL26-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL26-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG23</td>
+  <td class="inp" colspan="2" data-k="COG23-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG23-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE23</td>
+  <td class="inp" colspan="2" data-k="SE23-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE23-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB27</td>
+  <td class="inp" colspan="2" data-k="AB27-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB27-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM23</td>
+  <td class="inp" colspan="2" data-k="GM23-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM23-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM23</td>
+  <td class="inp" colspan="2" data-k="FM23-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM23-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL29</td>
+  <td class="inp" colspan="2" data-k="RL29-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL29-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL24</td>
+  <td class="inp" colspan="2" data-k="EL24-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL24-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG22</td>
+  <td class="inp" colspan="2" data-k="COG22-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG22-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE22</td>
+  <td class="inp" colspan="2" data-k="SE22-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE22-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB26</td>
+  <td class="inp" colspan="2" data-k="AB26-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB26-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM22</td>
+  <td class="inp" colspan="2" data-k="GM22-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM22-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM22</td>
+  <td class="inp" colspan="2" data-k="FM22-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM22-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL28</td>
+  <td class="inp" colspan="2" data-k="RL28-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL28-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL23</td>
+  <td class="inp" colspan="2" data-k="EL23-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL23-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG21</td>
+  <td class="inp" colspan="2" data-k="COG21-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG21-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE21</td>
+  <td class="inp" colspan="2" data-k="SE21-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE21-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB25</td>
+  <td class="inp" colspan="2" data-k="AB25-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB25-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM21</td>
+  <td class="inp" colspan="2" data-k="GM21-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM21-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM21</td>
+  <td class="inp" colspan="2" data-k="FM21-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM21-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL27</td>
+  <td class="inp" colspan="2" data-k="RL27-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL27-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL22</td>
+  <td class="inp" colspan="2" data-k="EL22-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL22-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG20</td>
+  <td class="inp" colspan="2" data-k="COG20-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG20-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE20</td>
+  <td class="inp" colspan="2" data-k="SE20-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE20-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB24</td>
+  <td class="inp" colspan="2" data-k="AB24-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB24-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM20</td>
+  <td class="inp" colspan="2" data-k="GM20-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM20-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM20</td>
+  <td class="inp" colspan="2" data-k="FM20-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM20-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL25</td>
+  <td class="inp" colspan="2" data-k="RL25-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL25-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL20</td>
+  <td class="inp" colspan="2" data-k="EL20-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL20-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG19</td>
+  <td class="inp" colspan="2" data-k="COG19-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG19-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE19</td>
+  <td class="inp" colspan="2" data-k="SE19-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE19-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB23</td>
+  <td class="inp" colspan="2" data-k="AB23-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB23-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM19</td>
+  <td class="inp" colspan="2" data-k="GM19-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM19-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM19</td>
+  <td class="inp" colspan="2" data-k="FM19-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM19-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL24</td>
+  <td class="inp" colspan="2" data-k="RL24-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL24-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL19</td>
+  <td class="inp" colspan="2" data-k="EL19-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL19-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG18</td>
+  <td class="inp" colspan="2" data-k="COG18-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG18-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE18</td>
+  <td class="inp" colspan="2" data-k="SE18-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE18-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB22</td>
+  <td class="inp" colspan="2" data-k="AB22-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB22-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM18</td>
+  <td class="inp" colspan="2" data-k="GM18-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM18-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM18</td>
+  <td class="inp" colspan="2" data-k="FM18-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM18-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL23</td>
+  <td class="inp" colspan="2" data-k="RL23-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL23-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL18</td>
+  <td class="inp" colspan="2" data-k="EL18-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL18-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG17</td>
+  <td class="inp" colspan="2" data-k="COG17-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG17-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE17</td>
+  <td class="inp" colspan="2" data-k="SE17-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE17-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB21</td>
+  <td class="inp" colspan="2" data-k="AB21-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB21-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM17</td>
+  <td class="inp" colspan="2" data-k="GM17-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM17-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM17</td>
+  <td class="inp" colspan="2" data-k="FM17-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM17-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL22</td>
+  <td class="inp" colspan="2" data-k="RL22-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL22-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL17</td>
+  <td class="inp" colspan="2" data-k="EL17-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL17-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG16</td>
+  <td class="inp" colspan="2" data-k="COG16-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG16-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE16</td>
+  <td class="inp" colspan="2" data-k="SE16-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE16-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB20</td>
+  <td class="inp" colspan="2" data-k="AB20-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB20-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM16</td>
+  <td class="inp" colspan="2" data-k="GM16-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM16-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM16</td>
+  <td class="inp" colspan="2" data-k="FM16-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM16-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL17</td>
+  <td class="inp" colspan="2" data-k="RL17-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL17-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL16</td>
+  <td class="inp" colspan="2" data-k="EL16-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL16-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG15</td>
+  <td class="inp" colspan="2" data-k="COG15-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG15-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE15</td>
+  <td class="inp" colspan="2" data-k="SE15-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE15-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB18</td>
+  <td class="inp" colspan="2" data-k="AB18-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB18-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM15</td>
+  <td class="inp" colspan="2" data-k="GM15-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM15-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM15</td>
+  <td class="inp" colspan="2" data-k="FM15-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM15-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL16</td>
+  <td class="inp" colspan="2" data-k="RL16-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL16-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL15</td>
+  <td class="inp" colspan="2" data-k="EL15-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL15-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG14</td>
+  <td class="inp" colspan="2" data-k="COG14-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG14-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE14</td>
+  <td class="inp" colspan="2" data-k="SE14-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE14-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB17</td>
+  <td class="inp" colspan="2" data-k="AB17-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB17-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM14</td>
+  <td class="inp" colspan="2" data-k="GM14-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM14-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM14</td>
+  <td class="inp" colspan="2" data-k="FM14-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM14-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL15</td>
+  <td class="inp" colspan="2" data-k="RL15-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL15-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL14</td>
+  <td class="inp" colspan="2" data-k="EL14-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL14-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG13</td>
+  <td class="inp" colspan="2" data-k="COG13-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG13-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE13</td>
+  <td class="inp" colspan="2" data-k="SE13-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE13-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB16</td>
+  <td class="inp" colspan="2" data-k="AB16-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB16-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM13</td>
+  <td class="inp" colspan="2" data-k="GM13-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM13-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM13</td>
+  <td class="inp" colspan="2" data-k="FM13-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM13-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL14</td>
+  <td class="inp" colspan="2" data-k="RL14-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL14-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL13</td>
+  <td class="inp" colspan="2" data-k="EL13-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL13-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG12</td>
+  <td class="inp" colspan="2" data-k="COG12-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG12-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE12</td>
+  <td class="inp" colspan="2" data-k="SE12-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE12-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB15</td>
+  <td class="inp" colspan="2" data-k="AB15-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB15-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM12</td>
+  <td class="inp" colspan="2" data-k="GM12-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM12-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM12</td>
+  <td class="inp" colspan="2" data-k="FM12-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM12-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL13</td>
+  <td class="inp" colspan="2" data-k="RL13-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL13-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL12</td>
+  <td class="inp" colspan="2" data-k="EL12-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL12-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG11</td>
+  <td class="inp" colspan="2" data-k="COG11-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG11-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE11</td>
+  <td class="inp" colspan="2" data-k="SE11-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE11-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB14</td>
+  <td class="inp" colspan="2" data-k="AB14-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB14-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM11</td>
+  <td class="inp" colspan="2" data-k="GM11-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM11-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM11</td>
+  <td class="inp" colspan="2" data-k="FM11-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM11-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL11</td>
+  <td class="inp" colspan="2" data-k="RL11-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL11-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL11</td>
+  <td class="inp" colspan="2" data-k="EL11-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL11-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG10</td>
+  <td class="inp" colspan="2" data-k="COG10-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG10-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE10</td>
+  <td class="inp" colspan="2" data-k="SE10-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE10-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB13</td>
+  <td class="inp" colspan="2" data-k="AB13-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB13-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM10</td>
+  <td class="inp" colspan="2" data-k="GM10-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM10-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM10</td>
+  <td class="inp" colspan="2" data-k="FM10-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM10-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL10</td>
+  <td class="inp" colspan="2" data-k="RL10-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL10-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL10</td>
+  <td class="inp" colspan="2" data-k="EL10-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL10-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG9</td>
+  <td class="inp" colspan="2" data-k="COG9-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG9-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE9</td>
+  <td class="inp" colspan="2" data-k="SE9-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE9-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB12</td>
+  <td class="inp" colspan="2" data-k="AB12-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB12-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM9</td>
+  <td class="inp" colspan="2" data-k="GM9-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM9-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM9</td>
+  <td class="inp" colspan="2" data-k="FM9-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM9-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL9</td>
+  <td class="inp" colspan="2" data-k="RL9-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL9-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL9</td>
+  <td class="inp" colspan="2" data-k="EL9-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL9-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG8</td>
+  <td class="inp" colspan="2" data-k="COG8-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG8-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE8</td>
+  <td class="inp" colspan="2" data-k="SE8-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE8-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB9</td>
+  <td class="inp" colspan="2" data-k="AB9-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB9-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM8</td>
+  <td class="inp" colspan="2" data-k="GM8-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM8-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM8</td>
+  <td class="inp" colspan="2" data-k="FM8-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM8-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL8</td>
+  <td class="inp" colspan="2" data-k="RL8-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL8-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL8</td>
+  <td class="inp" colspan="2" data-k="EL8-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL8-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG7</td>
+  <td class="inp" colspan="2" data-k="COG7-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG7-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE7</td>
+  <td class="inp" colspan="2" data-k="SE7-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE7-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB8</td>
+  <td class="inp" colspan="2" data-k="AB8-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB8-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM7</td>
+  <td class="inp" colspan="2" data-k="GM7-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM7-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM7</td>
+  <td class="inp" colspan="2" data-k="FM7-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM7-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL7</td>
+  <td class="inp" colspan="2" data-k="RL7-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL7-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL7</td>
+  <td class="inp" colspan="2" data-k="EL7-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL7-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG6</td>
+  <td class="inp" colspan="2" data-k="COG6-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG6-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE6</td>
+  <td class="inp" colspan="2" data-k="SE6-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE6-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB7</td>
+  <td class="inp" colspan="2" data-k="AB7-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB7-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM6</td>
+  <td class="inp" colspan="2" data-k="GM6-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM6-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM6</td>
+  <td class="inp" colspan="2" data-k="FM6-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM6-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL6</td>
+  <td class="inp" colspan="2" data-k="RL6-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL6-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL6</td>
+  <td class="inp" colspan="2" data-k="EL6-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL6-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG5</td>
+  <td class="inp" colspan="2" data-k="COG5-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG5-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE5</td>
+  <td class="inp" colspan="2" data-k="SE5-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE5-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB5</td>
+  <td class="inp" colspan="2" data-k="AB5-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB5-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM5</td>
+  <td class="inp" colspan="2" data-k="GM5-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM5-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM5</td>
+  <td class="inp" colspan="2" data-k="FM5-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM5-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL5</td>
+  <td class="inp" colspan="2" data-k="RL5-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL5-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL5</td>
+  <td class="inp" colspan="2" data-k="EL5-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL5-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG4</td>
+  <td class="inp" colspan="2" data-k="COG4-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG4-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE4</td>
+  <td class="inp" colspan="2" data-k="SE4-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE4-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB4</td>
+  <td class="inp" colspan="2" data-k="AB4-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB4-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM4</td>
+  <td class="inp" colspan="2" data-k="GM4-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM4-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM4</td>
+  <td class="inp" colspan="2" data-k="FM4-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM4-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL4</td>
+  <td class="inp" colspan="2" data-k="RL4-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL4-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL4</td>
+  <td class="inp" colspan="2" data-k="EL4-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL4-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG3</td>
+  <td class="inp" colspan="2" data-k="COG3-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG3-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE3</td>
+  <td class="inp" colspan="2" data-k="SE3-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE3-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB3</td>
+  <td class="inp" colspan="2" data-k="AB3-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB3-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM3</td>
+  <td class="inp" colspan="2" data-k="GM3-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM3-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM3</td>
+  <td class="inp" colspan="2" data-k="FM3-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM3-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL3</td>
+  <td class="inp" colspan="2" data-k="RL3-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL3-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL3</td>
+  <td class="inp" colspan="2" data-k="EL3-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL3-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG2</td>
+  <td class="inp" colspan="2" data-k="COG2-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG2-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE2</td>
+  <td class="inp" colspan="2" data-k="SE2-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE2-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB2</td>
+  <td class="inp" colspan="2" data-k="AB2-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB2-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM2</td>
+  <td class="inp" colspan="2" data-k="GM2-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM2-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM2</td>
+  <td class="inp" colspan="2" data-k="FM2-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM2-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL2</td>
+  <td class="inp" colspan="2" data-k="RL2-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL2-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL2</td>
+  <td class="inp" colspan="2" data-k="EL2-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL2-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr>
+  <td class="lbl">COG1</td>
+  <td class="inp" colspan="2" data-k="COG1-0" data-domain="COG" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="COG1-1" data-domain="COG" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">SE1</td>
+  <td class="inp" colspan="2" data-k="SE1-0" data-domain="SE" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="SE1-1" data-domain="SE" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">AB1</td>
+  <td class="inp" colspan="2" data-k="AB1-0" data-domain="AB" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="AB1-1" data-domain="AB" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">GM1</td>
+  <td class="inp" colspan="2" data-k="GM1-0" data-domain="GM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="GM1-1" data-domain="GM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">FM1</td>
+  <td class="inp" colspan="2" data-k="FM1-0" data-domain="FM" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="FM1-1" data-domain="FM" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">RL1</td>
+  <td class="inp" colspan="2" data-k="RL1-0" data-domain="RL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="RL1-1" data-domain="RL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+  <td class="gap"></td>
+  <td class="lbl">EL1</td>
+  <td class="inp" colspan="2" data-k="EL1-0" data-domain="EL" data-score="0" data-option="No / Not yet" title="No / Not yet" onclick="applyColor(this)"></td>
+  <td class="inp" colspan="2" data-k="EL1-1" data-domain="EL" data-score="1" data-option="Yes / Mastered" title="Yes / Mastered" onclick="applyColor(this)"></td>
+</tr>
+<tr class="foot-row">
+  <td class="foot-cell" colspan="5"><b>COG</b><br><span class="foot-name">Cognitive</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>SE</b><br><span class="foot-name">Social-Emotional</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>AB</b><br><span class="foot-name">Adaptive Behavior</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>GM</b><br><span class="foot-name">Gross Motor</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>FM</b><br><span class="foot-name">Fine Motor</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>RL</b><br><span class="foot-name">Receptive Language</span></td>
+  <td class="gap"></td>
+  <td class="foot-cell" colspan="5"><b>EL</b><br><span class="foot-name">Expressive Language</span></td>
+</tr>
+</tbody></table></div>
+
+
+</div>
+<div id="tip"></div>
+<div id="vbStickyStatus">VB: not loaded</div>
+
+<!-- Manual color + notes -->
+<script>
+let ac=0; const st={};
+document.querySelectorAll('.pb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.pb').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); ac=+b.dataset.c;
+  });
+});
+document.getElementById('clrAll').addEventListener('click',()=>{
+  if(!confirm('Clear all colors and notes?'))return;
+  document.querySelectorAll('td.inp').forEach(t=>{
+    t.className='inp';
+    const d=t.querySelector('.ndot'); if(d) d.style.display='none';
+    delete st[t.dataset.k];
+  });
+  save();
+});
+function applyColor(td){
+  const k=td.dataset.k;
+  if(!st[k])st[k]={};
+  st[k].ci=ac; td.className='inp c'+ac;
+  const d=td.querySelector('.ndot');
+  if(d&&(st[k]||{}).note) d.style.display='block';
+  save();
+}
+window.applyColor=applyColor;
+document.addEventListener('dblclick',e=>{
+  const t=e.target.closest('td.inp'); if(!t)return;
+  const k=t.dataset.k;
+  const cur=(st[k]||{}).note||'';
+  const lbl=k.replace(/-\d+$/,'');
+  const note=prompt('Note for '+lbl+':',cur);
+  if(note===null)return;
+  if(!st[k])st[k]={};
+  st[k].note=note.trim();
+  let d=t.querySelector('.ndot');
+  if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
+  d.style.display=note.trim()?'block':'none';
+  save();
+});
+const tip=document.getElementById('tip');
+document.addEventListener('mouseover',e=>{
+  const t=e.target.closest('td.inp');
+  if(!t){tip.style.display='none';return;}
+  const k=t.dataset.k;
+  const note=(st[k]||{}).note;
+  const option=t.dataset.option||'';
+  const score=t.dataset.score||'';
+  let txt=option?'Score '+score+': '+option:'';
+  if(note) txt+=(txt?'\n\nNote: ':'Note: ')+note;
+  if(!txt){tip.style.display='none';return;}
+  tip.textContent=txt; tip.style.display='block';
+});
+document.addEventListener('mousemove',e=>{
+  tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+10)+'px';
+});
+document.addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||!e.relatedTarget.closest('td.inp')) tip.style.display='none';
+});
+function save(){
+  const fields={};
+  document.querySelectorAll('input[type=text]').forEach((inp,i)=>fields[i]=inp.value);
+  try{localStorage.setItem('dayc2_grid_v1',JSON.stringify({st,fields}));}catch(e){}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem('dayc2_grid_v1'); if(!raw)return;
+    const p=JSON.parse(raw);
+    if(p.fields) document.querySelectorAll('input[type=text]').forEach((inp,i)=>{
+      if(p.fields[i]) inp.value=p.fields[i];
+    });
+    if(p.st){
+      Object.assign(st,p.st);
+      Object.entries(st).forEach(([k,v])=>{
+        const t=document.querySelector('td.inp[data-k="'+k+'"]'); if(!t)return;
+        if(v.ci!==undefined) t.className='inp c'+v.ci;
+        if(v.note){
+          let d=t.querySelector('.ndot');
+          if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
+          d.style.display='block';
+        }
+      });
+    }
+  }catch(e){}
+}
+document.querySelectorAll('input[type=text]').forEach(inp=>inp.addEventListener('input',save));
+load();
+</script>
+
+<!-- VB Mapping Engine -->
+<script>
+const VB_BASE = 4;
+const VB_GRADIENT = ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'];
+const VB_EMPTY = '#ffffff';
+const VB_PALETTES = {
+  red:    ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'],
+  blue:   ['#1e3a5f', '#2563eb', '#60a5fa', '#93c5fd'],
+  green:  ['#14532d', '#16a34a', '#4ade80', '#86efac'],
+  purple: ['#581c87', '#9333ea', '#c084fc', '#d8b4fe'],
+  amber:  ['#78350f', '#d97706', '#fbbf24', '#fcd34d'],
+  teal:   ['#134e4a', '#0d9488', '#2dd4bf', '#5eead4'],
+};
+const GRID_DOMAINS = [{"code":"COG","name":"Cognitive"},{"code":"SE","name":"Social-Emotional"},{"code":"AB","name":"Adaptive Behavior"},{"code":"GM","name":"Gross Motor"},{"code":"FM","name":"Fine Motor"},{"code":"RL","name":"Receptive Language"},{"code":"EL","name":"Expressive Language"}];
+const domainColorMap = {};
+const DOMAIN_COLOR_KEY = 'dayc2_domainColors';
+
+function getGradientForDomain(domainCode) {
+  const palName = domainColorMap[domainCode] || 'red';
+  return VB_PALETTES[palName] || VB_PALETTES.red;
+}
+function saveDomainColors() {
+  try { localStorage.setItem(DOMAIN_COLOR_KEY, JSON.stringify(domainColorMap)); } catch(e) {}
+}
+function loadDomainColors() {
+  try {
+    const raw = localStorage.getItem(DOMAIN_COLOR_KEY);
+    if (raw) Object.assign(domainColorMap, JSON.parse(raw));
+  } catch(e) {}
+}
+loadDomainColors();
+
+const domainSelect = document.getElementById('domainSelect');
+GRID_DOMAINS.forEach(d => {
+  const opt = document.createElement('option');
+  opt.value = d.code;
+  opt.textContent = d.code + ' — ' + d.name;
+  domainSelect.appendChild(opt);
+});
+
+let selectedPalette = domainColorMap[GRID_DOMAINS[0]?.code] || 'red';
+document.querySelectorAll('.dm-pal').forEach(swatch => {
+  if (swatch.dataset.pal === selectedPalette) swatch.classList.add('sel');
+  swatch.addEventListener('click', () => {
+    document.querySelectorAll('.dm-pal').forEach(s => s.classList.remove('sel'));
+    swatch.classList.add('sel');
+    selectedPalette = swatch.dataset.pal;
+    const domCode = domainSelect.value;
+    if (domCode) {
+      domainColorMap[domCode] = selectedPalette;
+      saveDomainColors();
+      repaintVBFromStorage();
+    }
+  });
+});
+
+domainSelect.addEventListener('change', () => {
+  const pal = domainColorMap[domainSelect.value] || 'red';
+  document.querySelectorAll('.dm-pal').forEach(s => {
+    s.classList.toggle('sel', s.dataset.pal === pal);
+  });
+  selectedPalette = pal;
+});
+
+function repaintVBFromStorage() {
+  const params = new URLSearchParams(window.location.search || '');
+  const sk = params.get('storageKey') || 'dayc2_grid_payload';
+  try {
+    const raw = window.localStorage.getItem(sk);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed.answers && parsed.scoreMap) paintVB(parsed.answers, parsed.scoreMap);
+  } catch(e) {}
+}
+
+function resolveVBMax(rawMax) {
+  if (rawMax <= 2) return 2;  // 0-1 and 0-2 both use paired (2-cell) mode
+  return 4;
+}
+
+function clampVBScore(score, max) {
+  const n = Number.isFinite(Number(score)) ? Number(score) : 0;
+  return Math.max(0, Math.min(n, max));
+}
+
+function normalizeVBScore(score, max) {
+  if (max <= 1) return score * 4;  // 0-1: score 1 → 4 (fills both paired cells)
+  if (max === 2) return score * 2;  // 0-2: score 2 → 4
+  return score;                     // 0-4: direct
+}
+
+function mapQuestionToVB(question, rawScore, rawMax) {
+  const max = resolveVBMax(rawMax);
+  const score = clampVBScore(rawScore, max);
+  const normalized = normalizeVBScore(score, max);
+  const threshold = VB_BASE - normalized + 1;
+  const filledMap = [false, false, false, false];
+  const filledUnits = [];
+
+  for (let i = 1; i <= VB_BASE; i++) {
+    if (i >= threshold) {
+      filledMap[i - 1] = true;
+      filledUnits.push(i);
+    }
+  }
+
+  return {
+    question, score, max, normalized, threshold, filledUnits, filledMap,
+    pairedFillMap: [filledMap[0] || filledMap[1], filledMap[2] || filledMap[3]],
+  };
+}
+
+function mapAnswersToVB(answers, scoreMap) {
+  const keys = Array.from(new Set([...Object.keys(scoreMap || {}), ...Object.keys(answers || {})]));
+  return keys
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .map((q) => mapQuestionToVB(q, answers?.[q] ?? 0, scoreMap?.[q]));
+}
+
+function buildScoreTypeMapFromGrid() {
+  const scoreMap = {};
+  document.querySelectorAll('td.inp[data-k][data-score]').forEach((cell) => {
+    const key = cell.getAttribute('data-k') || '';
+    const q = key.split('-')[0];
+    const score = Number(cell.getAttribute('data-score') || '0');
+    if (!q || score <= 0) return;
+    scoreMap[q] = Math.max(scoreMap[q] || 0, score);
+  });
+  Object.keys(scoreMap).forEach((q) => {
+    scoreMap[q] = resolveVBMax(scoreMap[q]);
+  });
+  return scoreMap;
+}
+
+function hydrateVBDataAttributes() {
+  document.querySelectorAll('td.inp[data-k]').forEach((cell) => {
+    if (!cell.getAttribute('data-vb')) {
+      cell.setAttribute('data-vb', cell.getAttribute('data-k'));
+    }
+  });
+}
+
+function getQuestionCells(questionId) {
+  const vbCells = Array.from(document.querySelectorAll('td.inp[data-vb^="' + questionId + '-"]'));
+  const source = vbCells.length > 0 ? vbCells : Array.from(document.querySelectorAll('td.inp[data-k^="' + questionId + '-"]'));
+  return source.sort((a, b) => {
+    const sa = Number(a.getAttribute('data-score') || '0');
+    const sb = Number(b.getAttribute('data-score') || '0');
+    return sa - sb;
+  });
+}
+
+function paintVB(answers, scoreMap) {
+  const resolvedScoreMap = scoreMap || buildScoreTypeMapFromGrid();
+  const mappedRows = mapAnswersToVB(answers || {}, resolvedScoreMap);
+  let paintedCount = 0;
+  let firstFilledCell = null;
+
+  mappedRows.forEach((row) => {
+    const cells = getQuestionCells(row.question);
+    if (cells.length === 0) return;
+    const domCode = (cells[0] && cells[0].getAttribute('data-domain')) || '';
+    const gradient = getGradientForDomain(domCode);
+
+    cells.forEach((cell) => {
+      cell.classList.remove('c0', 'c1', 'c2', 'c3', 'c4', 'vb-filled', 'vb-empty');
+      cell.classList.add('vb-empty');
+      cell.style.background = VB_EMPTY;
+    });
+
+    // Single cell fallback (shouldn't happen for DAYC-2 but safe guard)
+    if (cells.length === 1) {
+      if (row.score > 0) {
+        cells[0].classList.remove('vb-empty');
+        cells[0].classList.add('vb-filled');
+        cells[0].style.background = gradient[3];
+        if (!firstFilledCell) firstFilledCell = cells[0];
+        paintedCount++;
+      }
+      return;
+    }
+
+    if (row.max === 2 && cells.length >= 2) {
+      if (row.pairedFillMap[0]) {
+        cells[0].classList.remove('vb-empty');
+        cells[0].classList.add('vb-filled');
+        cells[0].style.background = gradient[0];
+        if (!firstFilledCell) firstFilledCell = cells[0];
+        paintedCount++;
+      }
+      if (row.pairedFillMap[1]) {
+        cells[1].classList.remove('vb-empty');
+        cells[1].classList.add('vb-filled');
+        cells[1].style.background = gradient[3];
+        if (!firstFilledCell) firstFilledCell = cells[1];
+        paintedCount++;
+      }
+      return;
+    }
+
+    for (let i = 0; i < Math.min(4, cells.length); i++) {
+      if (row.filledMap[i]) {
+        cells[i].classList.remove('vb-empty');
+        cells[i].classList.add('vb-filled');
+        cells[i].style.background = gradient[i];
+        if (!firstFilledCell) firstFilledCell = cells[i];
+        paintedCount++;
+      }
+    }
+  });
+
+  const status = document.getElementById('mockStatus');
+  if (status) {
+    status.textContent = 'Status: loaded ' + mappedRows.length + ' questions, painted ' + paintedCount + ' cells';
+    status.style.color = '#0b6b2a';
+  }
+  const sticky = document.getElementById('vbStickyStatus');
+  if (sticky) {
+    sticky.textContent = 'VB loaded (' + paintedCount + ' cells)';
+    sticky.style.color = '#14532d';
+    sticky.style.background = '#dcfce7';
+    sticky.style.borderColor = '#86efac';
+  }
+  if (firstFilledCell) {
+    firstFilledCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return mappedRows;
+}
+
+function loadExportedPayloadFromStorage() {
+  const params = new URLSearchParams(window.location.search || '');
+  const mode = params.get('autoload');
+  if (mode !== 'latest' && mode !== '1' && mode !== 'true') return false;
+
+  const storageKey = params.get('storageKey') || 'dayc2_grid_payload';
+
+  try {
+    const raw = window.localStorage.getItem(storageKey);
+    if (!raw) return false;
+
+    const parsed = JSON.parse(raw);
+    const answers = parsed && parsed.answers;
+    const scoreMap = parsed && parsed.scoreMap;
+
+    if (!answers || !scoreMap || typeof answers !== 'object' || typeof scoreMap !== 'object') return false;
+
+    const rows = paintVB(answers, scoreMap);
+    if (!rows || rows.length === 0) return false;
+
+    const status = document.getElementById('mockStatus');
+    if (status) {
+      status.textContent = 'Status: autoloaded export (' + rows.length + ' questions)';
+      status.style.color = '#0b6b2a';
+    }
+    const sticky = document.getElementById('vbStickyStatus');
+    if (sticky) {
+      sticky.textContent = 'VB autoloaded from export';
+      sticky.style.color = '#14532d';
+      sticky.style.background = '#dcfce7';
+      sticky.style.borderColor = '#86efac';
+    }
+    return true;
+  } catch (err) {
+    console.warn('Failed to autoload export payload:', err);
+    return false;
+  }
+}
+
+hydrateVBDataAttributes();
+const autoloaded = loadExportedPayloadFromStorage();
+if (!autoloaded) {
+  console.log('No autoload payload found. Use file upload or questionnaire export.');
+}
+console.log('DAYC-2 Grid v1 ready');
+</script>
+</body>
+</html>

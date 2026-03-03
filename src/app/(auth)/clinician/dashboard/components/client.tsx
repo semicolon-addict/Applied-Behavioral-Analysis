@@ -7,13 +7,14 @@
 
 "use client";
 
-import { useState, useCallback } from "react";
-import { Child, Assessment, Questionnaire } from "@/types";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Child, Assessment, Questionnaire, QuestionnaireDomain } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileText, PlusCircle, Baby, Stethoscope, MessageSquare, Activity, FileQuestion, ClipboardList } from "lucide-react";
+import { FileText, PlusCircle, MessageSquare, Activity, FileQuestion, ClipboardList } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentGrid } from "./assessment-grid";
 import { mockMessages } from "@/lib/mock-data";
@@ -21,6 +22,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { QuestionnaireView } from "@/components/app/questionnaire-view";
 import { QuestionnaireSelector } from "@/components/app/questionnaire-selector";
 import { QuestionnaireFlow } from "@/components/app/questionnaire-flow";
+import { AFLSProtocolSelector, AFLSProtocol } from "@/components/app/afls-protocol-selector";
+import { DAYC2ProtocolSelector, DAYC2Protocol } from "@/components/app/dayc2-protocol-selector";
+import { VBMAPPProtocolSelector, VBMAPPProtocol } from '@/components/app/vbmapp-protocol-selector';
+import { BehaviorTherapyFormsList } from "@/components/app/behavior-therapy-forms-list";
+import { BehaviorTherapyForm } from "@/components/app/behavior-therapy-form";
+import { useUser } from "@/firebase";
 
 export function ClinicianDashboardClient({
     children,
@@ -31,31 +38,156 @@ export function ClinicianDashboardClient({
     assessments: Assessment[],
     questionnaires: Questionnaire[]
 }) {
+    const { user } = useUser();
+    const searchParams = useSearchParams();
+    const [mainTab, setMainTab] = useState<string>('dashboard');
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        const allowedTabs = new Set(['dashboard', 'ablls-r', 'aflls', 'dayc-2', 'questionnaires', 'messages']);
+        if (tab && allowedTabs.has(tab)) {
+            setMainTab(tab);
+        }
+    }, [searchParams]);
+
+    const activeChildId = children[0]?.id || null;
+    const respondentId = user?.uid || null;
+
     // State for assessment questionnaire flow
     const [activeQuestionnaireType, setActiveQuestionnaireType] = useState<string | null>(null);
     const [preSelectedType, setPreSelectedType] = useState<string | null>(null);
+    // AFLS protocol selection state
+    const [showAFLSProtocols, setShowAFLSProtocols] = useState(false);
+    const [selectedAFLSProtocol, setSelectedAFLSProtocol] = useState<AFLSProtocol | null>(null);
+    const [aflsFilteredDomains, setAflsFilteredDomains] = useState<QuestionnaireDomain[] | null>(null);
+    // DAYC-2 protocol selection state
+    const [showDAYC2Protocols, setShowDAYC2Protocols] = useState(false);
+    const [selectedDAYC2Protocol, setSelectedDAYC2Protocol] = useState<DAYC2Protocol | null>(null);
+    const [dayc2FilteredDomains, setDayc2FilteredDomains] = useState<QuestionnaireDomain[] | null>(null);
+    // VB-MAPP protocol selection state
+    const [showVBMAPPProtocols, setShowVBMAPPProtocols] = useState(false);
+    const [selectedVBMAPPProtocol, setSelectedVBMAPPProtocol] = useState<VBMAPPProtocol | null>(null);
+    const [vbmappFilteredDomains, setVbmappFilteredDomains] = useState<QuestionnaireDomain[] | null>(null);
+    // Behavior Therapy forms state
+    const [showBehaviorTherapyForms, setShowBehaviorTherapyForms] = useState(false);
+    const [selectedBehaviorTherapyForm, setSelectedBehaviorTherapyForm] = useState<string | null>(null);
 
     const handleSelectQuestionnaire = useCallback((assessmentType: string) => {
-        setActiveQuestionnaireType(assessmentType);
+        if (assessmentType === 'AFLLS') {
+            // Show AFLS protocol selector instead of jumping directly to flow
+            setShowAFLSProtocols(true);
+            setActiveQuestionnaireType(null);
+        } else if (assessmentType === 'DAYC-2') {
+            // Show DAYC-2 protocol selector instead of jumping directly to flow
+            setShowDAYC2Protocols(true);
+            setActiveQuestionnaireType(null);
+        } else if (assessmentType === 'VB-MAPP') {
+            // Show VB-MAPP protocol selector instead of jumping directly to flow
+            setShowVBMAPPProtocols(true);
+            setActiveQuestionnaireType(null);
+        } else if (assessmentType === 'Behavior-Therapy') {
+            // Show Behavior Therapy forms list inside this tab
+            setShowBehaviorTherapyForms(true);
+            setSelectedBehaviorTherapyForm(null);
+            setActiveQuestionnaireType(null);
+        } else {
+            setActiveQuestionnaireType(assessmentType);
+            setShowAFLSProtocols(false);
+            setShowDAYC2Protocols(false);
+            setShowVBMAPPProtocols(false);
+        }
+    }, []);
+
+    const handleAFLSProtocolSelect = useCallback((protocol: AFLSProtocol | null, filteredDomains: QuestionnaireDomain[] | null) => {
+        setSelectedAFLSProtocol(protocol);
+        setAflsFilteredDomains(filteredDomains);
+        setActiveQuestionnaireType('AFLLS');
+        setShowAFLSProtocols(false);
+    }, []);
+
+    const handleBackFromAFLSProtocols = useCallback(() => {
+        setShowAFLSProtocols(false);
+        setActiveQuestionnaireType(null);
+    }, []);
+
+    const handleDAYC2ProtocolSelect = useCallback((protocol: DAYC2Protocol | null, filteredDomains: QuestionnaireDomain[] | null) => {
+        setSelectedDAYC2Protocol(protocol);
+        setDayc2FilteredDomains(filteredDomains);
+        setActiveQuestionnaireType('DAYC-2');
+        setShowDAYC2Protocols(false);
+    }, []);
+
+    const handleBackFromDAYC2Protocols = useCallback(() => {
+        setShowDAYC2Protocols(false);
+        setActiveQuestionnaireType(null);
+    }, []);
+
+    const handleVBMAPPProtocolSelect = useCallback((protocol: VBMAPPProtocol | null, filteredDomains: QuestionnaireDomain[] | null) => {
+        setSelectedVBMAPPProtocol(protocol);
+        setVbmappFilteredDomains(filteredDomains);
+        setActiveQuestionnaireType('VB-MAPP');
+        setShowVBMAPPProtocols(false);
+    }, []);
+
+    const handleBackFromVBMAPPProtocols = useCallback(() => {
+        setShowVBMAPPProtocols(false);
+        setActiveQuestionnaireType(null);
+    }, []);
+
+    const handleBackFromBehaviorTherapyForms = useCallback(() => {
+        setShowBehaviorTherapyForms(false);
+        setSelectedBehaviorTherapyForm(null);
     }, []);
 
     const handleBackToSelector = useCallback(() => {
-        setActiveQuestionnaireType(null);
-        setPreSelectedType(null);
-    }, []);
+        if (activeQuestionnaireType === 'AFLLS' && selectedAFLSProtocol !== null) {
+            // Go back to AFLS protocol selector, not main selector
+            setActiveQuestionnaireType(null);
+            setShowAFLSProtocols(true);
+            setSelectedAFLSProtocol(null);
+            setAflsFilteredDomains(null);
+        } else if (activeQuestionnaireType === 'DAYC-2' && selectedDAYC2Protocol !== null) {
+            // Go back to DAYC-2 protocol selector, not main selector
+            setActiveQuestionnaireType(null);
+            setShowDAYC2Protocols(true);
+            setSelectedDAYC2Protocol(null);
+            setDayc2FilteredDomains(null);
+        } else if (activeQuestionnaireType === 'VB-MAPP' && selectedVBMAPPProtocol !== null) {
+            // Go back to VB-MAPP protocol selector, not main selector
+            setActiveQuestionnaireType(null);
+            setShowVBMAPPProtocols(true);
+            setSelectedVBMAPPProtocol(null);
+            setVbmappFilteredDomains(null);
+        } else {
+            setActiveQuestionnaireType(null);
+            setPreSelectedType(null);
+            setShowAFLSProtocols(false);
+            setShowDAYC2Protocols(false);
+            setShowVBMAPPProtocols(false);
+        }
+    }, [activeQuestionnaireType, selectedAFLSProtocol, selectedDAYC2Protocol, selectedVBMAPPProtocol]);
 
     const handleQuestionnaireComplete = useCallback(() => {
         setActiveQuestionnaireType(null);
         setPreSelectedType(null);
+        setShowAFLSProtocols(false);
+        setSelectedAFLSProtocol(null);
+        setAflsFilteredDomains(null);
+        setShowDAYC2Protocols(false);
+        setSelectedDAYC2Protocol(null);
+        setDayc2FilteredDomains(null);
+        setShowVBMAPPProtocols(false);
+        setSelectedVBMAPPProtocol(null);
+        setVbmappFilteredDomains(null);
+        setShowBehaviorTherapyForms(false);
+        setSelectedBehaviorTherapyForm(null);
     }, []);
 
     // Called from assessment grid "View Questionnaire" button
     const handleViewQuestionnaire = useCallback((assessmentType: string) => {
         setPreSelectedType(assessmentType);
         setActiveQuestionnaireType(assessmentType);
-        // Switch to questionnaires tab via DOM
-        const trigger = document.querySelector('[data-value="questionnaires"]') as HTMLElement;
-        if (trigger) trigger.click();
+        setMainTab('questionnaires');
     }, []);
 
     return (
@@ -69,16 +201,16 @@ export function ClinicianDashboardClient({
                     </Button>
                 </div>
             </div>
-            <Tabs defaultValue="dashboard" className="space-y-4" id="main-tabs">
+            <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-4" id="main-tabs">
                 <TabsList>
                     <TabsTrigger value="dashboard">
                         <Activity className="mr-2 h-4 w-4" />
                         Dashboard
                     </TabsTrigger>
                     <TabsTrigger value="ablls-r">ABLLS-R</TabsTrigger>
-                    <TabsTrigger value="aflls">AFLLS</TabsTrigger>
+                    <TabsTrigger value="aflls">AFLS</TabsTrigger>
                     <TabsTrigger value="dayc-2">DAYC-2</TabsTrigger>
-                    <TabsTrigger value="questionnaires" data-value="questionnaires">
+                    <TabsTrigger value="questionnaires">
                         <FileQuestion className="mr-2 h-4 w-4" />
                         Questionnaires
                     </TabsTrigger>
@@ -173,13 +305,53 @@ export function ClinicianDashboardClient({
 
                         <TabsContent value="assessment-questionnaires">
                             {activeQuestionnaireType ? (
-                                <QuestionnaireFlow
-                                    assessmentType={activeQuestionnaireType}
-                                    childId={children[0]?.id || 'default-child'}
-                                    respondentId="current-clinician"
-                                    onBack={handleBackToSelector}
-                                    onComplete={handleQuestionnaireComplete}
+                                !activeChildId || !respondentId ? (
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle>Unable to Start Questionnaire</CardTitle>
+                                            <CardDescription>
+                                                A valid child and authenticated clinician session are required.
+                                            </CardDescription>
+                                        </CardHeader>
+                                    </Card>
+                                ) : (
+                                    <QuestionnaireFlow
+                                        assessmentType={activeQuestionnaireType}
+                                        childId={activeChildId}
+                                        respondentId={respondentId}
+                                        onBack={handleBackToSelector}
+                                        onComplete={handleQuestionnaireComplete}
+                                        filteredDomains={activeQuestionnaireType === 'DAYC-2' ? (dayc2FilteredDomains || undefined) : activeQuestionnaireType === 'VB-MAPP' ? (vbmappFilteredDomains || undefined) : (aflsFilteredDomains || undefined)}
+                                        protocolName={activeQuestionnaireType === 'DAYC-2' ? selectedDAYC2Protocol?.name : activeQuestionnaireType === 'VB-MAPP' ? selectedVBMAPPProtocol?.name : selectedAFLSProtocol?.name}
+                                    />
+                                )
+                            ) : showAFLSProtocols ? (
+                                <AFLSProtocolSelector
+                                    onSelectProtocol={handleAFLSProtocolSelect}
+                                    onBack={handleBackFromAFLSProtocols}
                                 />
+                            ) : showDAYC2Protocols ? (
+                                <DAYC2ProtocolSelector
+                                    onSelectProtocol={handleDAYC2ProtocolSelect}
+                                    onBack={handleBackFromDAYC2Protocols}
+                                />
+                            ) : showVBMAPPProtocols ? (
+                                <VBMAPPProtocolSelector
+                                    onSelectProtocol={handleVBMAPPProtocolSelect}
+                                    onBack={handleBackFromVBMAPPProtocols}
+                                />
+                            ) : showBehaviorTherapyForms ? (
+                                selectedBehaviorTherapyForm ? (
+                                    <BehaviorTherapyForm
+                                        formId={selectedBehaviorTherapyForm}
+                                        onBack={() => setSelectedBehaviorTherapyForm(null)}
+                                    />
+                                ) : (
+                                    <BehaviorTherapyFormsList
+                                        onSelectForm={(formId) => setSelectedBehaviorTherapyForm(formId)}
+                                        onBack={handleBackFromBehaviorTherapyForms}
+                                    />
+                                )
                             ) : (
                                 <QuestionnaireSelector
                                     onSelect={handleSelectQuestionnaire}
@@ -217,12 +389,12 @@ export function ClinicianDashboardClient({
                                 {mockMessages.map(message => (
                                     <div key={message.id} className="flex items-start gap-4 p-4 border rounded-lg">
                                         <Avatar>
-                                            <AvatarImage src={message.from === 'user-1' ? 'https://picsum.photos/seed/avatar1/100/100' : 'https://picsum.photos/seed/avatar2/100/100'} />
-                                            <AvatarFallback>{message.from === 'user-1' ? 'CR' : 'P'}</AvatarFallback>
+                                            <AvatarImage src={message.from === user?.uid ? 'https://picsum.photos/seed/avatar1/100/100' : 'https://picsum.photos/seed/avatar2/100/100'} />
+                                            <AvatarFallback>{message.from === user?.uid ? 'ME' : 'P'}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid gap-1">
                                             <div className="flex items-center justify-between">
-                                                <p className="font-semibold">{message.from === 'user-1' ? "You" : "Mark Johnson (Parent)"}</p>
+                                                <p className="font-semibold">{message.from === user?.uid ? "You" : `Parent (${message.from})`}</p>
                                                 <p className="text-xs text-muted-foreground">{new Date(message.timestamp).toLocaleString()}</p>
                                             </div>
                                             <p className="font-semibold">{message.subject}</p>

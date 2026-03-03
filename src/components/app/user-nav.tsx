@@ -7,6 +7,7 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +23,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser, useAuth } from "@/firebase";
 import { signOut } from "firebase/auth";
-import { logoutUser } from "@/lib/sheets-auth";
+import { getSession, logoutUser } from "@/lib/sheets-auth";
 import { useToast } from "@/hooks/use-toast";
 
 export function UserNav() {
@@ -31,8 +32,15 @@ export function UserNav() {
   const { user } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
+  const [sessionRole, setSessionRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const session = getSession();
+    setSessionRole(session?.role ?? null);
+  }, [pathname, user?.uid]);
 
   const getRole = () => {
+    if (sessionRole) return sessionRole;
     if (pathname.startsWith("/admin")) return "Admin";
     if (pathname.startsWith("/clinician")) return "Clinician";
     if (pathname.startsWith("/parent")) return "Parent";
@@ -49,20 +57,20 @@ export function UserNav() {
 
   // Use real Firebase user data when available
   const getName = () => {
+    const session = getSession();
+    if (session?.firstName || session?.lastName) {
+      return `${session.firstName || ""} ${session.lastName || ""}`.trim();
+    }
     if (user?.displayName) return user.displayName;
     if (user?.email) return user.email.split('@')[0];
-    if (role === 'Admin') return "Admin User";
-    if (role === 'Clinician') return "Dr. Evelyn Reed";
-    if (role === 'Parent') return "Mark Johnson";
     return "User";
   }
 
   const getEmail = () => {
+    const session = getSession();
+    if (session?.email) return session.email;
     if (user?.email) return user.email;
-    if (role === 'Admin') return "admin@abaassessments.com";
-    if (role === 'Clinician') return "e.reed@clinic.com";
-    if (role === 'Parent') return "m.johnson@example.com";
-    return "user@example.com";
+    return "";
   }
 
   // Proper logout handler

@@ -1,18 +1,18 @@
 ///////////////////////////////////////////////////
 // Author: Shashank Kakad
-// Inputs: Assessment template + in-progress answer selections
-// Outcome: Backend-compatible ABLLS JSON maps for answers and score limits
-// Short Description: Builds numeric answer and score-map exports that match existing mock JSON formats for VB grid consumption
+// Inputs: DAYC-2 assessment template + in-progress answer selections
+// Outcome: Backend-compatible DAYC-2 JSON maps for answers and score limits
+// Short Description: Builds numeric answer and score-map exports for DAYC-2 VB grid consumption (0-1 Yes/No scale)
 /////////////////////////////////////////////////////////////
 
 import { AssessmentQuestion, AssessmentQuestionnaire } from '@/types';
 
-export type ABLLSAnswerMap = Record<string, number>;
-export type ABLLSScoreMap = Record<string, number>;
+export type DAYC2AnswerMap = Record<string, number>;
+export type DAYC2ScoreMap = Record<string, number>;
 
-export type ABLLSExportState = {
-    answers: ABLLSAnswerMap;
-    scoreMap: ABLLSScoreMap;
+export type DAYC2ExportState = {
+    answers: DAYC2AnswerMap;
+    scoreMap: DAYC2ScoreMap;
     answeredCount: number;
     totalCount: number;
 };
@@ -29,6 +29,7 @@ function getQuestionKey(question: AssessmentQuestion): string {
 }
 
 function getQuestionMaxScore(question: AssessmentQuestion): number {
+    // Check scoreType field first (e.g., "0-1")
     const scoreType = question.scoreType?.match(/0-(\d+)/);
     if (scoreType) {
         const fromScoreType = Number.parseInt(scoreType[1], 10);
@@ -37,6 +38,7 @@ function getQuestionMaxScore(question: AssessmentQuestion): number {
         }
     }
 
+    // Infer from options
     let maxFromOptions = 0;
     for (const option of question.options || []) {
         const value = parseLeadingInteger(option);
@@ -46,11 +48,8 @@ function getQuestionMaxScore(question: AssessmentQuestion): number {
     }
     if (maxFromOptions > 0) return maxFromOptions;
 
-    if (question.options && question.options.length > 0) {
-        return Math.max(1, question.options.length - 1);
-    }
-
-    return 4;
+    // Default for DAYC-2 is 0-1 scale (Yes/No)
+    return 1;
 }
 
 function parseSelectedScore(question: AssessmentQuestion, selectedValue: string): number {
@@ -63,25 +62,19 @@ function parseSelectedScore(question: AssessmentQuestion, selectedValue: string)
     return 0;
 }
 
-export function buildABLLSExportState(
+export function buildDAYC2ExportState(
     template: AssessmentQuestionnaire,
     answersByQuestionId: Record<string, string>
-): ABLLSExportState {
-    const answers: ABLLSAnswerMap = {};
-    const scoreMap: ABLLSScoreMap = {};
+): DAYC2ExportState {
+    const answers: DAYC2AnswerMap = {};
+    const scoreMap: DAYC2ScoreMap = {};
     let totalCount = 0;
 
-    for (let domainIndex = 0; domainIndex < template.domains.length; domainIndex++) {
-        const domain = template.domains[domainIndex];
-        for (let questionIndex = 0; questionIndex < domain.questions.length; questionIndex++) {
-            const question = domain.questions[questionIndex];
+    for (const domain of template.domains) {
+        for (const question of domain.questions) {
             totalCount += 1;
-            // Use skillCode if available; otherwise build a fallback code matching the ABLLS grid cell IDs (A1, B2, C3, …)
-            let key = getQuestionKey(question);
-            if (!key) {
-                const domainLetter = String.fromCharCode(65 + domainIndex);
-                key = `${domainLetter}${questionIndex + 1}`;
-            }
+            const key = getQuestionKey(question);
+            if (!key) continue;
 
             scoreMap[key] = getQuestionMaxScore(question);
 
@@ -98,4 +91,3 @@ export function buildABLLSExportState(
         totalCount,
     };
 }
-

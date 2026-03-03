@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////
 // Author: Shashank Kakad
 // Inputs: QuestionnaireFlow component with domain-scroll view
 // Outcome: Domain-based questionnaire flow with exportable VB JSON pipeline and grid handoff
@@ -18,6 +18,9 @@ import { ArrowRight, Check, Loader2, ChevronLeft, Download, Save } from 'lucide-
 import { AssessmentQuestionnaire, AssessmentQuestion, QuestionnaireDomain } from '@/types';
 import { getTemplate, startSession, saveResponse, completeSession, downloadExcelReport } from '@/lib/questionnaire-api';
 import { buildABLLSExportState } from '@/lib/ablls-export';
+import { buildAFLSExportState } from '@/lib/afls-export';
+import { buildDAYC2ExportState } from '@/lib/dayc2-export';
+import { buildVBMAPPExportState } from '@/lib/vbmapp-export';
 import { useToast } from '@/hooks/use-toast';
 
 interface QuestionnaireFlowProps {
@@ -26,6 +29,10 @@ interface QuestionnaireFlowProps {
     respondentId: string;
     onBack: () => void;
     onComplete: () => void;
+    /** If provided, only show these domains (for AFLS protocol filtering) */
+    filteredDomains?: QuestionnaireDomain[];
+    /** Name of the selected AFLS protocol (e.g., "Basic Living Skills") */
+    protocolName?: string;
 }
 
 function resolveDomainCode(domain: QuestionnaireDomain, fallbackIndex: number): string {
@@ -41,10 +48,15 @@ function isGenericResponseOption(option: string): boolean {
 }
 
 function resolveQuestionMaxScore(question: AssessmentQuestion): number {
-    const scoreTypeMatch = question.scoreType?.match(/0-(\d+)/i);
+    const scoreTypeMatch = question.scoreType?.match(/(\d+)\s*-\s*(\d+)/i);
     if (scoreTypeMatch) {
-        const maxFromScoreType = Number.parseInt(scoreTypeMatch[1], 10);
-        if (Number.isFinite(maxFromScoreType) && maxFromScoreType > 0) {
+        const minFromScoreType = Number.parseInt(scoreTypeMatch[1], 10);
+        const maxFromScoreType = Number.parseInt(scoreTypeMatch[2], 10);
+        if (
+            Number.isFinite(minFromScoreType) &&
+            Number.isFinite(maxFromScoreType) &&
+            maxFromScoreType >= minFromScoreType
+        ) {
             return maxFromScoreType;
         }
     }
@@ -97,6 +109,8 @@ export function QuestionnaireFlow({
     respondentId,
     onBack,
     onComplete,
+    filteredDomains,
+    protocolName,
 }: QuestionnaireFlowProps) {
     const { toast } = useToast();
 
@@ -127,14 +141,17 @@ export function QuestionnaireFlow({
 
                 // Fetch template
                 const tmpl = await getTemplate(assessmentType);
-                const sortedDomains = [...tmpl.domains].sort((a, b) => {
-                    const codeA = resolveDomainCode(a, 0);
-                    const codeB = resolveDomainCode(b, 0);
-                    return codeA.localeCompare(codeB, undefined, { numeric: true });
-                });
+                
+                // If filteredDomains provided (AFLS protocol mode), use only matching domains
+                let domainsToUse = tmpl.domains;
+                if (filteredDomains && filteredDomains.length > 0) {
+                    const filteredIds = new Set(filteredDomains.map(d => d.id));
+                    domainsToUse = tmpl.domains.filter(d => filteredIds.has(d.id));
+                }
+
                 const normalizedTemplate: AssessmentQuestionnaire = {
                     ...tmpl,
-                    domains: sortedDomains,
+                    domains: domainsToUse,
                 };
                 setTemplate(normalizedTemplate);
 
@@ -169,18 +186,13 @@ export function QuestionnaireFlow({
             }
         }
         init();
-    }, [assessmentType, childId, respondentId]);
+    }, [assessmentType, childId, respondentId, filteredDomains]);
 
     useEffect(() => {
         if (!template) return;
-        setExportState(buildABLLSExportState(template, answers));
+        const buildExport = assessmentType === 'AFLLS' ? buildAFLSExportState : assessmentType === 'DAYC-2' ? buildDAYC2ExportState : assessmentType === 'VB-MAPP' ? buildVBMAPPExportState : buildABLLSExportState;
+        setExportState(buildExport(template, answers));
     }, [template, answers]);
-
-    // Helper: Filter out 0th option (starts with "0 -" or "0-")
-    const filterOptions = (options: string[]): string[] => {
-        return options.filter((opt) => !opt.trim().match(/^0\s*[-–—]/));
-    };
-
     const ablls02FallbackOptions = [
         '1 - Emerging or prompted / Inconsistent',
         '2 - Independent / Mastered',
@@ -195,7 +207,10 @@ export function QuestionnaireFlow({
 
     const getDisplayOptions = (question: AssessmentQuestion): string[] => {
         const rawOptions = question.options || [];
-        const filtered = filterOptions(rawOptions);
+        // For AFLS, hide the "0 - Not demonstrated" option; unanswered defaults to score 0.
+        const filtered = assessmentType === 'AFLLS'
+            ? rawOptions.filter((opt) => !/^\s*0\s*-/i.test(opt))
+            : rawOptions;
         const maxScore = resolveQuestionMaxScore(question);
         const criteriaOptions = buildOptionsFromCriteria(question.criteria, maxScore);
         const hasOnlyGenericOptions = filtered.length > 0 && filtered.every(isGenericResponseOption);
@@ -265,10 +280,10 @@ export function QuestionnaireFlow({
         for (const question of domain.questions) {
             const answer = answers[question.id];
             if (answer) {
-                await saveResponse(sessionId, question.id, answer);
+                await saveResponse(sessionId, question.id, answer, respondentId);
             }
         }
-    }, [sessionId, answers]);
+    }, [sessionId, answers, respondentId]);
 
     // Handle "Next Domain" button
     const handleNextDomain = useCallback(async () => {
@@ -288,7 +303,7 @@ export function QuestionnaireFlow({
 
             toast({
                 title: 'Progress Saved',
-                description: `Domain "${currentDomain.name}" completed!`,
+                description: `Domain "${currentDomain.name}" progress saved!`,
             });
         } catch (err) {
             toast({
@@ -314,22 +329,58 @@ export function QuestionnaireFlow({
         window.URL.revokeObjectURL(url);
     };
 
+    // Resolve the correct localStorage key and grid URL for each assessment type
+    const resolveGridConfig = useCallback((): { storageKey: string; gridUrl: string } => {
+        if (assessmentType === 'AFLLS') {
+            const key = 'afls_grid_payload';
+            // Route to the correct AFLS protocol grid page
+            const aflsProtocolGridMap: Record<string, string> = {
+                'Basic Living Skills': '/afls/grid-basic-living.html',
+                'Home Skills': '/afls/grid-home.html',
+                'Community Participation Skills': '/afls/grid-community.html',
+                'School Skills': '/afls/grid-school.html',
+            };
+            const gridPage = (protocolName && aflsProtocolGridMap[protocolName]) || '/afls/grid-basic-living.html';
+            return { storageKey: key, gridUrl: `${gridPage}?autoload=latest&storageKey=${key}` };
+        }
+        if (assessmentType === 'DAYC-2') {
+            const key = 'dayc2_grid_payload';
+            return { storageKey: key, gridUrl: `/dayc2/grid.html?autoload=latest&storageKey=${key}` };
+        }
+        if (assessmentType === 'VB-MAPP') {
+            const key = 'vbmapp_grid_payload';
+            const vbmappProtocolGridMap: Record<string, string> = {
+                'Level 1 - Milestones (0-18 months)': '/vbmapp/grid-level1.html',
+                'Level 2 - Milestones (18-30 months)': '/vbmapp/grid-level2.html',
+                'Level 3 - Milestones (30-48 months)': '/vbmapp/grid-level3.html',
+                'Barriers Assessment': '/vbmapp/grid-barriers.html',
+                'Transition Assessment': '/vbmapp/grid-transitions.html',
+            };
+            const gridPage = (protocolName && vbmappProtocolGridMap[protocolName]) || '/vbmapp/grid-level1.html';
+            return { storageKey: key, gridUrl: `${gridPage}?autoload=latest&storageKey=${key}` };
+        }
+        // Default: ABLLS-R
+        return { storageKey: 'ablls_grid_payload', gridUrl: '/ablls/grid.html?autoload=latest&storageKey=ablls_grid_payload' };
+    }, [assessmentType, protocolName]);
+
     const handleSaveAndExport = useCallback(() => {
         if (!template) return;
 
         try {
             setExporting(true);
 
-            const exportSnapshot = buildABLLSExportState(template, answers);
+            const buildExport = assessmentType === 'AFLLS' ? buildAFLSExportState : assessmentType === 'DAYC-2' ? buildDAYC2ExportState : assessmentType === 'VB-MAPP' ? buildVBMAPPExportState : buildABLLSExportState;
+            const exportSnapshot = buildExport(template, answers);
             const generatedAt = new Date().toISOString();
             const safeAssessmentType = assessmentType.replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
             const timestamp = generatedAt.replace(/[:.]/g, '-');
             const answersFileName = `${safeAssessmentType}-responses-${timestamp}.json`;
             const scoreMapFileName = `${safeAssessmentType}-score-map-${timestamp}.json`;
 
-            // Save latest export for grid autoload
+            // Save latest export for grid autoload (per-assessment localStorage key)
+            const { storageKey, gridUrl } = resolveGridConfig();
             window.localStorage.setItem(
-                'ablls_grid_payload',
+                storageKey,
                 JSON.stringify({
                     version: 1,
                     assessmentType,
@@ -339,11 +390,8 @@ export function QuestionnaireFlow({
                 })
             );
 
-            downloadJson(answersFileName, exportSnapshot.answers);
-            downloadJson(scoreMapFileName, exportSnapshot.scoreMap);
-
-            // Open ABLLS VB grid with autoload enabled
-            const gridWindow = window.open('/ablls/grid.html?autoload=latest', '_blank', 'noopener,noreferrer');
+            // Open the assessment-specific VB grid with autoload enabled
+            const gridWindow = window.open(gridUrl, '_blank', 'noopener,noreferrer');
 
             toast({
                 title: 'Saved & Exported',
@@ -360,7 +408,7 @@ export function QuestionnaireFlow({
         } finally {
             setExporting(false);
         }
-    }, [template, answers, assessmentType, toast]);
+    }, [template, answers, assessmentType, toast, resolveGridConfig]);
 
     // Handle final submission and Excel download
     const handleSubmitAndExport = useCallback(async () => {
@@ -373,7 +421,10 @@ export function QuestionnaireFlow({
             await persistDomainResponses(currentDomain);
 
             // Complete the session
-            await completeSession(sessionId);
+            const requiredQuestionIds = template.domains.flatMap((domain) =>
+                domain.questions.map((question) => question.id)
+            );
+            await completeSession(sessionId, respondentId, requiredQuestionIds);
 
             toast({
                 title: 'Assessment Complete!',
@@ -381,7 +432,7 @@ export function QuestionnaireFlow({
             });
 
             // Trigger Excel download
-            await downloadExcelReport(sessionId);
+            await downloadExcelReport(sessionId, respondentId);
 
             toast({
                 title: 'Success!',
@@ -398,7 +449,7 @@ export function QuestionnaireFlow({
         } finally {
             setCompleting(false);
         }
-    }, [sessionId, currentDomain, toast, onComplete, persistDomainResponses]);
+    }, [sessionId, currentDomain, template, respondentId, toast, onComplete, persistDomainResponses]);
 
     // Loading state
     if (loading) {
@@ -436,9 +487,14 @@ export function QuestionnaireFlow({
             {/* Header with back button and badge */}
             <div className="flex items-center justify-between sticky top-0 z-10 bg-background/95 backdrop-blur py-3 px-1 border-b">
                 <Button variant="ghost" onClick={onBack} className="gap-2">
-                    <ChevronLeft className="h-4 w-4" /> Back to Questionnaires
+                    <ChevronLeft className="h-4 w-4" /> {protocolName ? 'Back to Protocols' : 'Back to Questionnaires'}
                 </Button>
-                <Badge variant="outline">{assessmentType}</Badge>
+                <div className="flex items-center gap-2">
+                    {protocolName && (
+                        <Badge variant="outline" className="text-xs">{protocolName}</Badge>
+                    )}
+                    <Badge variant="outline">{assessmentType}</Badge>
+                </div>
             </div>
 
             {/* Domain header card */}
@@ -541,7 +597,7 @@ export function QuestionnaireFlow({
                             </CardHeader>
 
                             <CardContent className="pt-0">
-                                {/* Radio button options (0th option filtered out) */}
+                                {/* Radio button options */}
                                 <div className="space-y-2">
                                     <Label className="text-sm font-medium text-muted-foreground mb-3 block">
                                         Select your response:
@@ -648,7 +704,7 @@ export function QuestionnaireFlow({
                             {isLastDomain ? (
                                 <Button
                                     onClick={handleSubmitAndExport}
-                                    disabled={!isDomainComplete || completing}
+                                    disabled={completing}
                                     className="gap-2"
                                 >
                                     {completing ? (
@@ -666,7 +722,7 @@ export function QuestionnaireFlow({
                             ) : (
                                 <Button
                                     onClick={handleNextDomain}
-                                    disabled={!isDomainComplete || saving}
+                                    disabled={saving}
                                     className="gap-2"
                                 >
                                     {saving ? (
@@ -689,3 +745,4 @@ export function QuestionnaireFlow({
         </div>
     );
 }
+

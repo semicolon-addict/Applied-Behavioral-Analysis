@@ -30,12 +30,12 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { useAuth, useFirestore, setDocumentNonBlocking } from '@/firebase';
+import { useAuth, useFirestore } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Baby } from 'lucide-react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { registerUser } from '@/lib/sheets-auth';
 import { useState } from 'react';
 
@@ -79,25 +79,12 @@ export default function RegisterPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      // Step 1: Register in Google Sheets via Apps Script
-      const sheetResult = await registerUser(
-        values.email,
-        values.password,
-        values.role,
-        values.firstName,
-        values.lastName
-      );
-
-      if (!sheetResult.success) {
-        throw new Error(sheetResult.error || 'Registration failed in Google Sheets');
-      }
-
-      // Step 2: Create Firebase Auth user for session management
+      // Step 1: Create Firebase Auth user for identity/session
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
       if (user) {
-        // Step 3: Store user data in Firestore for role-based routing
+        // Step 2: Write Firestore role/profile document (awaited)
         const userRef = doc(firestore, "users", user.uid);
         const userData = {
           id: user.uid,
@@ -106,7 +93,23 @@ export default function RegisterPage() {
           firstName: values.firstName,
           lastName: values.lastName,
         };
-        setDocumentNonBlocking(userRef, userData, { merge: true });
+        await setDoc(userRef, userData, { merge: true });
+
+        // Step 3: Register in Google Sheets via Apps Script
+        const sheetResult = await registerUser(
+          values.email,
+          values.password,
+          values.role,
+          values.firstName,
+          values.lastName
+        );
+
+        if (!sheetResult.success) {
+          // Best-effort rollback to avoid partial account state.
+          await deleteDoc(userRef).catch(() => undefined);
+          await deleteUser(user).catch(() => undefined);
+          throw new Error(sheetResult.error || 'Registration failed in Google Sheets');
+        }
 
         toast({
           title: 'Registration Successful',
