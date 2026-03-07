@@ -3,99 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>VB-MAPP — Transition Assessment</title>
+<title>VB-MAPP Transition Scoring Form</title>
 <style>
+
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;background:#fff}
-.wrap{max-width:1600px;margin:0 auto;padding:12px 14px}
+body{font-family:'Segoe UI',Roboto,Arial,Helvetica,sans-serif;font-size:9pt;background:#f8f9fa;color:#1a1a2e}
+.wrap{max-width:1700px;margin:0 auto;padding:12px 16px;background:#fff;min-height:100vh}
 
-.nav-bar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;
-  padding:6px 8px;background:#f0f4ff;border:1px solid #c5d0e6;border-radius:4px}
-.nav-link{font-size:8pt;padding:4px 10px;border:1px solid #aab;border-radius:3px;
-  text-decoration:none;color:#333;background:#fff;white-space:nowrap}
-.nav-link:hover{background:#e8edf5}
-.nav-link.active{background:#1a56db;color:#fff;border-color:#1a56db;font-weight:bold}
+/* Navigation */
+.nav-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;
+  padding:8px 12px;background:linear-gradient(135deg,#f0f4ff 0%,#e8ecf7 100%);
+  border:1px solid #c5d0e6;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.nav-link{font-size:8pt;padding:5px 12px;border:1px solid #bbc4d6;border-radius:4px;
+  text-decoration:none;color:#444;background:#fff;white-space:nowrap;
+  transition:all 0.15s ease;font-weight:500}
+.nav-link:hover{background:#e2e8f4;border-color:#8b9dc3;color:#1a1a2e}
+.nav-link.active{background:#1a56db;color:#fff;border-color:#1a56db;font-weight:700;
+  box-shadow:0 2px 4px rgba(26,86,219,0.3)}
 
-.toolbar{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f5f5;
-  border:1px solid #ddd;border-radius:4px;margin-bottom:12px;flex-wrap:wrap}
-.pb{width:22px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer}
-.pb.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
-.cbtn{font-size:8pt;padding:3px 8px;border:1px solid #999;border-radius:3px;cursor:pointer;background:#fff}
-.cbtn:hover{background:#eee}
-.bigT{font-size:13pt;font-weight:normal;text-align:center}
-.subT{font-size:10.5pt;font-weight:normal;text-align:center;margin-bottom:6px}
-.fline{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:3px}
-.fl label{font-size:9pt;white-space:nowrap}
-.fl input{border:none;border-bottom:1px solid #444;outline:none;font-size:9pt;padding:1px 2px;background:transparent}
+/* Toolbar */
+.toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fafbfc;
+  border:1px solid #e0e4e8;border-radius:6px;margin-bottom:8px;flex-wrap:wrap}
+.pb{width:22px;height:22px;border:2px solid #999;border-radius:4px;cursor:pointer;
+  transition:transform 0.1s ease,box-shadow 0.1s ease}
+.pb:hover{transform:scale(1.15);box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+.pb.sel{border:3px solid #1a56db;box-shadow:0 0 0 2px rgba(26,86,219,0.25)}
+.cbtn{font-size:8pt;padding:4px 10px;border:1px solid #c0c4cc;border-radius:4px;
+  cursor:pointer;background:#fff;font-weight:500;transition:all 0.15s ease}
+.cbtn:hover{background:#eef1f5;border-color:#888}
 
-.gscroll{overflow-x:auto;margin-top:5px}
-table.g{border-collapse:collapse;table-layout:fixed}
-td.lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid #000;background:#f0f0f0;
-  font-size:5.8pt;font-weight:bold;text-align:center;vertical-align:middle;padding:0;white-space:nowrap}
-td.inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid #000;background:#fff;
-  cursor:pointer;padding:0;user-select:none;position:relative}
-td.inp[colspan="2"]{width:10mm;min-width:10mm}
-td.inp[colspan="4"]{width:20mm;min-width:20mm}
-td.inp:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.88)}
-td.off-lbl{width:14mm;min-width:14mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
-td.off-inp{width:5mm;min-width:5mm;height:5mm;border:0.4mm solid transparent;background:transparent;padding:0}
-td.gap{width:3mm;min-width:3mm;border:none;background:#fff;padding:0}
-td.ltr-hdr{font-weight:bold;font-size:9.5pt;text-align:center;
-  border:1px solid #111;background:#fff;height:17px;padding:0}
-td.name-hdr{font-size:5.8pt;line-height:1.25;text-align:center;
-  border:1px solid #222;background:#f0f0f0;padding:2px 1px}
-td.foot-cell{border:1px solid #666;border-top:2px solid #333;background:#ebebeb;
-  font-size:7pt;font-weight:bold;text-align:center;vertical-align:top;padding:2px 1px;line-height:1.3}
-.foot-name{font-size:5.5pt;font-weight:normal}
+/* Domain Color Toolbar */
+.dm-toolbar{margin-bottom:4px}
+.dm-pal{width:40px;height:22px;border:2px solid #888;border-radius:4px;cursor:pointer;
+  display:inline-block;transition:transform 0.1s ease}
+.dm-pal:hover{transform:scale(1.1)}
+.dm-pal.sel{border:3px solid #1a56db;box-shadow:0 0 0 2px rgba(26,86,219,0.25)}
 
-.c0{background:#fff!important}.c1{background:#c0c0c0!important}
-.c2{background:#ffff00!important}.c3{background:#ffa500!important}
-.c4{background:#00cc44!important}
+/* Manual Color Classes (no !important — palette inline styles must override) */
+.c0{background:#fff}.c1{background:#c0c0c0}
+.c2{background:#ffff00}.c3{background:#ffa500}
+.c4{background:#00cc44}
+
+/* Title */
+.bigT{font-size:14pt;font-weight:700;text-align:center;margin:8px 0 2px;color:#1a1a2e;
+  letter-spacing:-0.3px}
+
+/* Info / Key */
+.fline{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.fl label{font-size:9pt;font-weight:600;white-space:nowrap;color:#374151}
+.fl input{border:none;border-bottom:1.5px solid #9ca3af;outline:none;font-size:9pt;padding:2px 4px;
+  background:transparent;transition:border-color 0.15s}
+.fl input:focus{border-bottom-color:#1a56db}
+.key-table{border-collapse:collapse;font-size:8pt;box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  border-radius:4px;overflow:hidden}
+.key-table th,.key-table td{border:1px solid #d1d5db;padding:3px 8px;text-align:center}
+.key-table th{background:#92d050;color:#fff;font-weight:600;font-size:7.5pt;
+  text-transform:uppercase;letter-spacing:0.5px}
+
+/* ═══ Task Analysis Grid (Vertical Columns) ═══ */
+.chart-wrap{display:flex;align-items:stretch;margin-top:10px;overflow-x:auto;
+  border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.ms-labels{display:flex;flex-direction:column;flex-shrink:0;margin-right:2px}
+.ms-labels .ms-spacer{height:23px}
+.ms-labels .ms-group-label{display:flex;align-items:flex-start;justify-content:center;
+  font-weight:700;font-size:10pt;padding-top:2px;border-bottom:2px solid transparent;
+  color:#374151}
+.domain-col{display:flex;flex-direction:column;flex-shrink:0;min-width:72px;
+  border-left:1px solid #333}
+.domain-col:last-child{border-right:1px solid #333}
+.domain-hdr{background:#92d050;color:#fff;font-weight:700;font-size:8pt;
+  text-align:center;padding:4px 5px;border-bottom:1px solid #333;border-top:1px solid #333;
+  white-space:nowrap;height:24px;display:flex;align-items:center;justify-content:center;
+  text-transform:uppercase;letter-spacing:0.3px;font-size:7.5pt}
+.ms-group{border-bottom:2px solid #333}
+.ms-group:last-child{border-bottom:1px solid #333}
+.cell{height:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:7pt;position:relative;user-select:none;transition:background 0.12s ease;
+  border-bottom:1px solid #d1d5db;padding:0 2px;color:#374151}
+.cell:hover{outline:2px solid #1a56db;z-index:2;background:rgba(26,86,219,0.05)}
+.cell.m-cell{font-weight:700;font-size:8pt;border-bottom:1px solid #555;color:#1a1a2e}
+.cell.filled{background:#fff}
+.cell.empty-cell{background:#fafbfc;cursor:default}
+.cell.empty-cell:hover{outline:none;background:#fafbfc}
+
+/* Note dot */
 .ndot{position:absolute;top:1px;right:1px;width:4px;height:4px;border-radius:50%;
   background:#1a56db;display:none;pointer-events:none}
-#tip{display:none;position:fixed;background:#fffde7;border:1px solid #bbb;
-  padding:4px 8px;font-size:8pt;border-radius:3px;z-index:9999;
-  pointer-events:none;max-width:300px;white-space:pre-wrap;line-height:1.4}
-#vbStickyStatus{
-  position:fixed;right:12px;bottom:12px;z-index:9999;
-  font-size:11px;font-weight:bold;padding:6px 10px;border-radius:6px;
-  color:#14532d;background:#dcfce7;border:1px solid #86efac;
-  box-shadow:0 2px 6px rgba(0,0,0,.1)
-}
-.dm-toolbar{margin-bottom:4px}
-.dm-pal{width:40px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer;display:inline-block}
-.dm-pal.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+
+/* Tooltip */
+#tip{display:none;position:fixed;background:#333;color:#fff;padding:6px 10px;
+  border-radius:4px;font-size:8pt;max-width:350px;z-index:9999;pointer-events:none;
+  white-space:pre-wrap;line-height:1.4}
+
+/* ═══ Mini Bar-Chart Grid (Barriers/Transitions) ═══ */
+.charts-row{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:26px;justify-content:flex-start}
+.mini-chart{display:flex;flex-direction:column;align-items:center;
+  transition:transform 0.1s ease}
+.mini-chart:hover{transform:translateY(-1px)}
+.mini-hdr{background:#92d050;color:#1a1a2e;font-weight:600;font-size:7.5pt;
+  text-align:center;padding:5px 8px;border:1px solid #666;min-width:100px;height:50px;
+  white-space:pre-line;display:flex;align-items:center;justify-content:center;line-height:1.25;
+  border-radius:4px 4px 0 0;margin-left:15px}
+.mini-body{display:flex;align-items:flex-end}
+.mini-ylabel{display:flex;flex-direction:column;align-items:center;margin-right:1px}
+.mini-ylabel .yl{font-size:7pt;font-weight:600;height:20px;display:flex;align-items:center;
+  justify-content:center;width:14px;color:#555}
+.mini-grid{display:flex;flex-direction:column;border:1px solid #444;
+  border-radius:0 0 3px 3px;overflow:hidden}
+.mini-row{display:flex}
+.mini-cell{width:24px;height:20px;border:1px solid #bbb;background:#fff;cursor:pointer;
+  position:relative;user-select:none;transition:background 0.12s ease}
+.mini-cell:hover{outline:2px solid #1a56db;z-index:2;background:rgba(26,86,219,0.05)}
+.mini-xlabel{display:flex;margin-top:2px;margin-left:15px}
+.mini-xlabel .xl{font-size:7pt;font-weight:600;width:24px;text-align:center;color:#555}
+
+/* Status */
+#vbStickyStatus{position:fixed;bottom:12px;right:12px;background:#dcfce7;border:1px solid #86efac;
+  border-radius:6px;padding:6px 12px;font-size:7.5pt;font-weight:600;z-index:999;
+  color:#14532d;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+
+/* Totals bar */
+.totals-bar{display:flex;flex-wrap:wrap;gap:14px;padding:8px 14px;margin-top:10px;
+  background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 100%);
+  border:1px solid #c5d0e6;border-radius:6px;font-size:8pt;font-weight:600;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.tl{white-space:nowrap;color:#374151}
+
+/* Print */
 @media print{
-  .toolbar,.nav-bar{display:none}
-  #vbStickyStatus{display:none}
+  .nav-bar,.toolbar,.dm-toolbar,#vbStickyStatus{display:none!important}
+  .wrap{padding:0;max-width:100%;background:#fff}
+  body{font-size:8pt;background:#fff}
+  .chart-wrap{box-shadow:none}
 }
+
 </style>
 </head>
 <body>
 <div class="wrap">
+
 <div class="nav-bar">
-    <a class="nav-link" href="grid-level1.html?autoload=latest&storageKey=vbmapp_grid_payload">Level 1 — Milestones (0–18 months)</a>
-    <a class="nav-link" href="grid-level2.html?autoload=latest&storageKey=vbmapp_grid_payload">Level 2 — Milestones (18–30 months)</a>
-    <a class="nav-link" href="grid-level3.html?autoload=latest&storageKey=vbmapp_grid_payload">Level 3 — Milestones (30–48 months)</a>
-    <a class="nav-link" href="grid-barriers.html?autoload=latest&storageKey=vbmapp_grid_payload">Barriers Assessment</a>
-    <a class="nav-link active" href="grid-transitions.html?autoload=latest&storageKey=vbmapp_grid_payload">Transition Assessment</a>
+  <span style="font-size:8pt;font-weight:bold">VB-MAPP:</span>
+  <a class="nav-link" href="grid-master.html" onclick="this.href=addParams(this.href)">Master</a> &nbsp;|&nbsp; <a class="nav-link" href="grid-level1.html" onclick="this.href=addParams(this.href)">Level 1</a> &nbsp;|&nbsp; <a class="nav-link" href="grid-level2.html" onclick="this.href=addParams(this.href)">Level 2</a> &nbsp;|&nbsp; <a class="nav-link" href="grid-level3.html" onclick="this.href=addParams(this.href)">Level 3</a> &nbsp;|&nbsp; <a class="nav-link" href="grid-barriers.html" onclick="this.href=addParams(this.href)">Barriers</a> &nbsp;|&nbsp; <span class="nav-link active">Transitions</span>
 </div>
 
 <div class="toolbar">
-  <span style="font-size:8pt;font-weight:bold">Color:</span>
-  <div class="pb c0 sel" data-c="0" title="White / Clear"></div>
-  <div class="pb c1" data-c="1" title="Gray"></div>
-  <div class="pb c2" data-c="2" title="Yellow"></div>
-  <div class="pb c3" data-c="3" title="Orange"></div>
-  <div class="pb c4" data-c="4" title="Green"></div>
+  <span style="font-size:8pt;font-weight:600">Color:</span>
+  <div class="pb sel" data-c="0" style="background:#fff" title="White (clear)"></div>
+  <div class="pb" data-c="1" style="background:#c0c0c0" title="Gray"></div>
+  <div class="pb" data-c="2" style="background:#ffff00" title="Yellow"></div>
+  <div class="pb" data-c="3" style="background:#ffa500" title="Orange"></div>
+  <div class="pb" data-c="4" style="background:#00cc44" title="Green"></div>
   <button class="cbtn" id="clrAll">Clear All</button>
-  <span style="font-size:7.5pt;color:#14532d;font-weight:bold">VB-MAPP Transition Assessment</span>
-  <span id="mockStatus" style="font-size:7.5pt;color:#0b6b2a;font-weight:bold">Status: not loaded</span>
-  <span style="font-size:7.5pt;color:#555">Click = apply color &nbsp;|&nbsp; Dbl-click = add note</span>
+  <button class="cbtn" id="btnPrint" onclick="window.print()">&#9113; Print</button>
+  <span id="mockStatus" style="font-size:7.5pt;font-weight:bold;color:#0b6b2a;margin-left:6px">VB-MAPP Grid</span>
+  <span style="font-size:7pt;color:#888;margin-left:8px">Click = apply color &nbsp;|&nbsp; Dbl-click = add note</span>
 </div>
 <div class="toolbar dm-toolbar">
-  <span style="font-size:8pt;font-weight:bold">Domain VB Color:</span>
-  <select id="domainSelect" style="font-size:8pt;padding:2px 4px"></select>
+  <span style="font-size:8pt;font-weight:600">Domain VB Color:</span>
+  <select id="domainSelect" style="font-size:8pt;padding:2px 4px;border:1px solid #999;border-radius:3px"></select>
   <div class="dm-pal" data-pal="red" title="Red (default)" style="background:linear-gradient(90deg,#7f1d1d,#fca5a5)"></div>
   <div class="dm-pal" data-pal="blue" title="Blue" style="background:linear-gradient(90deg,#1e3a5f,#93c5fd)"></div>
   <div class="dm-pal" data-pal="green" title="Green" style="background:linear-gradient(90deg,#14532d,#86efac)"></div>
@@ -103,608 +169,1374 @@ td.foot-cell{border:1px solid #666;border-top:2px solid #333;background:#ebebeb;
   <div class="dm-pal" data-pal="amber" title="Amber" style="background:linear-gradient(90deg,#78350f,#fcd34d)"></div>
   <div class="dm-pal" data-pal="teal" title="Teal" style="background:linear-gradient(90deg,#134e4a,#5eead4)"></div>
 </div>
-
-<div class="bigT">Verbal Behavior Milestones Assessment and Placement Program</div>
-<div class="subT">Transition Assessment — 1 Domain · 18 Questions</div>
-<div class="fline" style="margin-top:6px">
-  <div class="fl"><label>Child: <input type="text" style="width:190px" id="p1s"/></label></div>
-  <div class="fl"><label>Assessor: <input type="text" style="width:140px" id="p1a"/></label></div>
-  <div class="fl"><label>Date: <input type="text" style="width:90px" id="p1d"/></label></div>
+<div class="toolbar" style="padding:4px 10px">
+  <span style="font-size:8pt;font-weight:bold">Load Session:</span>
+  <input type="text" id="sessionInput" placeholder="Session ID" style="font-size:8pt;padding:2px 4px;width:200px;border:1px solid #999;border-radius:3px">
+  <button class="cbtn" id="btnLoadSession">Load</button>
+  <span id="apiStatus" style="font-size:7.5pt;font-weight:bold"></span>
 </div>
 
-<div class="gscroll"><table class="g"><tbody>
-<tr>
-  <td class="ltr-hdr" colspan="6">TRANS</td>
-</tr>
-<tr>
-  <td class="name-hdr" colspan="6" style="white-space:pre-line">Transition Assessment</td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-18</td>
-  <td class="inp" data-k="TRANS-18-1" data-domain="TRANS" data-score="1" data-option="Requires significant help eating, limited food variety, negative behaviors during meals" title="1: Requires significant help eating, limited food variety, negative behaviors during meals" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-18-2" data-domain="TRANS" data-score="2" data-option="Eats some foods independently but needs physical prompts, limited utensil use" title="2: Eats some foods independently but needs physical prompts, limited utensil use" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-18-3" data-domain="TRANS" data-score="3" data-option="Uses a spoon independently, eats a variety of foods, needs prompts to stay seated and clean up" title="3: Uses a spoon independently, eats a variety of foods, needs prompts to stay seated and clean up" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-18-4" data-domain="TRANS" data-score="4" data-option="Independently uses a spoon, eats without prompts, makes a minimal mess, needs prompts to clean up" title="4: Independently uses a spoon, eats without prompts, makes a minimal mess, needs prompts to clean up" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-18-5" data-domain="TRANS" data-score="5" data-option="Independently gets food items, eats, and uses utensils, cleans up independently, or with 1 verbal prompt" title="5: Independently gets food items, eats, and uses utensils, cleans up independently, or with 1 verbal prompt" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-17</td>
-  <td class="inp" data-k="TRANS-17-1" data-domain="TRANS" data-score="1" data-option="Still wears a diaper, but demonstrates toilet training readiness signs" title="1: Still wears a diaper, but demonstrates toilet training readiness signs" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-17-2" data-domain="TRANS" data-score="2" data-option="Toilet training has begun, will occasionally urinate when seated on the toilet, but still wears a diaper" title="2: Toilet training has begun, will occasionally urinate when seated on the toilet, but still wears a diaper" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-17-3" data-domain="TRANS" data-score="3" data-option="Daytime bladder trained, uses pull-ups, has occasional accidents, needs prompts to complete the toileting routine" title="3: Daytime bladder trained, uses pull-ups, has occasional accidents, needs prompts to complete the toileting routine" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-17-4" data-domain="TRANS" data-score="4" data-option="Independently uses the toilet for urination, occasional bowel accidents, verbal prompts for hygiene" title="4: Independently uses the toilet for urination, occasional bowel accidents, verbal prompts for hygiene" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-17-5" data-domain="TRANS" data-score="5" data-option="Independently and consistently uses the toilet for both functions, maintains hygiene with minimal prompts" title="5: Independently and consistently uses the toilet for both functions, maintains hygiene with minimal prompts" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-16</td>
-  <td class="inp" data-k="TRANS-16-1" data-domain="TRANS" data-score="1" data-option="No independent self-help, but does not engage in negative behaviors when adults provide personal care" title="1: No independent self-help, but does not engage in negative behaviors when adults provide personal care" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-16-2" data-domain="TRANS" data-score="2" data-option="Requires verbal or physical prompts to complete most self-help tasks" title="2: Requires verbal or physical prompts to complete most self-help tasks" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-16-3" data-domain="TRANS" data-score="3" data-option="Requires mostly verbal prompts, but will attempt approximations to several self-help tasks" title="3: Requires mostly verbal prompts, but will attempt approximations to several self-help tasks" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-16-4" data-domain="TRANS" data-score="4" data-option="Initiates some self-help tasks and usually attempts approximations, but still requires verbal prompting" title="4: Initiates some self-help tasks and usually attempts approximations, but still requires verbal prompting" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-16-5" data-domain="TRANS" data-score="5" data-option="Is motivated, initiates approximations for most skills, and generalizes, but may need verbal prompts" title="5: Is motivated, initiates approximations for most skills, and generalizes, but may need verbal prompts" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-15</td>
-  <td class="inp" data-k="TRANS-15-1" data-domain="TRANS" data-score="1" data-option="Scores 3 points on independent play in the Milestones Assessment" title="1: Scores 3 points on independent play in the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-15-2" data-domain="TRANS" data-score="2" data-option="Scores 5 points on independent play in the Milestones Assessment" title="2: Scores 5 points on independent play in the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-15-3" data-domain="TRANS" data-score="3" data-option="Scores 8 points on independent play in the Milestones Assessment" title="3: Scores 8 points on independent play in the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-15-4" data-domain="TRANS" data-score="4" data-option="Scores 11 points on independent play in the Milestones Assessment" title="4: Scores 11 points on independent play in the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-15-5" data-domain="TRANS" data-score="5" data-option="Scores 14 points on independent play in the Milestones Assessment" title="5: Scores 14 points on independent play in the Milestones Assessment" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-14</td>
-  <td class="inp" data-k="TRANS-14-1" data-domain="TRANS" data-score="1" data-option="Emits some behaviors spontaneously, but most language and social skills are prompted" title="1: Emits some behaviors spontaneously, but most language and social skills are prompted" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-14-2" data-domain="TRANS" data-score="2" data-option="Emits many behaviors spontaneously, but they are mostly nonverbal behavior" title="2: Emits many behaviors spontaneously, but they are mostly nonverbal behavior" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-14-3" data-domain="TRANS" data-score="3" data-option="Spontaneously (no verbal prompts) mands and tacts several times a day" title="3: Spontaneously (no verbal prompts) mands and tacts several times a day" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-14-4" data-domain="TRANS" data-score="4" data-option="Spontaneously emits mand, tact, intraverbal, and verbal social behavior several times a day" title="4: Spontaneously emits mand, tact, intraverbal, and verbal social behavior several times a day" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-14-5" data-domain="TRANS" data-score="5" data-option="Emits appropriate spontaneous behaviors across most of the 16 areas of the Milestones Assessment" title="5: Emits appropriate spontaneous behaviors across most of the 16 areas of the Milestones Assessment" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-13</td>
-  <td class="inp" data-k="TRANS-13-1" data-domain="TRANS" data-score="1" data-option="Adapts to some minor changes with verbal preparation, but may demonstrate some negative behavior" title="1: Adapts to some minor changes with verbal preparation, but may demonstrate some negative behavior" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-13-2" data-domain="TRANS" data-score="2" data-option="Accepts minor changes, shows considerable distress, requires substantial preparation for change" title="2: Accepts minor changes, shows considerable distress, requires substantial preparation for change" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-13-3" data-domain="TRANS" data-score="3" data-option="Becomes annoyed and complains about changes, may perseverate, but ultimately goes with the change" title="3: Becomes annoyed and complains about changes, may perseverate, but ultimately goes with the change" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-13-4" data-domain="TRANS" data-score="4" data-option="Adapts to change quickly and without negative behaviors, but shows signs of minor distress" title="4: Adapts to change quickly and without negative behaviors, but shows signs of minor distress" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-13-5" data-domain="TRANS" data-score="5" data-option="The child handles change in routine well, and ignores or copes with other distractions and changes" title="5: The child handles change in routine well, and ignores or copes with other distractions and changes" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-12</td>
-  <td class="inp" data-k="TRANS-12-1" data-domain="TRANS" data-score="1" data-option="Demonstrates echoic to mand or tact transfer for 2 verbal responses with 2 or less transfer trials" title="1: Demonstrates echoic to mand or tact transfer for 2 verbal responses with 2 or less transfer trials" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-12-2" data-domain="TRANS" data-score="2" data-option="Demonstrates echoic to mand or tact transfer for 5 verbal responses without transfer trials" title="2: Demonstrates echoic to mand or tact transfer for 5 verbal responses without transfer trials" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-12-3" data-domain="TRANS" data-score="3" data-option="Demonstrates tact to mand transfer for 10 verbal responses without training" title="3: Demonstrates tact to mand transfer for 10 verbal responses without training" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-12-4" data-domain="TRANS" data-score="4" data-option="Demonstrates tact to intraverbal transfer for 10 topics or events without training" title="4: Demonstrates tact to intraverbal transfer for 10 topics or events without training" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-12-5" data-domain="TRANS" data-score="5" data-option="Demonstrates transfer daily, involving advanced parts of speech, and all speaker and listener skills" title="5: Demonstrates transfer daily, involving advanced parts of speech, and all speaker and listener skills" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-11</td>
-  <td class="inp" data-k="TRANS-11-1" data-domain="TRANS" data-score="1" data-option="Acquires 2 new motor skills in the natural environment without intensive teaching" title="1: Acquires 2 new motor skills in the natural environment without intensive teaching" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-11-2" data-domain="TRANS" data-score="2" data-option="Acquires 5 new mands or tacts in the natural environment without intensive teaching" title="2: Acquires 5 new mands or tacts in the natural environment without intensive teaching" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-11-3" data-domain="TRANS" data-score="3" data-option="Acquires 25 new mands or tacts in the natural environment without intensive teaching" title="3: Acquires 25 new mands or tacts in the natural environment without intensive teaching" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-11-4" data-domain="TRANS" data-score="4" data-option="Acquires 25 new intraverbals in the natural environment without intensive teaching" title="4: Acquires 25 new intraverbals in the natural environment without intensive teaching" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-11-5" data-domain="TRANS" data-score="5" data-option="Easily and consistently learns new skills daily in a natural or group setting without intensive teaching" title="5: Easily and consistently learns new skills daily in a natural or group setting without intensive teaching" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-10</td>
-  <td class="inp" data-k="TRANS-10-1" data-domain="TRANS" data-score="1" data-option="Loses most newly acquired skills within a day or two of acquisition" title="1: Loses most newly acquired skills within a day or two of acquisition" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-10-2" data-domain="TRANS" data-score="2" data-option="Retains some skills, but many are lost within a week without continued practice" title="2: Retains some skills, but many are lost within a week without continued practice" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-10-3" data-domain="TRANS" data-score="3" data-option="Retains most skills for a week, but some are lost without periodic review" title="3: Retains most skills for a week, but some are lost without periodic review" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-10-4" data-domain="TRANS" data-score="4" data-option="Retains most skills for several weeks, minimal review needed" title="4: Retains most skills for several weeks, minimal review needed" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-10-5" data-domain="TRANS" data-score="5" data-option="Retains virtually all acquired skills indefinitely with no review needed" title="5: Retains virtually all acquired skills indefinitely with no review needed" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-9</td>
-  <td class="inp" data-k="TRANS-9-1" data-domain="TRANS" data-score="1" data-option="Typically requires two or more weeks of training sessions and hundreds of trials to acquire a new skill" title="1: Typically requires two or more weeks of training sessions and hundreds of trials to acquire a new skill" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-9-2" data-domain="TRANS" data-score="2" data-option="Requires at least one week of training sessions and 100 or more trials to acquire a new target skill" title="2: Requires at least one week of training sessions and 100 or more trials to acquire a new target skill" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-9-3" data-domain="TRANS" data-score="3" data-option="Acquires several new target skills a week averaging less than 50 training trials" title="3: Acquires several new target skills a week averaging less than 50 training trials" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-9-4" data-domain="TRANS" data-score="4" data-option="Acquires several new target skills a week averaging less than 25 training trials" title="4: Acquires several new target skills a week averaging less than 25 training trials" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-9-5" data-domain="TRANS" data-score="5" data-option="Consistently acquires new target skills daily averaging 5 trials or less" title="5: Consistently acquires new target skills daily averaging 5 trials or less" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-8</td>
-  <td class="inp" data-k="TRANS-8-1" data-domain="TRANS" data-score="1" data-option="Reinforcers are frequent and mainly edibles, liquids, and physical contact (unlearned motivators)" title="1: Reinforcers are frequent and mainly edibles, liquids, and physical contact (unlearned motivators)" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-8-2" data-domain="TRANS" data-score="2" data-option="Reinforcers are tangible, sensory, or manipulative such as toys, cause-and-effect objects, music, dolls" title="2: Reinforcers are tangible, sensory, or manipulative such as toys, cause-and-effect objects, music, dolls" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-8-3" data-domain="TRANS" data-score="3" data-option="Reinforcers are social (e.g., attention), peer mediated (e.g., games), related to specific places (e.g., parks, stores), and less frequent; it is these learned reinforcers that are mainly used for teaching" title="3: Reinforcers are social (e.g., attention), peer mediated (e.g., games), related to specific places (e.g., parks, stores), and less frequent; it is these learned reinforcers that are mainly used for teaching" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-8-4" data-domain="TRANS" data-score="4" data-option="Reinforcers are intermittent, social, automatic, and involve a wide range of items and activities" title="4: Reinforcers are intermittent, social, automatic, and involve a wide range of items and activities" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-8-5" data-domain="TRANS" data-score="5" data-option="Reinforcers are intermittent, social, age appropriate, varied, and involve verbal information and change frequently" title="5: Reinforcers are intermittent, social, age appropriate, varied, and involve verbal information and change frequently" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-7</td>
-  <td class="inp" data-k="TRANS-7-1" data-domain="TRANS" data-score="1" data-option="Does not generalize any skills without extensive training" title="1: Does not generalize any skills without extensive training" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-7-2" data-domain="TRANS" data-score="2" data-option="Generalizes some skills with specific training across 2 examples" title="2: Generalizes some skills with specific training across 2 examples" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-7-3" data-domain="TRANS" data-score="3" data-option="Generalizes many skills across people, settings, and materials with minimal training" title="3: Generalizes many skills across people, settings, and materials with minimal training" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-7-4" data-domain="TRANS" data-score="4" data-option="Generalizes most skills with 1-2 additional examples on the first or second trial" title="4: Generalizes most skills with 1-2 additional examples on the first or second trial" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-7-5" data-domain="TRANS" data-score="5" data-option="Spontaneously generalizes new skills across people, settings, materials, and time on 10 occasions" title="5: Spontaneously generalizes new skills across people, settings, materials, and time on 10 occasions" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-6</td>
-  <td class="inp" data-k="TRANS-6-1" data-domain="TRANS" data-score="1" data-option="Does not work independently on any tasks" title="1: Does not work independently on any tasks" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-6-2" data-domain="TRANS" data-score="2" data-option="Works independently on some tasks for 1-2 minutes with frequent prompts" title="2: Works independently on some tasks for 1-2 minutes with frequent prompts" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-6-3" data-domain="TRANS" data-score="3" data-option="Works independently on familiar tasks for 5 minutes with occasional prompts" title="3: Works independently on familiar tasks for 5 minutes with occasional prompts" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-6-4" data-domain="TRANS" data-score="4" data-option="Works independently on a variety of tasks for 10 minutes with minimal prompts" title="4: Works independently on a variety of tasks for 10 minutes with minimal prompts" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-6-5" data-domain="TRANS" data-score="5" data-option="Works independently on new and familiar tasks for 15+ minutes without prompts" title="5: Works independently on new and familiar tasks for 15+ minutes without prompts" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-5</td>
-  <td class="inp" data-k="TRANS-5-1" data-domain="TRANS" data-score="1" data-option="Scores 3 points on social behavior and social play in the Milestones Assessment" title="1: Scores 3 points on social behavior and social play in the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-5-2" data-domain="TRANS" data-score="2" data-option="Scores 5 points on social behavior and social play" title="2: Scores 5 points on social behavior and social play" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-5-3" data-domain="TRANS" data-score="3" data-option="Scores 8 points on social behavior and social play" title="3: Scores 8 points on social behavior and social play" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-5-4" data-domain="TRANS" data-score="4" data-option="Scores 11 points on social behavior and social play" title="4: Scores 11 points on social behavior and social play" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-5-5" data-domain="TRANS" data-score="5" data-option="Scores 14 points on social behavior and social play" title="5: Scores 14 points on social behavior and social play" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-4</td>
-  <td class="inp" data-k="TRANS-4-1" data-domain="TRANS" data-score="1" data-option="Scores 2 points on classroom routines and group skills in the Milestones Assessment" title="1: Scores 2 points on classroom routines and group skills in the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-4-2" data-domain="TRANS" data-score="2" data-option="Scores 3 to 4 points on classroom routines and group skills" title="2: Scores 3 to 4 points on classroom routines and group skills" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-4-3" data-domain="TRANS" data-score="3" data-option="Scores 5 to 6 points on classroom routines and group skills" title="3: Scores 5 to 6 points on classroom routines and group skills" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-4-4" data-domain="TRANS" data-score="4" data-option="Scores 7 to 8 points on classroom routines and group skills" title="4: Scores 7 to 8 points on classroom routines and group skills" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-4-5" data-domain="TRANS" data-score="5" data-option="Scores 9 to 10 points on classroom routines and group skills" title="5: Scores 9 to 10 points on classroom routines and group skills" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-3</td>
-  <td class="inp" data-k="TRANS-3-1" data-domain="TRANS" data-score="1" data-option="A total score of 6 or 7 on negative behaviors and instructional control" title="1: A total score of 6 or 7 on negative behaviors and instructional control" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-3-2" data-domain="TRANS" data-score="2" data-option="A total score of 5 on negative behaviors and instructional control" title="2: A total score of 5 on negative behaviors and instructional control" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-3-3" data-domain="TRANS" data-score="3" data-option="A total score of 3 or 4 on negative behaviors and instructional control" title="3: A total score of 3 or 4 on negative behaviors and instructional control" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-3-4" data-domain="TRANS" data-score="4" data-option="A total score of 2 on negative behaviors and instructional control" title="4: A total score of 2 on negative behaviors and instructional control" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-3-5" data-domain="TRANS" data-score="5" data-option="A total score of 0 or 1 on negative behaviors and instructional control" title="5: A total score of 0 or 1 on negative behaviors and instructional control" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-2</td>
-  <td class="inp" data-k="TRANS-2-1" data-domain="TRANS" data-score="1" data-option="Scores 56 to 96 on the Barriers Assessment" title="1: Scores 56 to 96 on the Barriers Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-2-2" data-domain="TRANS" data-score="2" data-option="Scores 31 to 55 on the Barriers Assessment" title="2: Scores 31 to 55 on the Barriers Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-2-3" data-domain="TRANS" data-score="3" data-option="Scores 21 to 30 on the Barriers Assessment" title="3: Scores 21 to 30 on the Barriers Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-2-4" data-domain="TRANS" data-score="4" data-option="Scores 11 to 20 on the Barriers Assessment" title="4: Scores 11 to 20 on the Barriers Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-2-5" data-domain="TRANS" data-score="5" data-option="Scores 0 to 10 on the Barriers Assessment" title="5: Scores 0 to 10 on the Barriers Assessment" onclick="applyColor(this)"></td>
-</tr>
-<tr>
-  <td class="lbl">TRANS-1</td>
-  <td class="inp" data-k="TRANS-1-1" data-domain="TRANS" data-score="1" data-option="Scores 0 to 25 on the Milestones Assessment" title="1: Scores 0 to 25 on the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-1-2" data-domain="TRANS" data-score="2" data-option="Scores 26 to 50 on the Milestones Assessment" title="2: Scores 26 to 50 on the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-1-3" data-domain="TRANS" data-score="3" data-option="Scores 51 to 100 on the Milestones Assessment" title="3: Scores 51 to 100 on the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-1-4" data-domain="TRANS" data-score="4" data-option="Scores 101 to 135 on the Milestones Assessment" title="4: Scores 101 to 135 on the Milestones Assessment" onclick="applyColor(this)"></td>
-  <td class="inp" data-k="TRANS-1-5" data-domain="TRANS" data-score="5" data-option="Scores 136 to 170 on the Milestones Assessment" title="5: Scores 136 to 170 on the Milestones Assessment" onclick="applyColor(this)"></td>
-</tr>
-<tr class="foot-row">
-  <td class="foot-cell" colspan="6"><b>TRANS</b><br><span class="foot-name">Transition Assessment</span></td>
-</tr>
-</tbody></table></div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px">
+  <div>
+    <div class="fline"><span class="fl"><label>Child's Name:</label> <input type="text" style="width:200px" data-field="childName"></span>
+    <span class="fl" style="margin-left:20px"><label>Date of Birth:</label> <input type="text" style="width:120px" data-field="dob"></span></div>
+    <div class="fline"><span class="fl"><label>Age at Testing:</label> <input type="text" style="width:80px" data-field="age"></span>
+    <span class="fl" style="margin-left:20px"><label>Assessor:</label> <input type="text" style="width:140px" data-field="assessor"></span>
+    <span class="fl" style="margin-left:20px"><label>Date:</label> <input type="text" style="width:100px" data-field="date"></span></div>
+  </div>
+  <table class="key-table">
+    <tr><th>Key:</th><th>Score</th><th>Date</th><th>Color</th><th>Tester</th></tr>
+    <tr><td>1st test:</td><td><input type="text" style="width:40px" data-field="k1score"></td><td><input type="text" style="width:60px" data-field="k1date"></td><td style="width:40px;background:#00cc44"></td><td><input type="text" style="width:40px" data-field="k1tester"></td></tr>
+    <tr><td>2nd test:</td><td><input type="text" style="width:40px" data-field="k2score"></td><td><input type="text" style="width:60px" data-field="k2date"></td><td style="width:40px;background:#ffff00"></td><td><input type="text" style="width:40px" data-field="k2tester"></td></tr>
+    <tr><td>3rd test:</td><td><input type="text" style="width:40px" data-field="k3score"></td><td><input type="text" style="width:60px" data-field="k3date"></td><td style="width:40px;background:#ffa500"></td><td><input type="text" style="width:40px" data-field="k3tester"></td></tr>
+    <tr><td>4th test:</td><td><input type="text" style="width:40px" data-field="k4score"></td><td><input type="text" style="width:60px" data-field="k4date"></td><td style="width:40px;background:#c0c0c0"></td><td><input type="text" style="width:40px" data-field="k4tester"></td></tr>
+  </table>
+</div>
+<div class="bigT">VB-MAPP Transition Scoring Form</div>
+<div style="text-align:center;font-size:9pt;color:#555;margin-bottom:6px">18 Transition Items — Score 1-5</div>
+<div class="charts-row">
+<div class="mini-chart">
+  <div class="mini-hdr">VB-MAPP
+Milestones
+Score</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-1_T1_S5" data-base="TRANS-1" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-1 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T2_S5" data-base="TRANS-1" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-1 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T3_S5" data-base="TRANS-1" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-1 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T4_S5" data-base="TRANS-1" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-1 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-1_T1_S4" data-base="TRANS-1" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-1 Test 1, Score 4: 5 - Scores 136 to 170 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T2_S4" data-base="TRANS-1" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-1 Test 2, Score 4: 5 - Scores 136 to 170 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T3_S4" data-base="TRANS-1" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-1 Test 3, Score 4: 5 - Scores 136 to 170 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T4_S4" data-base="TRANS-1" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-1 Test 4, Score 4: 5 - Scores 136 to 170 on the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-1_T1_S3" data-base="TRANS-1" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-1 Test 1, Score 3: 4 - Scores 101 to 135 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T2_S3" data-base="TRANS-1" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-1 Test 2, Score 3: 4 - Scores 101 to 135 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T3_S3" data-base="TRANS-1" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-1 Test 3, Score 3: 4 - Scores 101 to 135 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T4_S3" data-base="TRANS-1" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-1 Test 4, Score 3: 4 - Scores 101 to 135 on the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-1_T1_S2" data-base="TRANS-1" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-1 Test 1, Score 2: 3 - Scores 51 to 100 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T2_S2" data-base="TRANS-1" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-1 Test 2, Score 2: 3 - Scores 51 to 100 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T3_S2" data-base="TRANS-1" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-1 Test 3, Score 2: 3 - Scores 51 to 100 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T4_S2" data-base="TRANS-1" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-1 Test 4, Score 2: 3 - Scores 51 to 100 on the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-1_T1_S1" data-base="TRANS-1" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-1 Test 1, Score 1: 2 - Scores 26 to 50 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T2_S1" data-base="TRANS-1" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-1 Test 2, Score 1: 2 - Scores 26 to 50 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T3_S1" data-base="TRANS-1" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-1 Test 3, Score 1: 2 - Scores 26 to 50 on the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-1_T4_S1" data-base="TRANS-1" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-1 Test 4, Score 1: 2 - Scores 26 to 50 on the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">VB-MAPP
+Barriers
+Score</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-2_T1_S5" data-base="TRANS-2" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-2 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T2_S5" data-base="TRANS-2" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-2 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T3_S5" data-base="TRANS-2" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-2 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T4_S5" data-base="TRANS-2" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-2 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-2_T1_S4" data-base="TRANS-2" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-2 Test 1, Score 4: 5 - Scores 0 to 10 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T2_S4" data-base="TRANS-2" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-2 Test 2, Score 4: 5 - Scores 0 to 10 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T3_S4" data-base="TRANS-2" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-2 Test 3, Score 4: 5 - Scores 0 to 10 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T4_S4" data-base="TRANS-2" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-2 Test 4, Score 4: 5 - Scores 0 to 10 on the Barriers Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-2_T1_S3" data-base="TRANS-2" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-2 Test 1, Score 3: 4 - Scores 11 to 20 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T2_S3" data-base="TRANS-2" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-2 Test 2, Score 3: 4 - Scores 11 to 20 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T3_S3" data-base="TRANS-2" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-2 Test 3, Score 3: 4 - Scores 11 to 20 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T4_S3" data-base="TRANS-2" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-2 Test 4, Score 3: 4 - Scores 11 to 20 on the Barriers Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-2_T1_S2" data-base="TRANS-2" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-2 Test 1, Score 2: 3 - Scores 21 to 30 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T2_S2" data-base="TRANS-2" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-2 Test 2, Score 2: 3 - Scores 21 to 30 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T3_S2" data-base="TRANS-2" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-2 Test 3, Score 2: 3 - Scores 21 to 30 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T4_S2" data-base="TRANS-2" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-2 Test 4, Score 2: 3 - Scores 21 to 30 on the Barriers Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-2_T1_S1" data-base="TRANS-2" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-2 Test 1, Score 1: 2 - Scores 31 to 55 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T2_S1" data-base="TRANS-2" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-2 Test 2, Score 1: 2 - Scores 31 to 55 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T3_S1" data-base="TRANS-2" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-2 Test 3, Score 1: 2 - Scores 31 to 55 on the Barriers Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-2_T4_S1" data-base="TRANS-2" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-2 Test 4, Score 1: 2 - Scores 31 to 55 on the Barriers Assessment"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Negative Behaviors
+and Instructional
+Control</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-3_T1_S5" data-base="TRANS-3" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-3 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T2_S5" data-base="TRANS-3" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-3 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T3_S5" data-base="TRANS-3" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-3 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T4_S5" data-base="TRANS-3" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-3 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-3_T1_S4" data-base="TRANS-3" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-3 Test 1, Score 4: 5 - A total score of 0 or 1 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T2_S4" data-base="TRANS-3" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-3 Test 2, Score 4: 5 - A total score of 0 or 1 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T3_S4" data-base="TRANS-3" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-3 Test 3, Score 4: 5 - A total score of 0 or 1 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T4_S4" data-base="TRANS-3" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-3 Test 4, Score 4: 5 - A total score of 0 or 1 on negative behaviors and instructional control"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-3_T1_S3" data-base="TRANS-3" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-3 Test 1, Score 3: 4 - A total score of 2 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T2_S3" data-base="TRANS-3" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-3 Test 2, Score 3: 4 - A total score of 2 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T3_S3" data-base="TRANS-3" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-3 Test 3, Score 3: 4 - A total score of 2 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T4_S3" data-base="TRANS-3" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-3 Test 4, Score 3: 4 - A total score of 2 on negative behaviors and instructional control"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-3_T1_S2" data-base="TRANS-3" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-3 Test 1, Score 2: 3 - A total score of 3 or 4 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T2_S2" data-base="TRANS-3" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-3 Test 2, Score 2: 3 - A total score of 3 or 4 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T3_S2" data-base="TRANS-3" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-3 Test 3, Score 2: 3 - A total score of 3 or 4 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T4_S2" data-base="TRANS-3" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-3 Test 4, Score 2: 3 - A total score of 3 or 4 on negative behaviors and instructional control"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-3_T1_S1" data-base="TRANS-3" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-3 Test 1, Score 1: 2 - A total score of 5 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T2_S1" data-base="TRANS-3" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-3 Test 2, Score 1: 2 - A total score of 5 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T3_S1" data-base="TRANS-3" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-3 Test 3, Score 1: 2 - A total score of 5 on negative behaviors and instructional control"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-3_T4_S1" data-base="TRANS-3" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-3 Test 4, Score 1: 2 - A total score of 5 on negative behaviors and instructional control"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Classroom Routines
+and
+Group Skills</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-4_T1_S5" data-base="TRANS-4" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-4 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T2_S5" data-base="TRANS-4" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-4 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T3_S5" data-base="TRANS-4" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-4 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T4_S5" data-base="TRANS-4" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-4 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-4_T1_S4" data-base="TRANS-4" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-4 Test 1, Score 4: 5 - Scores 9 to 10 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T2_S4" data-base="TRANS-4" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-4 Test 2, Score 4: 5 - Scores 9 to 10 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T3_S4" data-base="TRANS-4" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-4 Test 3, Score 4: 5 - Scores 9 to 10 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T4_S4" data-base="TRANS-4" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-4 Test 4, Score 4: 5 - Scores 9 to 10 points on classroom routines and group skills"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-4_T1_S3" data-base="TRANS-4" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-4 Test 1, Score 3: 4 - Scores 7 to 8 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T2_S3" data-base="TRANS-4" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-4 Test 2, Score 3: 4 - Scores 7 to 8 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T3_S3" data-base="TRANS-4" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-4 Test 3, Score 3: 4 - Scores 7 to 8 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T4_S3" data-base="TRANS-4" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-4 Test 4, Score 3: 4 - Scores 7 to 8 points on classroom routines and group skills"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-4_T1_S2" data-base="TRANS-4" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-4 Test 1, Score 2: 3 - Scores 5 to 6 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T2_S2" data-base="TRANS-4" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-4 Test 2, Score 2: 3 - Scores 5 to 6 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T3_S2" data-base="TRANS-4" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-4 Test 3, Score 2: 3 - Scores 5 to 6 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T4_S2" data-base="TRANS-4" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-4 Test 4, Score 2: 3 - Scores 5 to 6 points on classroom routines and group skills"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-4_T1_S1" data-base="TRANS-4" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-4 Test 1, Score 1: 2 - Scores 3 to 4 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T2_S1" data-base="TRANS-4" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-4 Test 2, Score 1: 2 - Scores 3 to 4 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T3_S1" data-base="TRANS-4" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-4 Test 3, Score 1: 2 - Scores 3 to 4 points on classroom routines and group skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-4_T4_S1" data-base="TRANS-4" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-4 Test 4, Score 1: 2 - Scores 3 to 4 points on classroom routines and group skills"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Social Skills
+and
+Social Play</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-5_T1_S5" data-base="TRANS-5" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-5 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T2_S5" data-base="TRANS-5" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-5 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T3_S5" data-base="TRANS-5" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-5 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T4_S5" data-base="TRANS-5" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-5 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-5_T1_S4" data-base="TRANS-5" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-5 Test 1, Score 4: 5 - Scores 14 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T2_S4" data-base="TRANS-5" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-5 Test 2, Score 4: 5 - Scores 14 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T3_S4" data-base="TRANS-5" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-5 Test 3, Score 4: 5 - Scores 14 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T4_S4" data-base="TRANS-5" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-5 Test 4, Score 4: 5 - Scores 14 points on social behavior and social play"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-5_T1_S3" data-base="TRANS-5" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-5 Test 1, Score 3: 4 - Scores 11 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T2_S3" data-base="TRANS-5" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-5 Test 2, Score 3: 4 - Scores 11 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T3_S3" data-base="TRANS-5" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-5 Test 3, Score 3: 4 - Scores 11 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T4_S3" data-base="TRANS-5" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-5 Test 4, Score 3: 4 - Scores 11 points on social behavior and social play"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-5_T1_S2" data-base="TRANS-5" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-5 Test 1, Score 2: 3 - Scores 8 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T2_S2" data-base="TRANS-5" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-5 Test 2, Score 2: 3 - Scores 8 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T3_S2" data-base="TRANS-5" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-5 Test 3, Score 2: 3 - Scores 8 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T4_S2" data-base="TRANS-5" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-5 Test 4, Score 2: 3 - Scores 8 points on social behavior and social play"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-5_T1_S1" data-base="TRANS-5" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-5 Test 1, Score 1: 2 - Scores 5 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T2_S1" data-base="TRANS-5" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-5 Test 2, Score 1: 2 - Scores 5 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T3_S1" data-base="TRANS-5" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-5 Test 3, Score 1: 2 - Scores 5 points on social behavior and social play"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-5_T4_S1" data-base="TRANS-5" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-5 Test 4, Score 1: 2 - Scores 5 points on social behavior and social play"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Independent
+Academic
+Work</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-6_T1_S5" data-base="TRANS-6" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-6 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T2_S5" data-base="TRANS-6" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-6 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T3_S5" data-base="TRANS-6" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-6 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T4_S5" data-base="TRANS-6" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-6 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-6_T1_S4" data-base="TRANS-6" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-6 Test 1, Score 4: 5 - Works independently on new and familiar tasks for 15+ minutes without prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T2_S4" data-base="TRANS-6" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-6 Test 2, Score 4: 5 - Works independently on new and familiar tasks for 15+ minutes without prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T3_S4" data-base="TRANS-6" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-6 Test 3, Score 4: 5 - Works independently on new and familiar tasks for 15+ minutes without prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T4_S4" data-base="TRANS-6" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-6 Test 4, Score 4: 5 - Works independently on new and familiar tasks for 15+ minutes without prompts"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-6_T1_S3" data-base="TRANS-6" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-6 Test 1, Score 3: 4 - Works independently on a variety of tasks for 10 minutes with minimal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T2_S3" data-base="TRANS-6" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-6 Test 2, Score 3: 4 - Works independently on a variety of tasks for 10 minutes with minimal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T3_S3" data-base="TRANS-6" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-6 Test 3, Score 3: 4 - Works independently on a variety of tasks for 10 minutes with minimal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T4_S3" data-base="TRANS-6" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-6 Test 4, Score 3: 4 - Works independently on a variety of tasks for 10 minutes with minimal prompts"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-6_T1_S2" data-base="TRANS-6" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-6 Test 1, Score 2: 3 - Works independently on familiar tasks for 5 minutes with occasional prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T2_S2" data-base="TRANS-6" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-6 Test 2, Score 2: 3 - Works independently on familiar tasks for 5 minutes with occasional prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T3_S2" data-base="TRANS-6" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-6 Test 3, Score 2: 3 - Works independently on familiar tasks for 5 minutes with occasional prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T4_S2" data-base="TRANS-6" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-6 Test 4, Score 2: 3 - Works independently on familiar tasks for 5 minutes with occasional prompts"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-6_T1_S1" data-base="TRANS-6" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-6 Test 1, Score 1: 2 - Works independently on some tasks for 1-2 minutes with frequent prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T2_S1" data-base="TRANS-6" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-6 Test 2, Score 1: 2 - Works independently on some tasks for 1-2 minutes with frequent prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T3_S1" data-base="TRANS-6" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-6 Test 3, Score 1: 2 - Works independently on some tasks for 1-2 minutes with frequent prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-6_T4_S1" data-base="TRANS-6" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-6 Test 4, Score 1: 2 - Works independently on some tasks for 1-2 minutes with frequent prompts"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+</div>
+<div class="charts-row">
+<div class="mini-chart">
+  <div class="mini-hdr">Generalization</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-7_T1_S5" data-base="TRANS-7" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-7 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T2_S5" data-base="TRANS-7" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-7 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T3_S5" data-base="TRANS-7" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-7 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T4_S5" data-base="TRANS-7" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-7 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-7_T1_S4" data-base="TRANS-7" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-7 Test 1, Score 4: 5 - Spontaneously generalizes new skills across people, settings, materials, and time on 10 occasions"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T2_S4" data-base="TRANS-7" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-7 Test 2, Score 4: 5 - Spontaneously generalizes new skills across people, settings, materials, and time on 10 occasions"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T3_S4" data-base="TRANS-7" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-7 Test 3, Score 4: 5 - Spontaneously generalizes new skills across people, settings, materials, and time on 10 occasions"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T4_S4" data-base="TRANS-7" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-7 Test 4, Score 4: 5 - Spontaneously generalizes new skills across people, settings, materials, and time on 10 occasions"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-7_T1_S3" data-base="TRANS-7" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-7 Test 1, Score 3: 4 - Generalizes most skills with 1-2 additional examples on the first or second trial"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T2_S3" data-base="TRANS-7" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-7 Test 2, Score 3: 4 - Generalizes most skills with 1-2 additional examples on the first or second trial"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T3_S3" data-base="TRANS-7" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-7 Test 3, Score 3: 4 - Generalizes most skills with 1-2 additional examples on the first or second trial"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T4_S3" data-base="TRANS-7" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-7 Test 4, Score 3: 4 - Generalizes most skills with 1-2 additional examples on the first or second trial"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-7_T1_S2" data-base="TRANS-7" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-7 Test 1, Score 2: 3 - Generalizes many skills across people, settings, and materials with minimal training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T2_S2" data-base="TRANS-7" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-7 Test 2, Score 2: 3 - Generalizes many skills across people, settings, and materials with minimal training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T3_S2" data-base="TRANS-7" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-7 Test 3, Score 2: 3 - Generalizes many skills across people, settings, and materials with minimal training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T4_S2" data-base="TRANS-7" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-7 Test 4, Score 2: 3 - Generalizes many skills across people, settings, and materials with minimal training"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-7_T1_S1" data-base="TRANS-7" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-7 Test 1, Score 1: 2 - Generalizes some skills with specific training across 2 examples"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T2_S1" data-base="TRANS-7" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-7 Test 2, Score 1: 2 - Generalizes some skills with specific training across 2 examples"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T3_S1" data-base="TRANS-7" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-7 Test 3, Score 1: 2 - Generalizes some skills with specific training across 2 examples"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-7_T4_S1" data-base="TRANS-7" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-7 Test 4, Score 1: 2 - Generalizes some skills with specific training across 2 examples"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Range of
+Reinforcers</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-8_T1_S5" data-base="TRANS-8" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-8 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T2_S5" data-base="TRANS-8" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-8 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T3_S5" data-base="TRANS-8" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-8 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T4_S5" data-base="TRANS-8" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-8 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-8_T1_S4" data-base="TRANS-8" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-8 Test 1, Score 4: 5 - Reinforcers are intermittent, social, age appropriate, varied, and involve verbal information and change frequently"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T2_S4" data-base="TRANS-8" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-8 Test 2, Score 4: 5 - Reinforcers are intermittent, social, age appropriate, varied, and involve verbal information and change frequently"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T3_S4" data-base="TRANS-8" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-8 Test 3, Score 4: 5 - Reinforcers are intermittent, social, age appropriate, varied, and involve verbal information and change frequently"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T4_S4" data-base="TRANS-8" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-8 Test 4, Score 4: 5 - Reinforcers are intermittent, social, age appropriate, varied, and involve verbal information and change frequently"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-8_T1_S3" data-base="TRANS-8" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-8 Test 1, Score 3: 4 - Reinforcers are intermittent, social, automatic, and involve a wide range of items and activities"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T2_S3" data-base="TRANS-8" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-8 Test 2, Score 3: 4 - Reinforcers are intermittent, social, automatic, and involve a wide range of items and activities"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T3_S3" data-base="TRANS-8" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-8 Test 3, Score 3: 4 - Reinforcers are intermittent, social, automatic, and involve a wide range of items and activities"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T4_S3" data-base="TRANS-8" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-8 Test 4, Score 3: 4 - Reinforcers are intermittent, social, automatic, and involve a wide range of items and activities"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-8_T1_S2" data-base="TRANS-8" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-8 Test 1, Score 2: 3 - Reinforcers are social (e.g., attention), peer mediated (e.g., games), related to specific places (e.g., parks, stores), and less frequent; it is these learned reinforcers that are mainly used for teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T2_S2" data-base="TRANS-8" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-8 Test 2, Score 2: 3 - Reinforcers are social (e.g., attention), peer mediated (e.g., games), related to specific places (e.g., parks, stores), and less frequent; it is these learned reinforcers that are mainly used for teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T3_S2" data-base="TRANS-8" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-8 Test 3, Score 2: 3 - Reinforcers are social (e.g., attention), peer mediated (e.g., games), related to specific places (e.g., parks, stores), and less frequent; it is these learned reinforcers that are mainly used for teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T4_S2" data-base="TRANS-8" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-8 Test 4, Score 2: 3 - Reinforcers are social (e.g., attention), peer mediated (e.g., games), related to specific places (e.g., parks, stores), and less frequent; it is these learned reinforcers that are mainly used for teaching"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-8_T1_S1" data-base="TRANS-8" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-8 Test 1, Score 1: 2 - Reinforcers are tangible, sensory, or manipulative such as toys, cause-and-effect objects, music, dolls"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T2_S1" data-base="TRANS-8" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-8 Test 2, Score 1: 2 - Reinforcers are tangible, sensory, or manipulative such as toys, cause-and-effect objects, music, dolls"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T3_S1" data-base="TRANS-8" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-8 Test 3, Score 1: 2 - Reinforcers are tangible, sensory, or manipulative such as toys, cause-and-effect objects, music, dolls"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-8_T4_S1" data-base="TRANS-8" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-8 Test 4, Score 1: 2 - Reinforcers are tangible, sensory, or manipulative such as toys, cause-and-effect objects, music, dolls"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Rate of
+Skill
+Acquisition</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-9_T1_S5" data-base="TRANS-9" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-9 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T2_S5" data-base="TRANS-9" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-9 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T3_S5" data-base="TRANS-9" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-9 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T4_S5" data-base="TRANS-9" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-9 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-9_T1_S4" data-base="TRANS-9" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-9 Test 1, Score 4: 5 - Consistently acquires new target skills daily averaging 5 trials or less"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T2_S4" data-base="TRANS-9" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-9 Test 2, Score 4: 5 - Consistently acquires new target skills daily averaging 5 trials or less"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T3_S4" data-base="TRANS-9" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-9 Test 3, Score 4: 5 - Consistently acquires new target skills daily averaging 5 trials or less"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T4_S4" data-base="TRANS-9" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-9 Test 4, Score 4: 5 - Consistently acquires new target skills daily averaging 5 trials or less"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-9_T1_S3" data-base="TRANS-9" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-9 Test 1, Score 3: 4 - Acquires several new target skills a week averaging less than 25 training trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T2_S3" data-base="TRANS-9" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-9 Test 2, Score 3: 4 - Acquires several new target skills a week averaging less than 25 training trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T3_S3" data-base="TRANS-9" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-9 Test 3, Score 3: 4 - Acquires several new target skills a week averaging less than 25 training trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T4_S3" data-base="TRANS-9" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-9 Test 4, Score 3: 4 - Acquires several new target skills a week averaging less than 25 training trials"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-9_T1_S2" data-base="TRANS-9" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-9 Test 1, Score 2: 3 - Acquires several new target skills a week averaging less than 50 training trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T2_S2" data-base="TRANS-9" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-9 Test 2, Score 2: 3 - Acquires several new target skills a week averaging less than 50 training trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T3_S2" data-base="TRANS-9" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-9 Test 3, Score 2: 3 - Acquires several new target skills a week averaging less than 50 training trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T4_S2" data-base="TRANS-9" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-9 Test 4, Score 2: 3 - Acquires several new target skills a week averaging less than 50 training trials"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-9_T1_S1" data-base="TRANS-9" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-9 Test 1, Score 1: 2 - Requires at least one week of training sessions and 100 or more trials to acquire a new target skill"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T2_S1" data-base="TRANS-9" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-9 Test 2, Score 1: 2 - Requires at least one week of training sessions and 100 or more trials to acquire a new target skill"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T3_S1" data-base="TRANS-9" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-9 Test 3, Score 1: 2 - Requires at least one week of training sessions and 100 or more trials to acquire a new target skill"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-9_T4_S1" data-base="TRANS-9" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-9 Test 4, Score 1: 2 - Requires at least one week of training sessions and 100 or more trials to acquire a new target skill"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Retention
+of New
+Skills</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-10_T1_S5" data-base="TRANS-10" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-10 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T2_S5" data-base="TRANS-10" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-10 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T3_S5" data-base="TRANS-10" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-10 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T4_S5" data-base="TRANS-10" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-10 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-10_T1_S4" data-base="TRANS-10" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-10 Test 1, Score 4: 5 - Retains virtually all acquired skills indefinitely with no review needed"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T2_S4" data-base="TRANS-10" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-10 Test 2, Score 4: 5 - Retains virtually all acquired skills indefinitely with no review needed"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T3_S4" data-base="TRANS-10" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-10 Test 3, Score 4: 5 - Retains virtually all acquired skills indefinitely with no review needed"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T4_S4" data-base="TRANS-10" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-10 Test 4, Score 4: 5 - Retains virtually all acquired skills indefinitely with no review needed"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-10_T1_S3" data-base="TRANS-10" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-10 Test 1, Score 3: 4 - Retains most skills for several weeks, minimal review needed"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T2_S3" data-base="TRANS-10" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-10 Test 2, Score 3: 4 - Retains most skills for several weeks, minimal review needed"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T3_S3" data-base="TRANS-10" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-10 Test 3, Score 3: 4 - Retains most skills for several weeks, minimal review needed"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T4_S3" data-base="TRANS-10" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-10 Test 4, Score 3: 4 - Retains most skills for several weeks, minimal review needed"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-10_T1_S2" data-base="TRANS-10" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-10 Test 1, Score 2: 3 - Retains most skills for a week, but some are lost without periodic review"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T2_S2" data-base="TRANS-10" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-10 Test 2, Score 2: 3 - Retains most skills for a week, but some are lost without periodic review"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T3_S2" data-base="TRANS-10" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-10 Test 3, Score 2: 3 - Retains most skills for a week, but some are lost without periodic review"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T4_S2" data-base="TRANS-10" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-10 Test 4, Score 2: 3 - Retains most skills for a week, but some are lost without periodic review"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-10_T1_S1" data-base="TRANS-10" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-10 Test 1, Score 1: 2 - Retains some skills, but many are lost within a week without continued practice"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T2_S1" data-base="TRANS-10" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-10 Test 2, Score 1: 2 - Retains some skills, but many are lost within a week without continued practice"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T3_S1" data-base="TRANS-10" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-10 Test 3, Score 1: 2 - Retains some skills, but many are lost within a week without continued practice"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-10_T4_S1" data-base="TRANS-10" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-10 Test 4, Score 1: 2 - Retains some skills, but many are lost within a week without continued practice"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Natural
+Environment
+Learning</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-11_T1_S5" data-base="TRANS-11" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-11 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T2_S5" data-base="TRANS-11" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-11 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T3_S5" data-base="TRANS-11" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-11 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T4_S5" data-base="TRANS-11" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-11 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-11_T1_S4" data-base="TRANS-11" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-11 Test 1, Score 4: 5 - Easily and consistently learns new skills daily in a natural or group setting without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T2_S4" data-base="TRANS-11" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-11 Test 2, Score 4: 5 - Easily and consistently learns new skills daily in a natural or group setting without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T3_S4" data-base="TRANS-11" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-11 Test 3, Score 4: 5 - Easily and consistently learns new skills daily in a natural or group setting without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T4_S4" data-base="TRANS-11" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-11 Test 4, Score 4: 5 - Easily and consistently learns new skills daily in a natural or group setting without intensive teaching"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-11_T1_S3" data-base="TRANS-11" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-11 Test 1, Score 3: 4 - Acquires 25 new intraverbals in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T2_S3" data-base="TRANS-11" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-11 Test 2, Score 3: 4 - Acquires 25 new intraverbals in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T3_S3" data-base="TRANS-11" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-11 Test 3, Score 3: 4 - Acquires 25 new intraverbals in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T4_S3" data-base="TRANS-11" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-11 Test 4, Score 3: 4 - Acquires 25 new intraverbals in the natural environment without intensive teaching"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-11_T1_S2" data-base="TRANS-11" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-11 Test 1, Score 2: 3 - Acquires 25 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T2_S2" data-base="TRANS-11" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-11 Test 2, Score 2: 3 - Acquires 25 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T3_S2" data-base="TRANS-11" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-11 Test 3, Score 2: 3 - Acquires 25 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T4_S2" data-base="TRANS-11" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-11 Test 4, Score 2: 3 - Acquires 25 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-11_T1_S1" data-base="TRANS-11" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-11 Test 1, Score 1: 2 - Acquires 5 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T2_S1" data-base="TRANS-11" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-11 Test 2, Score 1: 2 - Acquires 5 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T3_S1" data-base="TRANS-11" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-11 Test 3, Score 1: 2 - Acquires 5 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-11_T4_S1" data-base="TRANS-11" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-11 Test 4, Score 1: 2 - Acquires 5 new mands or tacts in the natural environment without intensive teaching"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Transfer
+Without
+Training</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-12_T1_S5" data-base="TRANS-12" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-12 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T2_S5" data-base="TRANS-12" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-12 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T3_S5" data-base="TRANS-12" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-12 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T4_S5" data-base="TRANS-12" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-12 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-12_T1_S4" data-base="TRANS-12" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-12 Test 1, Score 4: 5 - Demonstrates transfer daily, involving advanced parts of speech, and all speaker and listener skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T2_S4" data-base="TRANS-12" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-12 Test 2, Score 4: 5 - Demonstrates transfer daily, involving advanced parts of speech, and all speaker and listener skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T3_S4" data-base="TRANS-12" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-12 Test 3, Score 4: 5 - Demonstrates transfer daily, involving advanced parts of speech, and all speaker and listener skills"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T4_S4" data-base="TRANS-12" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-12 Test 4, Score 4: 5 - Demonstrates transfer daily, involving advanced parts of speech, and all speaker and listener skills"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-12_T1_S3" data-base="TRANS-12" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-12 Test 1, Score 3: 4 - Demonstrates tact to intraverbal transfer for 10 topics or events without training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T2_S3" data-base="TRANS-12" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-12 Test 2, Score 3: 4 - Demonstrates tact to intraverbal transfer for 10 topics or events without training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T3_S3" data-base="TRANS-12" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-12 Test 3, Score 3: 4 - Demonstrates tact to intraverbal transfer for 10 topics or events without training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T4_S3" data-base="TRANS-12" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-12 Test 4, Score 3: 4 - Demonstrates tact to intraverbal transfer for 10 topics or events without training"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-12_T1_S2" data-base="TRANS-12" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-12 Test 1, Score 2: 3 - Demonstrates tact to mand transfer for 10 verbal responses without training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T2_S2" data-base="TRANS-12" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-12 Test 2, Score 2: 3 - Demonstrates tact to mand transfer for 10 verbal responses without training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T3_S2" data-base="TRANS-12" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-12 Test 3, Score 2: 3 - Demonstrates tact to mand transfer for 10 verbal responses without training"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T4_S2" data-base="TRANS-12" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-12 Test 4, Score 2: 3 - Demonstrates tact to mand transfer for 10 verbal responses without training"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-12_T1_S1" data-base="TRANS-12" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-12 Test 1, Score 1: 2 - Demonstrates echoic to mand or tact transfer for 5 verbal responses without transfer trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T2_S1" data-base="TRANS-12" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-12 Test 2, Score 1: 2 - Demonstrates echoic to mand or tact transfer for 5 verbal responses without transfer trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T3_S1" data-base="TRANS-12" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-12 Test 3, Score 1: 2 - Demonstrates echoic to mand or tact transfer for 5 verbal responses without transfer trials"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-12_T4_S1" data-base="TRANS-12" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-12 Test 4, Score 1: 2 - Demonstrates echoic to mand or tact transfer for 5 verbal responses without transfer trials"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+</div>
+<div class="charts-row">
+<div class="mini-chart">
+  <div class="mini-hdr">Adaptability
+to
+Change</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-13_T1_S5" data-base="TRANS-13" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-13 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T2_S5" data-base="TRANS-13" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-13 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T3_S5" data-base="TRANS-13" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-13 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T4_S5" data-base="TRANS-13" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-13 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-13_T1_S4" data-base="TRANS-13" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-13 Test 1, Score 4: 5 - The child handles change in routine well, and ignores or copes with other distractions and changes"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T2_S4" data-base="TRANS-13" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-13 Test 2, Score 4: 5 - The child handles change in routine well, and ignores or copes with other distractions and changes"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T3_S4" data-base="TRANS-13" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-13 Test 3, Score 4: 5 - The child handles change in routine well, and ignores or copes with other distractions and changes"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T4_S4" data-base="TRANS-13" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-13 Test 4, Score 4: 5 - The child handles change in routine well, and ignores or copes with other distractions and changes"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-13_T1_S3" data-base="TRANS-13" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-13 Test 1, Score 3: 4 - Adapts to change quickly and without negative behaviors, but shows signs of minor distress"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T2_S3" data-base="TRANS-13" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-13 Test 2, Score 3: 4 - Adapts to change quickly and without negative behaviors, but shows signs of minor distress"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T3_S3" data-base="TRANS-13" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-13 Test 3, Score 3: 4 - Adapts to change quickly and without negative behaviors, but shows signs of minor distress"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T4_S3" data-base="TRANS-13" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-13 Test 4, Score 3: 4 - Adapts to change quickly and without negative behaviors, but shows signs of minor distress"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-13_T1_S2" data-base="TRANS-13" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-13 Test 1, Score 2: 3 - Becomes annoyed and complains about changes, may perseverate, but ultimately goes with the change"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T2_S2" data-base="TRANS-13" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-13 Test 2, Score 2: 3 - Becomes annoyed and complains about changes, may perseverate, but ultimately goes with the change"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T3_S2" data-base="TRANS-13" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-13 Test 3, Score 2: 3 - Becomes annoyed and complains about changes, may perseverate, but ultimately goes with the change"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T4_S2" data-base="TRANS-13" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-13 Test 4, Score 2: 3 - Becomes annoyed and complains about changes, may perseverate, but ultimately goes with the change"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-13_T1_S1" data-base="TRANS-13" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-13 Test 1, Score 1: 2 - Accepts minor changes, shows considerable distress, requires substantial preparation for change"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T2_S1" data-base="TRANS-13" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-13 Test 2, Score 1: 2 - Accepts minor changes, shows considerable distress, requires substantial preparation for change"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T3_S1" data-base="TRANS-13" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-13 Test 3, Score 1: 2 - Accepts minor changes, shows considerable distress, requires substantial preparation for change"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-13_T4_S1" data-base="TRANS-13" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-13 Test 4, Score 1: 2 - Accepts minor changes, shows considerable distress, requires substantial preparation for change"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Spontaneous
+Behaviors</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-14_T1_S5" data-base="TRANS-14" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-14 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T2_S5" data-base="TRANS-14" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-14 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T3_S5" data-base="TRANS-14" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-14 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T4_S5" data-base="TRANS-14" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-14 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-14_T1_S4" data-base="TRANS-14" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-14 Test 1, Score 4: 5 - Emits appropriate spontaneous behaviors across most of the 16 areas of the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T2_S4" data-base="TRANS-14" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-14 Test 2, Score 4: 5 - Emits appropriate spontaneous behaviors across most of the 16 areas of the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T3_S4" data-base="TRANS-14" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-14 Test 3, Score 4: 5 - Emits appropriate spontaneous behaviors across most of the 16 areas of the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T4_S4" data-base="TRANS-14" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-14 Test 4, Score 4: 5 - Emits appropriate spontaneous behaviors across most of the 16 areas of the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-14_T1_S3" data-base="TRANS-14" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-14 Test 1, Score 3: 4 - Spontaneously emits mand, tact, intraverbal, and verbal social behavior several times a day"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T2_S3" data-base="TRANS-14" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-14 Test 2, Score 3: 4 - Spontaneously emits mand, tact, intraverbal, and verbal social behavior several times a day"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T3_S3" data-base="TRANS-14" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-14 Test 3, Score 3: 4 - Spontaneously emits mand, tact, intraverbal, and verbal social behavior several times a day"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T4_S3" data-base="TRANS-14" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-14 Test 4, Score 3: 4 - Spontaneously emits mand, tact, intraverbal, and verbal social behavior several times a day"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-14_T1_S2" data-base="TRANS-14" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-14 Test 1, Score 2: 3 - Spontaneously (no verbal prompts) mands and tacts several times a day"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T2_S2" data-base="TRANS-14" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-14 Test 2, Score 2: 3 - Spontaneously (no verbal prompts) mands and tacts several times a day"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T3_S2" data-base="TRANS-14" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-14 Test 3, Score 2: 3 - Spontaneously (no verbal prompts) mands and tacts several times a day"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T4_S2" data-base="TRANS-14" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-14 Test 4, Score 2: 3 - Spontaneously (no verbal prompts) mands and tacts several times a day"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-14_T1_S1" data-base="TRANS-14" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-14 Test 1, Score 1: 2 - Emits many behaviors spontaneously, but they are mostly nonverbal behavior"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T2_S1" data-base="TRANS-14" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-14 Test 2, Score 1: 2 - Emits many behaviors spontaneously, but they are mostly nonverbal behavior"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T3_S1" data-base="TRANS-14" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-14 Test 3, Score 1: 2 - Emits many behaviors spontaneously, but they are mostly nonverbal behavior"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-14_T4_S1" data-base="TRANS-14" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-14 Test 4, Score 1: 2 - Emits many behaviors spontaneously, but they are mostly nonverbal behavior"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Self-Directed
+Leisure
+Time</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-15_T1_S5" data-base="TRANS-15" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-15 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T2_S5" data-base="TRANS-15" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-15 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T3_S5" data-base="TRANS-15" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-15 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T4_S5" data-base="TRANS-15" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-15 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-15_T1_S4" data-base="TRANS-15" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-15 Test 1, Score 4: 5 - Scores 14 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T2_S4" data-base="TRANS-15" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-15 Test 2, Score 4: 5 - Scores 14 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T3_S4" data-base="TRANS-15" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-15 Test 3, Score 4: 5 - Scores 14 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T4_S4" data-base="TRANS-15" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-15 Test 4, Score 4: 5 - Scores 14 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-15_T1_S3" data-base="TRANS-15" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-15 Test 1, Score 3: 4 - Scores 11 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T2_S3" data-base="TRANS-15" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-15 Test 2, Score 3: 4 - Scores 11 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T3_S3" data-base="TRANS-15" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-15 Test 3, Score 3: 4 - Scores 11 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T4_S3" data-base="TRANS-15" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-15 Test 4, Score 3: 4 - Scores 11 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-15_T1_S2" data-base="TRANS-15" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-15 Test 1, Score 2: 3 - Scores 8 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T2_S2" data-base="TRANS-15" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-15 Test 2, Score 2: 3 - Scores 8 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T3_S2" data-base="TRANS-15" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-15 Test 3, Score 2: 3 - Scores 8 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T4_S2" data-base="TRANS-15" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-15 Test 4, Score 2: 3 - Scores 8 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-15_T1_S1" data-base="TRANS-15" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-15 Test 1, Score 1: 2 - Scores 5 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T2_S1" data-base="TRANS-15" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-15 Test 2, Score 1: 2 - Scores 5 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T3_S1" data-base="TRANS-15" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-15 Test 3, Score 1: 2 - Scores 5 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-15_T4_S1" data-base="TRANS-15" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-15 Test 4, Score 1: 2 - Scores 5 points on independent play in the Milestones Assessment"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">General
+Self-Help</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-16_T1_S5" data-base="TRANS-16" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-16 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T2_S5" data-base="TRANS-16" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-16 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T3_S5" data-base="TRANS-16" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-16 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T4_S5" data-base="TRANS-16" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-16 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-16_T1_S4" data-base="TRANS-16" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-16 Test 1, Score 4: 5 - Is motivated, initiates approximations for most skills, and generalizes, but may need verbal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T2_S4" data-base="TRANS-16" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-16 Test 2, Score 4: 5 - Is motivated, initiates approximations for most skills, and generalizes, but may need verbal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T3_S4" data-base="TRANS-16" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-16 Test 3, Score 4: 5 - Is motivated, initiates approximations for most skills, and generalizes, but may need verbal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T4_S4" data-base="TRANS-16" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-16 Test 4, Score 4: 5 - Is motivated, initiates approximations for most skills, and generalizes, but may need verbal prompts"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-16_T1_S3" data-base="TRANS-16" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-16 Test 1, Score 3: 4 - Initiates some self-help tasks and usually attempts approximations, but still requires verbal prompting"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T2_S3" data-base="TRANS-16" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-16 Test 2, Score 3: 4 - Initiates some self-help tasks and usually attempts approximations, but still requires verbal prompting"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T3_S3" data-base="TRANS-16" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-16 Test 3, Score 3: 4 - Initiates some self-help tasks and usually attempts approximations, but still requires verbal prompting"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T4_S3" data-base="TRANS-16" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-16 Test 4, Score 3: 4 - Initiates some self-help tasks and usually attempts approximations, but still requires verbal prompting"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-16_T1_S2" data-base="TRANS-16" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-16 Test 1, Score 2: 3 - Requires mostly verbal prompts, but will attempt approximations to several self-help tasks"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T2_S2" data-base="TRANS-16" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-16 Test 2, Score 2: 3 - Requires mostly verbal prompts, but will attempt approximations to several self-help tasks"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T3_S2" data-base="TRANS-16" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-16 Test 3, Score 2: 3 - Requires mostly verbal prompts, but will attempt approximations to several self-help tasks"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T4_S2" data-base="TRANS-16" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-16 Test 4, Score 2: 3 - Requires mostly verbal prompts, but will attempt approximations to several self-help tasks"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-16_T1_S1" data-base="TRANS-16" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-16 Test 1, Score 1: 2 - Requires verbal or physical prompts to complete most self-help tasks"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T2_S1" data-base="TRANS-16" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-16 Test 2, Score 1: 2 - Requires verbal or physical prompts to complete most self-help tasks"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T3_S1" data-base="TRANS-16" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-16 Test 3, Score 1: 2 - Requires verbal or physical prompts to complete most self-help tasks"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-16_T4_S1" data-base="TRANS-16" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-16 Test 4, Score 1: 2 - Requires verbal or physical prompts to complete most self-help tasks"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Toileting
+Skills</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-17_T1_S5" data-base="TRANS-17" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-17 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T2_S5" data-base="TRANS-17" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-17 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T3_S5" data-base="TRANS-17" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-17 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T4_S5" data-base="TRANS-17" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-17 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-17_T1_S4" data-base="TRANS-17" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-17 Test 1, Score 4: 5 - Independently and consistently uses the toilet for both functions, maintains hygiene with minimal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T2_S4" data-base="TRANS-17" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-17 Test 2, Score 4: 5 - Independently and consistently uses the toilet for both functions, maintains hygiene with minimal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T3_S4" data-base="TRANS-17" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-17 Test 3, Score 4: 5 - Independently and consistently uses the toilet for both functions, maintains hygiene with minimal prompts"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T4_S4" data-base="TRANS-17" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-17 Test 4, Score 4: 5 - Independently and consistently uses the toilet for both functions, maintains hygiene with minimal prompts"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-17_T1_S3" data-base="TRANS-17" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-17 Test 1, Score 3: 4 - Independently uses the toilet for urination, occasional bowel accidents, verbal prompts for hygiene"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T2_S3" data-base="TRANS-17" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-17 Test 2, Score 3: 4 - Independently uses the toilet for urination, occasional bowel accidents, verbal prompts for hygiene"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T3_S3" data-base="TRANS-17" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-17 Test 3, Score 3: 4 - Independently uses the toilet for urination, occasional bowel accidents, verbal prompts for hygiene"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T4_S3" data-base="TRANS-17" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-17 Test 4, Score 3: 4 - Independently uses the toilet for urination, occasional bowel accidents, verbal prompts for hygiene"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-17_T1_S2" data-base="TRANS-17" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-17 Test 1, Score 2: 3 - Daytime bladder trained, uses pull-ups, has occasional accidents, needs prompts to complete the toileting routine"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T2_S2" data-base="TRANS-17" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-17 Test 2, Score 2: 3 - Daytime bladder trained, uses pull-ups, has occasional accidents, needs prompts to complete the toileting routine"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T3_S2" data-base="TRANS-17" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-17 Test 3, Score 2: 3 - Daytime bladder trained, uses pull-ups, has occasional accidents, needs prompts to complete the toileting routine"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T4_S2" data-base="TRANS-17" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-17 Test 4, Score 2: 3 - Daytime bladder trained, uses pull-ups, has occasional accidents, needs prompts to complete the toileting routine"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-17_T1_S1" data-base="TRANS-17" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-17 Test 1, Score 1: 2 - Toilet training has begun, will occasionally urinate when seated on the toilet, but still wears a diaper"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T2_S1" data-base="TRANS-17" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-17 Test 2, Score 1: 2 - Toilet training has begun, will occasionally urinate when seated on the toilet, but still wears a diaper"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T3_S1" data-base="TRANS-17" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-17 Test 3, Score 1: 2 - Toilet training has begun, will occasionally urinate when seated on the toilet, but still wears a diaper"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-17_T4_S1" data-base="TRANS-17" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-17 Test 4, Score 1: 2 - Toilet training has begun, will occasionally urinate when seated on the toilet, but still wears a diaper"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+<div class="mini-chart">
+  <div class="mini-hdr">Eating
+Skills</div>
+  <div class="mini-body">
+    <div class="mini-ylabel">
+      <div class="yl">5</div>
+      <div class="yl">4</div>
+      <div class="yl">3</div>
+      <div class="yl">2</div>
+      <div class="yl">1</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-18_T1_S5" data-base="TRANS-18" data-test="1" data-score="5" data-domain="TRANS" title="TRANS-18 Test 1, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T2_S5" data-base="TRANS-18" data-test="2" data-score="5" data-domain="TRANS" title="TRANS-18 Test 2, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T3_S5" data-base="TRANS-18" data-test="3" data-score="5" data-domain="TRANS" title="TRANS-18 Test 3, Score 5"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T4_S5" data-base="TRANS-18" data-test="4" data-score="5" data-domain="TRANS" title="TRANS-18 Test 4, Score 5"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-18_T1_S4" data-base="TRANS-18" data-test="1" data-score="4" data-domain="TRANS" title="TRANS-18 Test 1, Score 4: 5 - Independently gets food items, eats, and uses utensils, cleans up independently, or with 1 verbal prompt"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T2_S4" data-base="TRANS-18" data-test="2" data-score="4" data-domain="TRANS" title="TRANS-18 Test 2, Score 4: 5 - Independently gets food items, eats, and uses utensils, cleans up independently, or with 1 verbal prompt"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T3_S4" data-base="TRANS-18" data-test="3" data-score="4" data-domain="TRANS" title="TRANS-18 Test 3, Score 4: 5 - Independently gets food items, eats, and uses utensils, cleans up independently, or with 1 verbal prompt"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T4_S4" data-base="TRANS-18" data-test="4" data-score="4" data-domain="TRANS" title="TRANS-18 Test 4, Score 4: 5 - Independently gets food items, eats, and uses utensils, cleans up independently, or with 1 verbal prompt"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-18_T1_S3" data-base="TRANS-18" data-test="1" data-score="3" data-domain="TRANS" title="TRANS-18 Test 1, Score 3: 4 - Independently uses a spoon, eats without prompts, makes a minimal mess, needs prompts to clean up"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T2_S3" data-base="TRANS-18" data-test="2" data-score="3" data-domain="TRANS" title="TRANS-18 Test 2, Score 3: 4 - Independently uses a spoon, eats without prompts, makes a minimal mess, needs prompts to clean up"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T3_S3" data-base="TRANS-18" data-test="3" data-score="3" data-domain="TRANS" title="TRANS-18 Test 3, Score 3: 4 - Independently uses a spoon, eats without prompts, makes a minimal mess, needs prompts to clean up"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T4_S3" data-base="TRANS-18" data-test="4" data-score="3" data-domain="TRANS" title="TRANS-18 Test 4, Score 3: 4 - Independently uses a spoon, eats without prompts, makes a minimal mess, needs prompts to clean up"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-18_T1_S2" data-base="TRANS-18" data-test="1" data-score="2" data-domain="TRANS" title="TRANS-18 Test 1, Score 2: 3 - Uses a spoon independently, eats a variety of foods, needs prompts to stay seated and clean up"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T2_S2" data-base="TRANS-18" data-test="2" data-score="2" data-domain="TRANS" title="TRANS-18 Test 2, Score 2: 3 - Uses a spoon independently, eats a variety of foods, needs prompts to stay seated and clean up"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T3_S2" data-base="TRANS-18" data-test="3" data-score="2" data-domain="TRANS" title="TRANS-18 Test 3, Score 2: 3 - Uses a spoon independently, eats a variety of foods, needs prompts to stay seated and clean up"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T4_S2" data-base="TRANS-18" data-test="4" data-score="2" data-domain="TRANS" title="TRANS-18 Test 4, Score 2: 3 - Uses a spoon independently, eats a variety of foods, needs prompts to stay seated and clean up"><span class="ndot"></span></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-cell" data-k="TRANS-18_T1_S1" data-base="TRANS-18" data-test="1" data-score="1" data-domain="TRANS" title="TRANS-18 Test 1, Score 1: 2 - Eats some foods independently but needs physical prompts, limited utensil use"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T2_S1" data-base="TRANS-18" data-test="2" data-score="1" data-domain="TRANS" title="TRANS-18 Test 2, Score 1: 2 - Eats some foods independently but needs physical prompts, limited utensil use"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T3_S1" data-base="TRANS-18" data-test="3" data-score="1" data-domain="TRANS" title="TRANS-18 Test 3, Score 1: 2 - Eats some foods independently but needs physical prompts, limited utensil use"><span class="ndot"></span></div>
+        <div class="mini-cell" data-k="TRANS-18_T4_S1" data-base="TRANS-18" data-test="4" data-score="1" data-domain="TRANS" title="TRANS-18 Test 4, Score 1: 2 - Eats some foods independently but needs physical prompts, limited utensil use"><span class="ndot"></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-xlabel">
+    <div class="xl">1</div>
+    <div class="xl">2</div>
+    <div class="xl">3</div>
+    <div class="xl">4</div>
+  </div>
+</div>
+</div>
 
+<div class="totals-bar"><span class="tl">Total Transition Score: <span id="total_transitions">—</span></span></div>
 
 </div>
 <div id="tip"></div>
-<div id="vbStickyStatus">VB: not loaded</div>
-
-<!-- Manual color + notes -->
+<div id="vbStickyStatus">VB-MAPP: ready</div>
 <script>
-let ac=0; const st={};
-document.querySelectorAll('.pb').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.pb').forEach(x=>x.classList.remove('sel'));
-    b.classList.add('sel'); ac=+b.dataset.c;
-  });
-});
-document.getElementById('clrAll').addEventListener('click',()=>{
-  if(!confirm('Clear all colors and notes?'))return;
-  document.querySelectorAll('td.inp').forEach(t=>{
-    t.className='inp';
-    const d=t.querySelector('.ndot'); if(d) d.style.display='none';
-    delete st[t.dataset.k];
-  });
-  save();
-});
-function applyColor(td){
-  const k=td.dataset.k;
-  if(!st[k])st[k]={};
-  st[k].ci=ac; td.className='inp c'+ac;
-  const d=td.querySelector('.ndot');
-  if(d&&(st[k]||{}).note) d.style.display='block';
-  save();
-}
-window.applyColor=applyColor;
-document.addEventListener('dblclick',e=>{
-  const t=e.target.closest('td.inp'); if(!t)return;
-  const k=t.dataset.k;
-  const cur=(st[k]||{}).note||'';
-  const lbl=k.replace(/-[\d.]+$/,'').replace(/-half$/,'');
-  const note=prompt('Note for '+lbl+':',cur);
-  if(note===null)return;
-  if(!st[k])st[k]={};
-  st[k].note=note.trim();
-  let d=t.querySelector('.ndot');
-  if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
-  d.style.display=note.trim()?'block':'none';
-  save();
-});
-const tip=document.getElementById('tip');
-document.addEventListener('mouseover',e=>{
-  const t=e.target.closest('td.inp');
-  if(!t){tip.style.display='none';return;}
-  const k=t.dataset.k;
-  const note=(st[k]||{}).note;
-  const option=t.dataset.option||'';
-  const score=t.dataset.score||'';
-  let txt=option?'Score '+score+': '+option:'';
-  if(note) txt+=(txt?'\n\nNote: ':'Note: ')+note;
-  if(!txt){tip.style.display='none';return;}
-  tip.textContent=txt; tip.style.display='block';
-});
-document.addEventListener('mousemove',e=>{
-  tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+10)+'px';
-});
-document.addEventListener('mouseout',e=>{
-  if(!e.relatedTarget||!e.relatedTarget.closest('td.inp')) tip.style.display='none';
-});
-function save(){
-  const fields={};
-  document.querySelectorAll('input[type=text]').forEach((inp,i)=>fields[i]=inp.value);
-  try{localStorage.setItem('vbmapp_transitions_v1',JSON.stringify({st,fields}));}catch(e){}
-}
-function load(){
-  try{
-    const raw=localStorage.getItem('vbmapp_transitions_v1'); if(!raw)return;
-    const p=JSON.parse(raw);
-    if(p.fields) document.querySelectorAll('input[type=text]').forEach((inp,i)=>{
-      if(p.fields[i]) inp.value=p.fields[i];
-    });
-    if(p.st){
-      Object.assign(st,p.st);
-      Object.entries(st).forEach(([k,v])=>{
-        const t=document.querySelector('td.inp[data-k="'+k+'"]'); if(!t)return;
-        if(v.ci!==undefined) t.className='inp c'+v.ci;
-        if(v.note){
-          let d=t.querySelector('.ndot');
-          if(!d){d=document.createElement('span');d.className='ndot';t.appendChild(d);}
-          d.style.display='block';
-        }
-      });
-    }
-  }catch(e){}
-}
-document.querySelectorAll('input[type=text]').forEach(inp=>inp.addEventListener('input',save));
-load();
-</script>
 
-<!-- VB Mapping Engine -->
-<script>
-const VB_BASE = 4;
-const VB_GRADIENT = ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'];
-const VB_EMPTY = '#ffffff';
-const VB_PALETTES = {
+// ── STATE ──
+var STORAGE_KEY = 'vbmapp_transitions';
+var ac = 0;
+var st = {};
+
+// ── URL param helper (forward sessionId / respondentId to nav links) ──
+function addParams(href) {
+  var p = new URLSearchParams(window.location.search || '');
+  var sid = p.get('sessionId'), rid = p.get('respondentId');
+  try {
+    var u = new URL(href, window.location.origin);
+    if (sid) u.searchParams.set('sessionId', sid);
+    if (rid) u.searchParams.set('respondentId', rid);
+    return u.pathname + u.search;
+  } catch(e) { return href; }
+}
+
+// ══ DOMAIN VB COLOR SYSTEM ══
+var VB_PALETTES = {
   red:    ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'],
   blue:   ['#1e3a5f', '#2563eb', '#60a5fa', '#93c5fd'],
   green:  ['#14532d', '#16a34a', '#4ade80', '#86efac'],
   purple: ['#581c87', '#9333ea', '#c084fc', '#d8b4fe'],
   amber:  ['#78350f', '#d97706', '#fbbf24', '#fcd34d'],
-  teal:   ['#134e4a', '#0d9488', '#2dd4bf', '#5eead4'],
+  teal:   ['#134e4a', '#0d9488', '#2dd4bf', '#5eead4']
 };
-const GRID_DOMAINS = [{"code":"TRANS","name":"Transition Assessment"}];
-const domainColorMap = {};
-const DOMAIN_COLOR_KEY = 'vbmapp_transitions_domainColors';
+var DOMAIN_COLOR_KEY = 'vbmapp_transitions_domainColors';
+var domainColorMap = {};
 
-function getGradientForDomain(domainCode) {
-  const palName = domainColorMap[domainCode] || 'red';
-  return VB_PALETTES[palName] || VB_PALETTES.red;
+function getDomainCodeForCell(cell) {
+  if (!cell) return '';
+  return cell.getAttribute('data-domain') || cell.getAttribute('data-base') || '';
 }
-function saveDomainColors() {
-  try { localStorage.setItem(DOMAIN_COLOR_KEY, JSON.stringify(domainColorMap)); } catch(e) {}
-}
+
 function loadDomainColors() {
   try {
-    const raw = localStorage.getItem(DOMAIN_COLOR_KEY);
+    var raw = localStorage.getItem(DOMAIN_COLOR_KEY);
     if (raw) Object.assign(domainColorMap, JSON.parse(raw));
   } catch(e) {}
 }
-loadDomainColors();
 
-const domainSelect = document.getElementById('domainSelect');
-GRID_DOMAINS.forEach(d => {
-  const opt = document.createElement('option');
-  opt.value = d.code;
-  opt.textContent = d.code + ' — ' + d.name;
-  domainSelect.appendChild(opt);
-});
+function saveDomainColors() {
+  try { localStorage.setItem(DOMAIN_COLOR_KEY, JSON.stringify(domainColorMap)); } catch(e) {}
+}
 
-let selectedPalette = domainColorMap[GRID_DOMAINS[0]?.code] || 'red';
-document.querySelectorAll('.dm-pal').forEach(swatch => {
-  if (swatch.dataset.pal === selectedPalette) swatch.classList.add('sel');
-  swatch.addEventListener('click', () => {
-    document.querySelectorAll('.dm-pal').forEach(s => s.classList.remove('sel'));
-    swatch.classList.add('sel');
-    selectedPalette = swatch.dataset.pal;
-    const domCode = domainSelect.value;
-    if (domCode) {
-      domainColorMap[domCode] = selectedPalette;
+function getGradientForDomain(domainCode) {
+  var palName = domainColorMap[domainCode] || 'red';
+  return VB_PALETTES[palName] || VB_PALETTES.red;
+}
+
+function applyPaletteTone(cell, colorIndex) {
+  if (colorIndex <= 0) {
+    cell.style.background = '';
+    cell.style.color = '';
+    return;
+  }
+  var domainCode = getDomainCodeForCell(cell);
+  var gradient = getGradientForDomain(domainCode);
+  var toneIndex = Math.max(0, Math.min(3, colorIndex - 1));
+  cell.style.background = gradient[toneIndex];
+  cell.style.color = toneIndex <= 1 ? '#fff' : '#111827';
+}
+
+function syncPaletteSelection(domainCode) {
+  var palette = domainColorMap[domainCode] || 'red';
+  document.querySelectorAll('.dm-pal').forEach(function(swatch) {
+    swatch.classList.toggle('sel', swatch.dataset.pal === palette);
+  });
+}
+
+function repaintAllDomainColors() {
+  document.querySelectorAll('[data-k]').forEach(function(cell) {
+    var ci = parseInt(cell.dataset.color || '0', 10) || 0;
+    if (ci > 0) applyPaletteTone(cell, ci);
+  });
+}
+
+function initDomainColorControls() {
+  loadDomainColors();
+  var domainSelect = document.getElementById('domainSelect');
+  if (!domainSelect) return;
+
+  // Build unique domain list from cells
+  var seen = {};
+  var domains = [];
+  document.querySelectorAll('[data-k]').forEach(function(cell) {
+    var code = getDomainCodeForCell(cell);
+    if (!code || seen[code]) return;
+    seen[code] = true;
+    domains.push(code);
+  });
+  domains.sort(function(a, b) {
+    var am = a.match(/^(BARRIER|TRANS)-?(\d+)$/);
+    var bm = b.match(/^(BARRIER|TRANS)-?(\d+)$/);
+    if (am && bm && am[1] === bm[1]) return Number(am[2]) - Number(bm[2]);
+    if (am && !bm) return 1;
+    if (!am && bm) return -1;
+    return a.localeCompare(b, undefined, { numeric: true });
+  });
+
+  domainSelect.innerHTML = '';
+  domains.forEach(function(code) {
+    var opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = code;
+    domainSelect.appendChild(opt);
+  });
+
+  if (domains[0]) {
+    domainSelect.value = domains[0];
+    syncPaletteSelection(domains[0]);
+  }
+
+  document.querySelectorAll('.dm-pal').forEach(function(swatch) {
+    swatch.addEventListener('click', function() {
+      var domCode = domainSelect.value;
+      if (!domCode) return;
+      domainColorMap[domCode] = swatch.dataset.pal || 'red';
       saveDomainColors();
-      repaintVBFromStorage();
-    }
+      syncPaletteSelection(domCode);
+      repaintAllDomainColors();
+    });
+  });
+
+  domainSelect.addEventListener('change', function() {
+    syncPaletteSelection(domainSelect.value);
+  });
+}
+
+// ── Paint Palette ──
+document.querySelectorAll('.pb').forEach(function(b) {
+  b.addEventListener('click', function() {
+    document.querySelectorAll('.pb').forEach(function(x){ x.classList.remove('sel'); });
+    b.classList.add('sel');
+    ac = parseInt(b.dataset.c) || 0;
   });
 });
 
-domainSelect.addEventListener('change', () => {
-  const pal = domainColorMap[domainSelect.value] || 'red';
-  document.querySelectorAll('.dm-pal').forEach(s => {
-    s.classList.toggle('sel', s.dataset.pal === pal);
+// ── Clear All ──
+document.getElementById('clrAll').addEventListener('click', function() {
+  if (!confirm('Clear all colors and notes?')) return;
+  document.querySelectorAll('[data-k]').forEach(function(el) {
+    el.classList.remove('c0','c1','c2','c3','c4');
+    el.style.background = '';
+    el.style.color = '';
+    el.dataset.color = '0';
+    var d = el.querySelector('.ndot');
+    if (d) d.style.display = 'none';
+    delete st[el.dataset.k];
   });
-  selectedPalette = pal;
+  save();
 });
 
-function repaintVBFromStorage() {
-  const params = new URLSearchParams(window.location.search || '');
-  const sk = params.get('storageKey') || 'vbmapp_grid_payload';
+// ── Click → Apply Color (palette-aware) ──
+function applyColor(el) {
+  if (el.classList.contains('empty-cell')) return;
+  var k = el.dataset.k;
+  if (!k) return;
+  if (!st[k]) st[k] = {};
+  st[k].ci = ac;
+  el.classList.remove('c0','c1','c2','c3','c4');
+  el.classList.add('c' + ac);
+  el.dataset.color = String(ac);
+  applyPaletteTone(el, ac);
+  var d = el.querySelector('.ndot');
+  if (d && (st[k] || {}).note) d.style.display = 'block';
+  save();
+}
+
+// Attach click handlers
+document.querySelectorAll('[data-k]').forEach(function(el) {
+  el.addEventListener('click', function() { applyColor(el); });
+});
+
+// ── Double-Click → Notes ──
+document.addEventListener('dblclick', function(e) {
+  var t = e.target.closest('[data-k]');
+  if (!t || t.classList.contains('empty-cell')) return;
+  var k = t.dataset.k;
+  var cur = (st[k] || {}).note || '';
+  var note = prompt('Note for ' + k + ':', cur);
+  if (note === null) return;
+  if (!st[k]) st[k] = {};
+  st[k].note = note.trim();
+  var d = t.querySelector('.ndot');
+  if (!d) { d = document.createElement('span'); d.className = 'ndot'; t.appendChild(d); }
+  d.style.display = note.trim() ? 'block' : 'none';
+  save();
+});
+
+// ── Tooltip ──
+var tip = document.getElementById('tip');
+document.addEventListener('mouseover', function(e) {
+  var t = e.target.closest('[data-k]');
+  if (!t) { if(tip) tip.style.display = 'none'; return; }
+  var k = t.dataset.k;
+  var desc = t.getAttribute('title') || '';
+  var note = (st[k] || {}).note;
+  var txt = desc;
+  if (note) txt += (txt ? '\n\nNote: ' : 'Note: ') + note;
+  if (!txt) { if(tip) tip.style.display = 'none'; return; }
+  if(tip){ tip.textContent = txt; tip.style.display = 'block'; }
+});
+document.addEventListener('mousemove', function(e) {
+  if(tip){ tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 10) + 'px'; }
+});
+document.addEventListener('mouseout', function(e) {
+  if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('[data-k]'))
+    if(tip) tip.style.display = 'none';
+});
+
+// ── localStorage Persistence ──
+function save() {
+  var fields = {};
+  document.querySelectorAll('input[type=text]').forEach(function(inp) {
+    var f = inp.dataset.field || inp.getAttribute('data-field') || inp.id;
+    if (f) fields[f] = inp.value;
+  });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ st: st, fields: fields })); } catch(e) {}
+}
+function load() {
   try {
-    const raw = window.localStorage.getItem(sk);
+    var raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
-    const parsed = JSON.parse(raw);
-    if (parsed.answers && parsed.scoreMap) paintVB(parsed.answers, parsed.scoreMap);
+    var p = JSON.parse(raw);
+    if (p.fields) {
+      document.querySelectorAll('input[type=text]').forEach(function(inp) {
+        var f = inp.dataset.field || inp.getAttribute('data-field') || inp.id;
+        if (f && p.fields[f]) inp.value = p.fields[f];
+      });
+    }
+    if (p.st) {
+      Object.assign(st, p.st);
+      Object.keys(st).forEach(function(k) {
+        var v = st[k];
+        var el = document.querySelector('[data-k="' + k + '"]');
+        if (!el) return;
+        if (v.ci !== undefined) {
+          el.classList.remove('c0','c1','c2','c3','c4');
+          el.classList.add('c' + v.ci);
+          el.dataset.color = String(v.ci);
+          applyPaletteTone(el, v.ci);
+        }
+        if (v.note) {
+          var d = el.querySelector('.ndot');
+          if (!d) { d = document.createElement('span'); d.className = 'ndot'; el.appendChild(d); }
+          d.style.display = 'block';
+        }
+      });
+    }
   } catch(e) {}
 }
+document.querySelectorAll('input[type=text]').forEach(function(inp) { inp.addEventListener('input', save); });
+load();
 
-function resolveVBMax(rawMax) {
-  if (rawMax <= 2) return 2;  // 0-1 and 0-2 → paired mode
-  return 4;
-}
+// ── Paint from API/Export payload (score-aware coloring with palette) ──
+function paintFromPayload(scores, scoreMap) {
+  var painted = 0;
+  Object.keys(scores).forEach(function(skillCode) {
+    var score = parseFloat(scores[skillCode]) || 0;
+    var max = parseFloat((scoreMap || {})[skillCode]) || 1;
 
-function clampVBScore(score, max) {
-  const n = Number.isFinite(Number(score)) ? Number(score) : 0;
-  return Math.max(0, Math.min(n, max));
-}
-
-function normalizeVBScore(score, max) {
-  if (max <= 1) return score * 4;  // 0-1: score 1 → 4
-  if (max === 2) return score * 2;  // 0-2: score 2 → 4
-  return score;                     // 0-4: direct
-}
-
-/**
- * Map a single question answer to VB fill state.
- * For VB-MAPP milestones (0-1 with 0/0.5/1):
- *   score 0   → no cells filled
- *   score 0.5 → first cell filled (partial)
- *   score 1   → both/all cells filled (mastered)
- * For barriers (0-4): standard right-aligned fill
- * For transitions (1-5): special handling (rawMax=5)
- */
-function mapQuestionToVB(question, rawScore, rawMax) {
-  // Transitions (1-5): rawMax=5, scores 1-5
-  if (rawMax === 5) {
-    const score = Math.max(0, Math.min(Number(rawScore) || 0, 5));
-    // Map 1-5 directly to 5 fill slots
-    const filledSlots = [];
-    for (let i = 1; i <= 5; i++) {
-      filledSlots.push(i <= score);
-    }
-    return { question, score, max: 5, filledSlots, isTransition: true };
-  }
-
-  const max = resolveVBMax(rawMax);
-  const score = clampVBScore(rawScore, max);
-  const normalized = normalizeVBScore(score, max);
-  const threshold = VB_BASE - normalized + 1;
-  const filledMap = [false, false, false, false];
-
-  for (let i = 1; i <= VB_BASE; i++) {
-    if (i >= threshold) filledMap[i - 1] = true;
-  }
-
-  return {
-    question, score, max, normalized, threshold, filledMap,
-    pairedFillMap: [filledMap[0] || filledMap[1], filledMap[2] || filledMap[3]],
-    isTransition: false,
-  };
-}
-
-function mapAnswersToVB(answers, scoreMap) {
-  const keys = Array.from(new Set([...Object.keys(scoreMap || {}), ...Object.keys(answers || {})]));
-  return keys
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-    .map((q) => mapQuestionToVB(q, answers?.[q] ?? 0, scoreMap?.[q] ?? 1));
-}
-
-function buildScoreTypeMapFromGrid() {
-  const scoreMap = {};
-  document.querySelectorAll('td.inp[data-k][data-score]').forEach((cell) => {
-    const key = cell.getAttribute('data-k') || '';
-    // Support "CODE-1", "CODE-half", "CODE-0.5" etc.
-    const parts = key.split('-');
-    // The question id is everything before the last segment
-    const scorePart = parts[parts.length - 1];
-    const q = key.substring(0, key.length - scorePart.length - 1);
-    const score = scorePart === 'half' ? 0.5 : Number(cell.getAttribute('data-score') || '0');
-    if (!q || score <= 0) return;
-    scoreMap[q] = Math.max(scoreMap[q] || 0, score);
-  });
-  return scoreMap;
-}
-
-function hydrateVBDataAttributes() {
-  document.querySelectorAll('td.inp[data-k]').forEach((cell) => {
-    if (!cell.getAttribute('data-vb')) {
-      cell.setAttribute('data-vb', cell.getAttribute('data-k'));
-    }
-  });
-}
-
-/**
- * Get all scoring cells for a question, sorted by score ascending.
- * Handles the "-half" suffix used for 0.5 milestone cells.
- */
-function getQuestionCells(questionId) {
-  // Match cells whose data-k starts with "questionId-"
-  const allInp = Array.from(document.querySelectorAll('td.inp[data-k]'));
-  const cells = allInp.filter(c => {
-    const k = c.getAttribute('data-k') || '';
-    return k === questionId + '-0' || k === questionId + '-half' ||
-           k === questionId + '-1' || k === questionId + '-2' ||
-           k === questionId + '-3' || k === questionId + '-4' ||
-           k === questionId + '-5' ||
-           k.startsWith(questionId + '-');
-  });
-  return cells.sort((a, b) => {
-    const sa = a.getAttribute('data-k').endsWith('-half') ? 0.5 : Number(a.getAttribute('data-score') || '0');
-    const sb = b.getAttribute('data-k').endsWith('-half') ? 0.5 : Number(b.getAttribute('data-score') || '0');
-    return sa - sb;
-  });
-}
-
-function paintVB(answers, scoreMap) {
-  const resolvedScoreMap = scoreMap || buildScoreTypeMapFromGrid();
-  const mappedRows = mapAnswersToVB(answers || {}, resolvedScoreMap);
-  let paintedCount = 0;
-  let firstFilledCell = null;
-
-  mappedRows.forEach((row) => {
-    const cells = getQuestionCells(row.question);
-    if (cells.length === 0) return;
-    const domCode = (cells[0] && cells[0].getAttribute('data-domain')) || '';
-    const gradient = getGradientForDomain(domCode);
-
-    // Clear all cells first
-    cells.forEach((cell) => {
-      cell.classList.remove('c0', 'c1', 'c2', 'c3', 'c4', 'vb-filled', 'vb-empty');
-      cell.classList.add('vb-empty');
-      cell.style.background = VB_EMPTY;
-    });
-
-    // Transitions (1-5): 5 cells, fill left-to-right up to score
-    if (row.isTransition && row.filledSlots) {
-      for (let i = 0; i < Math.min(5, cells.length); i++) {
-        if (row.filledSlots[i]) {
-          cells[i].classList.remove('vb-empty');
-          cells[i].classList.add('vb-filled');
-          cells[i].style.background = gradient[Math.min(i, 3)];
-          if (!firstFilledCell) firstFilledCell = cells[i];
-          paintedCount++;
-        }
+    // Determine color index from score
+    function getColorIndex(score, max) {
+      if (max <= 1) {
+        if (score >= 1) return 4;
+        if (score >= 0.5) return 2;
+        return 0;
+      } else if (max <= 4) {
+        var bi = Math.round(score);
+        if (bi >= 3) return 4;
+        if (bi >= 2) return 3;
+        if (bi >= 1) return 2;
+        return 0;
+      } else {
+        var ti = Math.round(score);
+        if (ti >= 4) return 4;
+        if (ti >= 3) return 3;
+        if (ti >= 2) return 2;
+        if (ti >= 1) return 1;
+        return 0;
       }
+    }
+
+    // Direct match (milestones have data-k matching skillCode exactly)
+    var el = document.querySelector('[data-k="' + skillCode + '"]');
+    if (el) {
+      var ci = getColorIndex(score, max);
+      el.classList.remove('c0','c1','c2','c3','c4');
+      el.classList.add('c' + ci);
+      el.dataset.color = String(ci);
+      applyPaletteTone(el, ci);
+      if (score > 0) painted++;
       return;
     }
 
-    // Milestones (0-1 with 0/0.5/1): 3 cells (score 0, 0.5, 1)
-    if (row.max === 2 && cells.length === 3) {
-      if (row.score >= 0.5) {
-        cells[0].classList.remove('vb-empty');
-        cells[0].classList.add('vb-filled');
-        cells[0].style.background = gradient[0];
-        if (!firstFilledCell) firstFilledCell = cells[0];
-        paintedCount++;
-        cells[1].classList.remove('vb-empty');
-        cells[1].classList.add('vb-filled');
-        cells[1].style.background = gradient[1];
-        paintedCount++;
+    // Barrier/Transition mini-chart: cells use data-base attribute
+    var baseCells = document.querySelectorAll('[data-base="' + skillCode + '"]');
+    if (baseCells.length > 0) {
+      var roundedScore = Math.round(score);
+      if (roundedScore > 0) {
+        baseCells.forEach(function(cell) {
+          var testNum = parseInt(cell.dataset.test) || 0;
+          var scoreLevel = parseInt(cell.dataset.score) || 0;
+          if (testNum === 1 && scoreLevel <= roundedScore) {
+            cell.classList.remove('c0','c1','c2','c3','c4');
+            cell.classList.add('c4');
+            cell.dataset.color = '4';
+            applyPaletteTone(cell, 4);
+          }
+        });
+        painted++;
       }
-      if (row.score >= 1) {
-        cells[2].classList.remove('vb-empty');
-        cells[2].classList.add('vb-filled');
-        cells[2].style.background = gradient[3];
-        paintedCount++;
-      }
-      return;
-    }
-
-    // Barriers (0-4): standard 4-cell fill
-    if (cells.length >= 4) {
-      for (let i = 0; i < Math.min(4, cells.length); i++) {
-        if (row.filledMap && row.filledMap[i]) {
-          cells[i].classList.remove('vb-empty');
-          cells[i].classList.add('vb-filled');
-          cells[i].style.background = gradient[i];
-          if (!firstFilledCell) firstFilledCell = cells[i];
-          paintedCount++;
-        }
-      }
-      return;
-    }
-
-    // Fallback: paired fill (2-cell 0-1)
-    if (row.max === 2 && cells.length >= 2) {
-      if (row.pairedFillMap[0]) {
-        cells[0].classList.remove('vb-empty');
-        cells[0].classList.add('vb-filled');
-        cells[0].style.background = gradient[0];
-        if (!firstFilledCell) firstFilledCell = cells[0];
-        paintedCount++;
-      }
-      if (row.pairedFillMap[1]) {
-        cells[1].classList.remove('vb-empty');
-        cells[1].classList.add('vb-filled');
-        cells[1].style.background = gradient[3];
-        paintedCount++;
-      }
-      return;
-    }
-
-    // Single-cell fallback
-    if (cells.length === 1 && row.score > 0) {
-      cells[0].classList.remove('vb-empty');
-      cells[0].classList.add('vb-filled');
-      cells[0].style.background = gradient[3];
-      if (!firstFilledCell) firstFilledCell = cells[0];
-      paintedCount++;
     }
   });
-
-  const status = document.getElementById('mockStatus');
-  if (status) {
-    status.textContent = 'Status: loaded ' + mappedRows.length + ' questions, painted ' + paintedCount + ' cells';
-    status.style.color = '#0b6b2a';
-  }
-  const sticky = document.getElementById('vbStickyStatus');
-  if (sticky) {
-    sticky.textContent = 'VB loaded (' + paintedCount + ' cells)';
-    sticky.style.color = '#14532d';
-    sticky.style.background = '#dcfce7';
-    sticky.style.borderColor = '#86efac';
-  }
-  if (firstFilledCell) {
-    firstFilledCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-  return mappedRows;
+  save();
+  return painted;
 }
 
-function loadExportedPayloadFromStorage() {
-  const params = new URLSearchParams(window.location.search || '');
-  const mode = params.get('autoload');
-  if (mode !== 'latest' && mode !== '1' && mode !== 'true') return false;
-
-  const storageKey = params.get('storageKey') || 'vbmapp_grid_payload';
-
+// ── Load from API (sessionId-based) ──
+async function loadFromAPI() {
+  var params = new URLSearchParams(window.location.search || '');
+  var sessionId = params.get('sessionId');
+  if (!sessionId) return false;
+  var status = document.getElementById('apiStatus');
+  if (status) { status.textContent = 'Loading...'; status.style.color = '#92400e'; }
   try {
-    const raw = window.localStorage.getItem(storageKey);
-    if (!raw) return false;
-
-    const parsed = JSON.parse(raw);
-    const answers = parsed && parsed.answers;
-    const scoreMap = parsed && parsed.scoreMap;
-
-    if (!answers || !scoreMap || typeof answers !== 'object' || typeof scoreMap !== 'object') return false;
-
-    const rows = paintVB(answers, scoreMap);
-    if (!rows || rows.length === 0) return false;
-
-    const status = document.getElementById('mockStatus');
-    if (status) {
-      status.textContent = 'Status: autoloaded export (' + rows.length + ' questions)';
-      status.style.color = '#0b6b2a';
+    var apiBase = window.location.origin;
+    var respondentId = params.get('respondentId') || 'system';
+    var res = await fetch(apiBase + '/api/questionnaires/sessions/' + encodeURIComponent(sessionId) + '/grid-payload', {
+      headers: { 'x-respondent-id': respondentId, 'x-user-role': 'admin' }
+    });
+    if (!res.ok) throw new Error('API ' + res.status);
+    var data = await res.json();
+    if (data.childName) {
+      var ci = document.querySelector('[data-field="childName"]') || document.getElementById('fieldChild');
+      if (ci) ci.value = data.childName;
     }
-    const sticky = document.getElementById('vbStickyStatus');
-    if (sticky) {
-      sticky.textContent = 'VB autoloaded from export';
-      sticky.style.color = '#14532d';
-      sticky.style.background = '#dcfce7';
-      sticky.style.borderColor = '#86efac';
+    if (data.completedAt) {
+      var di = document.querySelector('[data-field="date"]') || document.getElementById('fieldDate');
+      if (di) di.value = new Date(data.completedAt).toLocaleDateString();
     }
+    var painted = paintFromPayload(data.scores || data.answers || {}, data.scoreMap || {});
+    if (status) { status.textContent = 'Loaded ' + painted + ' cells'; status.style.color = '#14532d'; }
+    var st2 = document.getElementById('mockStatus');
+    if (st2) { st2.textContent = 'Status: API loaded (' + painted + ' cells)'; st2.style.color = '#0b6b2a'; }
     return true;
-  } catch (err) {
-    console.warn('Failed to autoload export payload:', err);
+  } catch(err) {
+    console.warn('API load failed:', err);
+    if (status) { status.textContent = 'API failed'; status.style.color = '#991b1b'; }
     return false;
   }
 }
 
-hydrateVBDataAttributes();
-const autoloaded = loadExportedPayloadFromStorage();
-if (!autoloaded) {
-  console.log('No autoload payload found. Use file upload or questionnaire export.');
+// ── Load from localStorage export payload ──
+function loadExportPayload() {
+  var params = new URLSearchParams(window.location.search || '');
+  var sk = params.get('storageKey') || 'vbmapp_grid_payload';
+  try {
+    var raw = localStorage.getItem(sk);
+    if (!raw) return false;
+    var parsed = JSON.parse(raw);
+    if (parsed.answers) {
+      var painted = paintFromPayload(parsed.answers, parsed.scoreMap || {});
+      var st2 = document.getElementById('mockStatus');
+      if (st2) { st2.textContent = 'Status: export loaded (' + painted + ' cells)'; st2.style.color = '#0b6b2a'; }
+      return true;
+    }
+    return false;
+  } catch(e) { return false; }
 }
-console.log('VB-MAPP Grid transitions ready');
+
+// ── Load Session button handler ──
+document.getElementById('btnLoadSession').addEventListener('click', async function() {
+  var sid = (document.getElementById('sessionInput').value || '').trim();
+  if (!sid) { alert('Enter a session ID'); return; }
+  var url = new URL(window.location.href);
+  url.searchParams.set('sessionId', sid);
+  window.history.replaceState({}, '', url);
+  await loadFromAPI();
+});
+
+// ── Pre-fill session ID from URL ──
+(function() {
+  var params = new URLSearchParams(window.location.search || '');
+  var sid = params.get('sessionId');
+  if (sid) {
+    var inp = document.getElementById('sessionInput');
+    if (inp) inp.value = sid;
+  }
+})();
+
+// ── Initialize: domain colors, then try API, then localStorage ──
+(async function initGrid() {
+  initDomainColorControls();
+  var apiLoaded = await loadFromAPI();
+  if (!apiLoaded) loadExportPayload();
+  console.log('VB-MAPP Grid vbmapp_transitions ready');
+})();
+
 </script>
 </body>
 </html>
