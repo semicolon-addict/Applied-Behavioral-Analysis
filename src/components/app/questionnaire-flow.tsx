@@ -16,7 +16,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { ArrowRight, Check, Loader2, ChevronLeft, Download, Save } from 'lucide-react';
 import { AssessmentQuestionnaire, AssessmentQuestion, QuestionnaireDomain } from '@/types';
-import { getTemplate, startSession, saveResponse, completeSession, downloadExcelReport } from '@/lib/questionnaire-api';
+import { getTemplate, startSession, saveResponse, completeSession, downloadExcelReport, getGridPayload } from '@/lib/questionnaire-api';
 import { buildABLLSExportState } from '@/lib/ablls-export';
 import { buildAFLSExportState } from '@/lib/afls-export';
 import { buildDAYC2ExportState } from '@/lib/dayc2-export';
@@ -192,7 +192,7 @@ export function QuestionnaireFlow({
         if (!template) return;
         const buildExport = assessmentType === 'AFLLS' ? buildAFLSExportState : assessmentType === 'DAYC-2' ? buildDAYC2ExportState : assessmentType === 'VB-MAPP' ? buildVBMAPPExportState : buildABLLSExportState;
         setExportState(buildExport(template, answers));
-    }, [template, answers]);
+    }, [template, answers, assessmentType]);
     const ablls02FallbackOptions = [
         '1 - Emerging or prompted / Inconsistent',
         '2 - Independent / Mastered',
@@ -333,7 +333,6 @@ export function QuestionnaireFlow({
     const resolveGridConfig = useCallback((): { storageKey: string; gridUrl: string } => {
         if (assessmentType === 'AFLLS') {
             const key = 'afls_grid_payload';
-            // Route to the correct AFLS protocol grid page
             const aflsProtocolGridMap: Record<string, string> = {
                 'Basic Living Skills': '/afls/grid-basic-living.html',
                 'Home Skills': '/afls/grid-home.html',
@@ -357,13 +356,17 @@ export function QuestionnaireFlow({
                 'Transition Assessment': '/vbmapp/grid-transitions.html',
             };
             const gridPage = (protocolName && vbmappProtocolGridMap[protocolName]) || '/vbmapp/grid-level1.html';
+            // For VB-MAPP, prefer sessionId-based loading if session exists
+            if (sessionId) {
+                return { storageKey: key, gridUrl: `${gridPage}?sessionId=${sessionId}&respondentId=${respondentId}` };
+            }
             return { storageKey: key, gridUrl: `${gridPage}?autoload=latest&storageKey=${key}` };
         }
         // Default: ABLLS-R
         return { storageKey: 'ablls_grid_payload', gridUrl: '/ablls/grid.html?autoload=latest&storageKey=ablls_grid_payload' };
-    }, [assessmentType, protocolName]);
+    }, [assessmentType, protocolName, sessionId, respondentId]);
 
-    const handleSaveAndExport = useCallback(() => {
+    const handleSaveAndExport = useCallback(async () => {
         if (!template) return;
 
         try {
@@ -371,6 +374,22 @@ export function QuestionnaireFlow({
 
             const buildExport = assessmentType === 'AFLLS' ? buildAFLSExportState : assessmentType === 'DAYC-2' ? buildDAYC2ExportState : assessmentType === 'VB-MAPP' ? buildVBMAPPExportState : buildABLLSExportState;
             const exportSnapshot = buildExport(template, answers);
+            let payloadAnswers = exportSnapshot.answers;
+            let payloadScoreMap = exportSnapshot.scoreMap;
+            let answeredCount = exportSnapshot.answeredCount;
+
+            // Prefer normalized backend payload when session context is available.
+            if (sessionId) {
+                try {
+                    const gridPayload = await getGridPayload(sessionId, respondentId);
+                    payloadAnswers = gridPayload.answers;
+                    payloadScoreMap = gridPayload.scoreMap;
+                    answeredCount = Object.keys(gridPayload.answers || {}).length;
+                } catch {
+                    // Fall back to local export snapshot if grid payload endpoint is unavailable.
+                }
+            }
+
             const generatedAt = new Date().toISOString();
             const safeAssessmentType = assessmentType.replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
             const timestamp = generatedAt.replace(/[:.]/g, '-');
@@ -385,8 +404,8 @@ export function QuestionnaireFlow({
                     version: 1,
                     assessmentType,
                     generatedAt,
-                    answers: exportSnapshot.answers,
-                    scoreMap: exportSnapshot.scoreMap,
+                    answers: payloadAnswers,
+                    scoreMap: payloadScoreMap,
                 })
             );
 
@@ -396,8 +415,8 @@ export function QuestionnaireFlow({
             toast({
                 title: 'Saved & Exported',
                 description: gridWindow
-                    ? `${exportSnapshot.answeredCount} responses exported and grid opened.`
-                    : `${exportSnapshot.answeredCount} responses exported. Allow popups to open the VB grid automatically.`,
+                    ? `${answeredCount} responses exported and grid opened.`
+                    : `${answeredCount} responses exported. Allow popups to open the VB grid automatically.`,
             });
         } catch (err) {
             toast({
@@ -408,7 +427,7 @@ export function QuestionnaireFlow({
         } finally {
             setExporting(false);
         }
-    }, [template, answers, assessmentType, toast, resolveGridConfig]);
+    }, [template, answers, assessmentType, sessionId, respondentId, toast, resolveGridConfig]);
 
     // Handle final submission and Excel download
     const handleSubmitAndExport = useCallback(async () => {

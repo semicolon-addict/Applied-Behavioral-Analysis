@@ -10,6 +10,7 @@ import type {
     AssessmentQuestionnaire,
     QuestionnaireSession,
     QuestionnaireResponseEntry,
+    GridPayload,
 } from '@/types';
 import { getSession as getSheetSession } from '@/lib/sheets-auth';
 
@@ -165,6 +166,15 @@ export async function getVBExport(
 ): Promise<Array<{ question: string; score: number; max: number; normalized: number }>> {
     return fetchApi<Array<{ question: string; score: number; max: number; normalized: number }>>(
         `/api/questionnaires/sessions/${sessionId}/vb-export`,
+        undefined,
+        respondentId
+    );
+}
+
+// Fetch grid payload used by assessment grid HTML views
+export async function getGridPayload(sessionId: string, respondentId: string): Promise<GridPayload> {
+    return fetchApi<GridPayload>(
+        `/api/questionnaires/sessions/${sessionId}/grid-payload`,
         undefined,
         respondentId
     );
