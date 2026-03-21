@@ -13,13 +13,14 @@ export function initializeFirebase() {
     // populate the FirebaseOptions in production. It is critical that we attempt to call initializeApp()
     // without arguments.
     let firebaseApp;
+    const isBrowser = typeof window !== 'undefined';
     try {
-      // Attempt to initialize via Firebase App Hosting environment variables
-      firebaseApp = initializeApp();
+      // Attempt automatic app-hosting initialization only in the browser runtime.
+      // During SSR/static generation this can fail noisily and should use explicit config.
+      firebaseApp = isBrowser ? initializeApp() : initializeApp(firebaseConfig);
     } catch (e) {
-      // Only warn in production because it's normal to use the firebaseConfig to initialize
-      // during development
-      if (process.env.NODE_ENV === "production") {
+      // Keep fallback silent on server build/runtime; warn only in browser production.
+      if (process.env.NODE_ENV === 'production' && isBrowser) {
         console.warn('Automatic initialization failed. Falling back to firebase config object.', e);
       }
       firebaseApp = initializeApp(firebaseConfig);

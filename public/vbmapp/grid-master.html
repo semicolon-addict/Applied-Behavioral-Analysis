@@ -1,0 +1,593 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VB-MAPP Master Scoring Form</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;font-size:9pt;background:#fff}
+.wrap{max-width:1800px;margin:0 auto;padding:12px 14px}
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f5f5;
+  border:1px solid #ddd;border-radius:4px;margin-bottom:8px;flex-wrap:wrap}
+.pb{width:22px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer}
+.pb.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+.cbtn{font-size:8pt;padding:3px 8px;border:1px solid #999;border-radius:3px;cursor:pointer;background:#fff}
+.cbtn:hover{background:#eee}
+/* ── Color classes ── */
+.c0{background:#fff!important}.c1{background:#c0c0c0!important}
+.c2{background:#ffff00!important}.c3{background:#ffa500!important}
+.c4{background:#00cc44!important}
+/* ── Score color classes for milestone cells ── */
+.ms-0{background:#fff!important}
+.ms-half{background:#fff3cd!important}
+.ms-1{background:#d4edda!important}
+/* ── Barrier score colors ── */
+.bar-0{background:#fff!important}
+.bar-1{background:#fff3e0!important}
+.bar-2{background:#ffe0b2!important}
+.bar-3{background:#ff9800!important}
+.bar-4{background:#e64a19!important;color:#fff}
+/* ── Transition score colors ── */
+.tr-1{background:#e8f5e9!important}
+.tr-2{background:#a5d6a7!important}
+.tr-3{background:#66bb6a!important}
+.tr-4{background:#388e3c!important;color:#fff}
+.tr-5{background:#1b5e20!important;color:#fff}
+/* ── Titles ── */
+.bigT{font-size:13pt;font-weight:bold;text-align:center;margin-bottom:2px}
+.subT{font-size:10pt;font-weight:normal;text-align:center;margin-bottom:6px;color:#555}
+/* ── Info line ── */
+.fline{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:3px}
+.fl label{font-size:9pt;white-space:nowrap}
+.fl input{border:none;border-bottom:1px solid #444;outline:none;font-size:9pt;padding:1px 2px;background:transparent}
+/* ── Key box ── */
+.key-box{border:1px solid #000;display:inline-block;font-size:7pt;margin-bottom:6px;margin-left:10px}
+.key-box td{border:1px solid #999;padding:1px 4px;text-align:center}
+.key-box .kh{background:#e0e0e0;font-weight:bold}
+/* ── Nav bar ── */
+.nav-bar{display:flex;align-items:center;gap:6px;padding:4px 10px;font-size:9pt;
+  background:#e3f2fd;border:1px solid #90caf9;border-radius:4px;margin-bottom:8px}
+.nav-bar a{color:#1565c0;text-decoration:none;font-weight:bold}
+.nav-bar a:hover{text-decoration:underline}
+.nav-bar .cur{font-weight:bold;color:#0d47a1;text-decoration:underline}
+/* ── Grid table ── */
+.gscroll{overflow-x:auto;margin-top:4px}
+table.g{border-collapse:collapse;table-layout:fixed}
+/* ── Task Analysis cells ── */
+td.dom-hdr{font-weight:bold;font-size:8.5pt;text-align:center;
+  border:1px solid #000;background:#dbeafe;padding:2px 4px;white-space:nowrap;vertical-align:middle}
+td.ms-hdr{font-weight:bold;font-size:7pt;text-align:center;
+  border:1px solid #333;background:#e8eaf6;padding:1px;width:18px;vertical-align:middle}
+td.cell{width:28px;min-width:28px;height:17px;border:0.5px solid #666;
+  cursor:pointer;padding:0;user-select:none;text-align:center;vertical-align:middle;
+  font-size:6pt;font-weight:bold;color:#333;position:relative;background:#fff}
+td.cell.m-cell{font-weight:bold;font-size:6.5pt;background:#f0f4ff;border:0.7px solid #444}
+td.cell:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.92)}
+td.blank{width:28px;min-width:28px;height:17px;border:0.5px solid #ddd;background:#fafafa;padding:0}
+td.gap{width:3px;min-width:3px;border:none;background:#fff;padding:0}
+td.ms-sep{height:2px;background:#000;padding:0;border:none}
+/* ── Barriers / Transitions block layout ── */
+.block-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px}
+.block-item{border:1px solid #000;display:inline-block;text-align:center}
+.block-item .blk-title{font-size:6.5pt;font-weight:bold;padding:2px 3px;
+  background:#e8eaf6;border-bottom:1px solid #000;white-space:pre-line;line-height:1.25;min-height:28px}
+.block-item table{border-collapse:collapse}
+.block-item td.blk-lbl{font-size:7pt;font-weight:bold;text-align:center;
+  border:0.5px solid #666;padding:1px 3px;background:#f5f5f5;width:22px}
+.block-item td.blk-cell{width:22px;height:17px;border:0.5px solid #666;
+  cursor:pointer;padding:0;user-select:none;text-align:center;vertical-align:middle;
+  font-size:6.5pt;color:#333;background:#fff;position:relative}
+.block-item td.blk-cell:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.92)}
+/* ── Footer totals ── */
+.totals-bar{margin-top:8px;padding:6px 10px;background:#f5f5f5;border:1px solid #ddd;
+  border-radius:4px;font-size:9pt;display:flex;gap:18px;flex-wrap:wrap}
+.totals-bar .tl{font-weight:bold;white-space:nowrap}
+/* ── Tooltip ── */
+#tip{display:none;position:fixed;background:#fffde7;border:1px solid #bbb;
+  padding:4px 8px;font-size:8pt;border-radius:3px;z-index:9999;
+  pointer-events:none;max-width:280px;white-space:pre-wrap;line-height:1.4}
+/* ── Sticky status ── */
+#vbStickyStatus{
+  position:fixed;right:12px;bottom:12px;z-index:9999;
+  font-size:11px;font-weight:bold;padding:6px 10px;border-radius:6px;
+  color:#14532d;background:#dcfce7;border:1px solid #86efac;
+  box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.dm-toolbar{margin-bottom:4px}
+.dm-pal{width:40px;height:22px;border:2px solid #888;border-radius:3px;cursor:pointer;display:inline-block}
+.dm-pal.sel{border:3px solid #1a56db;box-shadow:0 0 0 1px #1a56db}
+/* ── Note dot ── */
+.ndot{position:absolute;top:1px;right:1px;width:4px;height:4px;border-radius:50%;
+  background:#1a56db;display:none;pointer-events:none}
+/* ── Print ── */
+@media print{
+  .toolbar,.nav-bar,.totals-bar{display:none!important}
+  #vbStickyStatus{display:none!important}
+  body{font-size:7pt}
+  .wrap{padding:4px}
+  td.cell{height:14px;width:24px;min-width:24px;font-size:5.5pt}
+  td.blank{height:14px;width:24px;min-width:24px}
+  .block-item td.blk-cell{height:14px}
+  @page{size:landscape;margin:10mm}
+}
+
+td.master-cell{width:38px;min-width:38px;height:20px;border:1px solid #000;
+  cursor:pointer;padding:0;user-select:none;text-align:center;vertical-align:middle;
+  font-size:7pt;font-weight:bold;color:#333;position:relative;background:#fff}
+td.master-cell:hover{outline:1px solid #1a56db;z-index:2;filter:brightness(0.92)}
+td.master-hdr{font-weight:bold;font-size:7pt;text-align:center;
+  border:1px solid #000;background:#dbeafe;padding:2px 3px;white-space:nowrap;vertical-align:middle}
+td.level-hdr{font-weight:bold;font-size:9pt;text-align:center;writing-mode:vertical-lr;
+  text-orientation:mixed;border:1px solid #000;background:#bbdefb;padding:4px 2px;
+  white-space:nowrap;vertical-align:middle;letter-spacing:1px}
+td.ms-num{font-weight:bold;font-size:8pt;text-align:center;
+  border:1px solid #000;background:#e3f2fd;padding:1px 4px;width:22px}
+td.level-sep{height:3px;background:#1565c0;border:none;padding:0}
+</style></head><body>
+<div class="wrap">
+
+<div class="toolbar">
+  <span style="font-size:8pt;font-weight:bold">Color:</span>
+  <div class="pb c0 sel" data-c="0" title="White / Clear"></div>
+  <div class="pb c1" data-c="1" title="Gray"></div>
+  <div class="pb c2" data-c="2" title="Yellow / Emerging"></div>
+  <div class="pb c3" data-c="3" title="Orange / Partial"></div>
+  <div class="pb c4" data-c="4" title="Green / Mastered"></div>
+  <button class="cbtn" id="clrAll">Clear All</button>
+  <button class="cbtn" id="btnPrint" onclick="window.print()">🖨 Print</button>
+  <span style="font-size:7.5pt;color:#14532d;font-weight:bold">VB-MAPP Grid</span>
+  <span id="mockStatus" style="font-size:7.5pt;color:#0b6b2a;font-weight:bold">Status: not loaded</span>
+  <span style="font-size:7.5pt;color:#555">Click = apply color &nbsp;|&nbsp; Dbl-click = add note</span>
+</div>
+<div class="toolbar dm-toolbar">
+  <span style="font-size:8pt;font-weight:bold">Domain VB Color:</span>
+  <select id="domainSelect" style="font-size:8pt;padding:2px 4px"></select>
+  <div class="dm-pal" data-pal="red" title="Red (default)" style="background:linear-gradient(90deg,#7f1d1d,#fca5a5)"></div>
+  <div class="dm-pal" data-pal="blue" title="Blue" style="background:linear-gradient(90deg,#1e3a5f,#93c5fd)"></div>
+  <div class="dm-pal" data-pal="green" title="Green" style="background:linear-gradient(90deg,#14532d,#86efac)"></div>
+  <div class="dm-pal" data-pal="purple" title="Purple" style="background:linear-gradient(90deg,#581c87,#d8b4fe)"></div>
+  <div class="dm-pal" data-pal="amber" title="Amber" style="background:linear-gradient(90deg,#78350f,#fcd34d)"></div>
+  <div class="dm-pal" data-pal="teal" title="Teal" style="background:linear-gradient(90deg,#134e4a,#5eead4)"></div>
+</div><div class="toolbar" style="padding:4px 10px">
+  <span style="font-size:8pt;font-weight:bold">Load Session:</span>
+  <input type="text" id="sessionInput" placeholder="Session ID" style="font-size:8pt;padding:2px 4px;width:200px;border:1px solid #999;border-radius:3px">
+  <button class="cbtn" id="btnLoadSession">Load</button>
+  <span id="apiStatus" style="font-size:7.5pt;font-weight:bold"></span>
+</div>
+<div class="nav-bar">
+  <span style="font-size:8pt;font-weight:bold">VB-MAPP:</span> <span class="cur">Master</span> &nbsp;|&nbsp; <a href="grid-level1.html" onclick="this.href=addParams(this.href)">Level 1</a> &nbsp;|&nbsp; <a href="grid-level2.html" onclick="this.href=addParams(this.href)">Level 2</a> &nbsp;|&nbsp; <a href="grid-level3.html" onclick="this.href=addParams(this.href)">Level 3</a> &nbsp;|&nbsp; <a href="grid-barriers.html" onclick="this.href=addParams(this.href)">Barriers</a> &nbsp;|&nbsp; <a href="grid-transitions.html" onclick="this.href=addParams(this.href)">Transitions</a>
+</div>
+<div class="bigT">VB-MAPP Master Scoring Form</div>
+<div class="subT">Copyright 2007-2008 Mark L. Sundberg</div>
+
+<div class="fline" style="margin-top:4px">
+  <div class="fl"><label>Child's Name: <input type="text" style="width:180px" id="fieldChild"/></label></div>
+  <div class="fl"><label>Date of Birth: <input type="text" style="width:100px" id="fieldDOB"/></label></div>
+  <div class="fl"><label>Age at Testing: <input type="text" style="width:80px" id="fieldAge"/></label></div>
+  <div class="fl"><label>Assessor: <input type="text" style="width:140px" id="fieldAssessor"/></label></div>
+  <div class="fl"><label>Date: <input type="text" style="width:90px" id="fieldDate"/></label></div>
+</div>
+
+<table class="key-box">
+  <tr><td class="kh">Key:</td><td class="kh">Score</td><td class="kh">Date</td><td class="kh">Color</td><td class="kh">Tester</td></tr>
+  <tr><td>1st test:</td><td><input type="text" style="width:30px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td style="width:20px;background:#00cc44"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td></tr>
+  <tr><td>2nd test:</td><td><input type="text" style="width:30px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td style="width:20px;background:#ffff00"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td></tr>
+  <tr><td>3rd test:</td><td><input type="text" style="width:30px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td style="width:20px;background:#ffa500"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td></tr>
+  <tr><td>4th test:</td><td><input type="text" style="width:30px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td><td style="width:20px;background:#c0c0c0"></td><td><input type="text" style="width:50px;font-size:7pt;border:none;border-bottom:1px solid #999"></td></tr>
+</table>
+<div class="gscroll"><table class="g"><tr><td class="level-hdr" rowspan="6">LEVEL 3</td><td class="master-hdr">Mand</td><td class="master-hdr">Tact</td><td class="master-hdr">Listener</td><td class="master-hdr">VP/MTS</td><td class="master-hdr">Play</td><td class="master-hdr">Social</td><td class="master-hdr">Reading</td><td class="master-hdr">Writing</td><td class="master-hdr">LRFFC</td><td class="master-hdr">Intraverbal</td><td class="master-hdr">Group</td><td class="master-hdr">Ling.</td><td class="master-hdr">Math</td></tr>
+<tr><td class="master-cell" data-k="MAND-15M" data-domain="MAND" data-color="0" title="Mands for others to attend to his own intraverbal behavior 5 times (e.g., Listen to me... Here's what happened... I'm telling the story...)">15<span class="ndot"></span></td><td class="master-cell" data-k="TACT-15M" data-domain="TACT" data-color="0" title="Has a total tact vocabulary of 1000 words (nouns, verbs, adjectives, etc.), tested or from an accumulated list of known tacts">15<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-15M" data-domain="LISTENER" data-color="0" title="Has a total listener repertoire of 1200 words (nouns, verbs, adjectives, etc.), tested or from an accumulated list of known words">15<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-15M" data-domain="VPMTS" data-color="0" title="Continues 20 three-step patterns, sequences, or seriation tasks (e.g., star, triangle, heart, star, triangle...)">15<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-15M" data-domain="PLAY" data-color="0" title="Independently draws or writes in pre-academic activity books for 5 minutes">15<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-15M" data-domain="SOCIAL" data-color="0" title="Engages in 4 verbal exchanges on 1 topic with peers for 5 topics">15<span class="ndot"></span></td><td class="master-cell" data-k="READING-15M" data-domain="READING" data-color="0" title="Matches 5 words to the corresponding pictures or items in an array of 5, and vice versa">15<span class="ndot"></span></td><td class="master-cell" data-k="WRITING-15M" data-domain="WRITING" data-color="0" title="Copies all 26 upper and lower case letters legibly">15<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-15M" data-domain="LRFFC" data-color="0" title="Demonstrates 1000 different LRFFC responses, tested or obtained from an accumulated list of known responses">15<span class="ndot"></span></td><td class="master-cell" data-k="IV-15M" data-domain="IV" data-color="0" title="Answers 4 different rotating WH questions about a single topic for 10 topics">15<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-15M" data-domain="GROUP" data-color="0" title="Sits in a 20-minute group session involving 5 children without disruptive behaviors, and answers 5 intraverbal questions">15<span class="ndot"></span></td><td class="master-cell" data-k="LING-15M" data-domain="LING" data-color="0" title="Combines noun and verb phrases to produce 10 different syntactically correct clauses or sentences containing at least 5 words">15<span class="ndot"></span></td><td class="master-cell" data-k="MATH-15M" data-domain="MATH" data-color="0" title="Correctly matches a written number to a quantity and a quantity to a written number for the numbers 1-5">15<span class="ndot"></span></td></tr>
+<tr><td class="master-cell" data-k="MAND-14M" data-domain="MAND" data-color="0" title="Gives directions, instructions, or explanations as to how to do something or how to participate in an activity 5 times (e.g., You put the glue on first, then stick it. You sit here while I get a book.)">14<span class="ndot"></span></td><td class="master-cell" data-k="TACT-14M" data-domain="TACT" data-color="0" title="Tacts with complete sentences containing 4 or more words, 20 times (e.g., The girl is pulling the wagon.)">14<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-14M" data-domain="LISTENER" data-color="0" title="Follows 3-step directions for 10 different directions (e.g., Get your coat, hang it up, and sit down.)">14<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-14M" data-domain="VPMTS" data-color="0" title="Sorts 5 items from 5 different categories without a model (e.g., animals, clothing, furniture)">14<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-14M" data-domain="PLAY" data-color="0" title="Independently engages in sustained play activities for 10 minutes without adult prompts or reinforcement">14<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-14M" data-domain="SOCIAL" data-color="0" title="Engages in pretend social play activities with peers for 5 minutes without adult prompts">14<span class="ndot"></span></td><td class="master-cell" data-k="READING-14M" data-domain="READING" data-color="0" title="Reads his own name">14<span class="ndot"></span></td><td class="master-cell" data-k="WRITING-14M" data-domain="WRITING" data-color="0" title="Legibly spells and writes his own name without copying">14<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-14M" data-domain="LRFFC" data-color="0" title="Selects the correct items given 4 different rotating LRFFC questions about a single topic for 25 different topics">14<span class="ndot"></span></td><td class="master-cell" data-k="IV-14M" data-domain="IV" data-color="0" title="Describes 25 different events, videos, stories, etc. with 8+ words">14<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-14M" data-domain="GROUP" data-color="0" title="Acquires 2 new behaviors in a 15-minute group-teaching format involving 5 or more children">14<span class="ndot"></span></td><td class="master-cell" data-k="LING-14M" data-domain="LING" data-color="0" title="Emits 10 different verb phrases containing at least 3 words, with 2 modifiers">14<span class="ndot"></span></td><td class="master-cell" data-k="MATH-14M" data-domain="MATH" data-color="0" title="Identifies as a listener 8 different comparisons involving measurement">14<span class="ndot"></span></td></tr>
+<tr><td class="master-cell" data-k="MAND-13M" data-domain="MAND" data-color="0" title="Mands with 10 different adjectives, prepositions, or adverbs (e.g., My crayon is broken. Don't take it out. Go fast.)">13<span class="ndot"></span></td><td class="master-cell" data-k="TACT-13M" data-domain="TACT" data-color="0" title="Tacts 4 different adjectives, excluding colors and shapes (e.g., big, little, long, short) and 4 adverbs (e.g., fast, slow, quietly, gently)">13<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-13M" data-domain="LISTENER" data-color="0" title="Selects items from an array of similar stimuli based on 4 pairs of relative adjectives (e.g., big-little, long-short) and demonstrates actions based on 4 pairs of relative adverbs (e.g., quiet-loud, fast-slow)">13<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-13M" data-domain="VPMTS" data-color="0" title="Completes 20 different block designs, parquetry, shape puzzles, or similar tasks with at least 8 different pieces">13<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-13M" data-domain="PLAY" data-color="0" title="Independently engages in arts and crafts type activities for 5 minutes">13<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-13M" data-domain="SOCIAL" data-color="0" title="Intraverbally responds to 5 different questions or statements from peers">13<span class="ndot"></span></td><td class="master-cell" data-k="READING-13M" data-domain="READING" data-color="0" title="Tacts 10 uppercase letters on command">13<span class="ndot"></span></td><td class="master-cell" data-k="WRITING-13M" data-domain="WRITING" data-color="0" title="Copies 10 letters or numbers legibly">13<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-13M" data-domain="LRFFC" data-color="0" title="Selects items from a page in a book or in the natural environment based on 3 verbal components for 25 WH-question LRFFC tasks">13<span class="ndot"></span></td><td class="master-cell" data-k="IV-13M" data-domain="IV" data-color="0" title="Answers 2 questions after being read short passages (15+ words) from books, for 25 passages">13<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-13M" data-domain="GROUP" data-color="0" title="Works independently for 5 minutes in a group, and stays on task for 50% of the period">13<span class="ndot"></span></td><td class="master-cell" data-k="LING-13M" data-domain="LING" data-color="0" title="Emits 10 different noun phrases containing at least 3 words, with 2 modifiers">13<span class="ndot"></span></td><td class="master-cell" data-k="MATH-13M" data-domain="MATH" data-color="0" title="Counts out 1-5 items from a larger set with 1 to 1 correspondence">13<span class="ndot"></span></td></tr>
+<tr><td class="master-cell" data-k="MAND-12M" data-domain="MAND" data-color="0" title="Politely mands to stop an undesirable activity or remove any aversive MO under 5 different circumstances (e.g., Please stop pushing me. No thank you. Excuse me, can you move?)">12<span class="ndot"></span></td><td class="master-cell" data-k="TACT-12M" data-domain="TACT" data-color="0" title="Tacts 4 different prepositions (e.g., in, out, on, under) and 4 pronouns (e.g., I, you, me, mine)">12<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-12M" data-domain="LISTENER" data-color="0" title="Follows 2 instructions involving 6 different prepositions (e.g., Stand behind the chair.) and 4 different pronouns (e.g., Touch my ear.)">12<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-12M" data-domain="VPMTS" data-color="0" title="Demonstrates generalized non-identical matching in a messy array of 10 with 3 similar stimuli, for 25 items">12<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-12M" data-domain="PLAY" data-color="0" title="Repeats a gross motor behavior to obtain a better effect for 2 activities">12<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-12M" data-domain="SOCIAL" data-color="0" title="Spontaneously mands to peers with a WH question 5 times">12<span class="ndot"></span></td><td class="master-cell" data-k="READING-12M" data-domain="READING" data-color="0" title="Selects (LDs) the correct uppercase letter from an array of 5 letters, for 10 different letters">12<span class="ndot"></span></td><td class="master-cell" data-k="WRITING-12M" data-domain="WRITING" data-color="0" title="Independently traces within 1/4 inch of the lines of 5 different geometrical shapes">12<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-12M" data-domain="LRFFC" data-color="0" title="Selects an item from a book based on 2 verbal components for 25 items">12<span class="ndot"></span></td><td class="master-cell" data-k="IV-12M" data-domain="IV" data-color="0" title="Demonstrates 300 different intraverbal responses, tested or obtained from accumulated list">12<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-12M" data-domain="GROUP" data-color="0" title="Responds to 5 different group instructions without direct prompts in a group of 3 or more children">12<span class="ndot"></span></td><td class="master-cell" data-k="LING-12M" data-domain="LING" data-color="0" title="Emits verb inflections by combining 10 root verbs with affixes for regular past tense and 10 root verbs with affixes for future tense">12<span class="ndot"></span></td><td class="master-cell" data-k="MATH-12M" data-domain="MATH" data-color="0" title="Tacts the numbers 1-5">12<span class="ndot"></span></td></tr>
+<tr><td class="master-cell" data-k="MAND-11M" data-domain="MAND" data-color="0" title="Spontaneously mands for different verbal information using a WH question or question word 5 times (e.g., What's your name? Where do I go?)">11<span class="ndot"></span></td><td class="master-cell" data-k="TACT-11M" data-domain="TACT" data-color="0" title="Tacts the color, shape, and function of 5 objects (15 trials) when each object and question is presented in a mixed order (This is part tact and part intraverbal)">11<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-11M" data-domain="LISTENER" data-color="0" title="Selects items by color and shape from an array of 6 similar stimuli, for 4 colors and 4 shapes (e.g., Find the red car. Find the square cracker.)">11<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-11M" data-domain="VPMTS" data-color="0" title="Spontaneously matches any part of an arts and crafts activity to another person's sample 2 times">11<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-11M" data-domain="PLAY" data-color="0" title="Spontaneously engages in pretend or imaginary play on 5 occasions">11<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-11M" data-domain="SOCIAL" data-color="0" title="Spontaneously cooperates with a peer to accomplish a specific outcome 5 times">11<span class="ndot"></span></td><td class="master-cell" data-k="READING-11M" data-domain="READING" data-color="0" title="Attends to a book when a story is being read to him for 75% of the time">11<span class="ndot"></span></td><td class="master-cell" data-k="WRITING-11M" data-domain="WRITING" data-color="0" title="Imitates 5 different writing actions modeled by an adult using a writing instrument and writing surface">11<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-11M" data-domain="LRFFC" data-color="0" title="Selects the correct item from an array of 10 that contains 3 similar stimuli for 25 different WH question LRFFC tasks">11<span class="ndot"></span></td><td class="master-cell" data-k="IV-11M" data-domain="IV" data-color="0" title="Completes 10 two-component (noun-verb) fill-ins">11<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-11M" data-domain="GROUP" data-color="0" title="Uses the toilet and washes hands with only verbal prompts">11<span class="ndot"></span></td><td class="master-cell" data-k="LING-11M" data-domain="LING" data-color="0" title="Emits noun inflections by combining 10 root nouns with suffixes for plurals and 10 root nouns with suffixes for possession">11<span class="ndot"></span></td><td class="master-cell" data-k="MATH-11M" data-domain="MATH" data-color="0" title="Identifies as a listener the numbers 1-5 in an array of 5 different numbers">11<span class="ndot"></span></td></tr>
+<tr><td class="level-sep" colspan="14"></td></tr>
+<tr><td class="level-hdr" rowspan="6">LEVEL 2</td><td class="master-hdr">Mand</td><td class="master-hdr">Tact</td><td class="master-hdr">Listener</td><td class="master-hdr">VP/MTS</td><td class="master-hdr">Play</td><td class="master-hdr">Social</td><td class="master-hdr">Imitation</td><td class="master-hdr">Echoic</td><td class="master-hdr">LRFFC</td><td class="master-hdr">Intraverbal</td><td class="master-hdr">Group</td><td class="master-hdr">Ling.</td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-10M" data-domain="MAND" data-color="0" title="Emits 10 new mands without specific training (e.g., spontaneously says Where kitty go? without formal mand training)">10<span class="ndot"></span></td><td class="master-cell" data-k="TACT-10M" data-domain="TACT" data-color="0" title="Tacts 200 nouns and/or verbs (or other parts of speech), tested or from an accumulated list of known tacts">10<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-10M" data-domain="LISTENER" data-color="0" title="Selects the correct item in a book, picture scene, or natural environment when named for 250 items, tested or from an accumulated list of known words">10<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-10M" data-domain="VPMTS" data-color="0" title="Matches non-identical objects (3D) to pictures (2D) and/or vice versa, in a messy array of 10 containing 3 similar stimuli, for 25 items">10<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-10M" data-domain="PLAY" data-color="0" title="Assembles toys that have multiple parts for 5 different sets of materials">10<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-10M" data-domain="SOCIAL" data-color="0" title="Spontaneously mands to peers to participate in games, social play, etc., 2 times">10<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-10M" data-domain="IMITATION" data-color="0" title="Imitates (or attempts to with approximations) any novel motor action modeled by an adult (generalized imitative repertoire)">10<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-10M" data-domain="ECHOIC" data-color="0" title="Echoes 25 different 4+ word phrases or sentences with 6+ syllables">10<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-10M" data-domain="LRFFC" data-color="0" title="Spontaneously tacts the item on 50% of the LRFFC trials">10<span class="ndot"></span></td><td class="master-cell" data-k="IV-10M" data-domain="IV" data-color="0" title="Answers 25 different who or where questions">10<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-10M" data-domain="GROUP" data-color="0" title="Sits in a small group for 10 minutes, attends to the teacher for 50% of the period, and responds to 5 of a teacher's SDs">10<span class="ndot"></span></td><td class="master-cell" data-k="LING-10M" data-domain="LING" data-color="0" title="Has a total speaker vocabulary of 300 words (all verbal operants except echoic)">10<span class="ndot"></span></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-9M" data-domain="MAND" data-color="0" title="Spontaneously emits 15 different mands (e.g., Let's play. Open. I want book.)">9<span class="ndot"></span></td><td class="master-cell" data-k="TACT-9M" data-domain="TACT" data-color="0" title="Tacts 50 two-component verb-noun, or noun-verb combinations, tested or from a list of known two-component tacts (e.g., washing face, Joe swinging, baby sleeping)">9<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-9M" data-domain="LISTENER" data-color="0" title="Follows 25 two-component noun-verb and/or verb-noun instructions (e.g., Show me the baby sleeping. Push the swing.)">9<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-9M" data-domain="VPMTS" data-color="0" title="Matches non-identical objects or non-identical pictures in a messy array of 10, for 25 items">9<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-9M" data-domain="PLAY" data-color="0" title="Independently engages in play on structures and playground equipment for a total of 5 minutes">9<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-9M" data-domain="SOCIAL" data-color="0" title="Spontaneously responds to the mands from peers 5 times">9<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-9M" data-domain="IMITATION" data-color="0" title="Spontaneously imitates 5 functional skills in the natural environment (e.g., eating with a spoon)">9<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-9M" data-domain="ECHOIC" data-color="0" title="Echoes 25 different 3-word phrases">9<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-9M" data-domain="LRFFC" data-color="0" title="Selects an item given 3 different verbal statements about each item when independently presented for 25 items">9<span class="ndot"></span></td><td class="master-cell" data-k="IV-9M" data-domain="IV" data-color="0" title="Answers 25 different what questions">9<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-9M" data-domain="GROUP" data-color="0" title="Sits in a small group for 5 minutes without disruptive behavior or attempting to leave the group">9<span class="ndot"></span></td><td class="master-cell" data-k="LING-9M" data-domain="LING" data-color="0" title="Emits functional prosody on 5 occasions in one day">9<span class="ndot"></span></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-8M" data-domain="MAND" data-color="0" title="Emits 5 different mands that contain 2 or more words (not including I want) (e.g., Go fast, My turn. Pour juice.)">8<span class="ndot"></span></td><td class="master-cell" data-k="TACT-8M" data-domain="TACT" data-color="0" title="Tacts 10 actions when asked, for example, What am I doing? (e.g., jumping, sleeping, eating)">8<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-8M" data-domain="LISTENER" data-color="0" title="Performs 10 specific motor actions on command (e.g., Show me clapping. Can you hop?)">8<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-8M" data-domain="VPMTS" data-color="0" title="Matches identical objects or pictures in a messy array of 8 containing 3 similar stimuli, for 25 items">8<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-8M" data-domain="PLAY" data-color="0" title="Plays with everyday items in creative ways 2 times (e.g., uses a bowl as a drum or a box as an imaginary car)">8<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-8M" data-domain="SOCIAL" data-color="0" title="Engages in sustained social play with peers for 3 minutes without adult prompts">8<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-8M" data-domain="IMITATION" data-color="0" title="Imitates 10 different three-component sequences of actions when prompted">8<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-8M" data-domain="ECHOIC" data-color="0" title="Echoes 10 3-syllable words within 2 seconds">8<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-8M" data-domain="LRFFC" data-color="0" title="Selects the correct item from an array of 10 for 25 different verb-noun what, which, or who questions">8<span class="ndot"></span></td><td class="master-cell" data-k="IV-8M" data-domain="IV" data-color="0" title="Completes 25 different fill-in-the-blank phrases (not including songs)">8<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-8M" data-domain="GROUP" data-color="0" title="Transitions between classroom activities with no more than 1 gestural or verbal prompt">8<span class="ndot"></span></td><td class="master-cell" data-k="LING-8M" data-domain="LING" data-color="0" title="Emits 10 different 2-word utterances per day of any type except echoic">8<span class="ndot"></span></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-7M" data-domain="MAND" data-color="0" title="Mands for others to emit 5 different actions or missing actions needed to enjoy a desired activity (e.g., open to get outside, push when on a swing)">7<span class="ndot"></span></td><td class="master-cell" data-k="TACT-7M" data-domain="TACT" data-color="0" title="Generalizes tacts across 3 examples of 50 items, or from a list of known generalizations (e.g., tacts 3 different cars)">7<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-7M" data-domain="LISTENER" data-color="0" title="Generalizes listener discriminations (LDs) in a messy array of 8, for 3 different examples of 50 items (e.g., the child can find 3 examples of a train)">7<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-7M" data-domain="VPMTS" data-color="0" title="Sorts similar colors and shapes for 10 different colors or shapes">7<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-7M" data-domain="PLAY" data-color="0" title="Independently demonstrates the use of toys or objects according to their function for 5 items">7<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-7M" data-domain="SOCIAL" data-color="0" title="Spontaneously mands to peers 5 times (e.g., My turn. Push me. Look! Come on.)">7<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-7M" data-domain="IMITATION" data-color="0" title="Imitates 20 different fine motor actions when prompted, Do this (e.g., wiggling fingers, pinching, making a fist, making a butterfly)">7<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-7M" data-domain="ECHOIC" data-color="0" title="Echoes 20 different 2-word phrases (no more than 4 syllables total per phrase)">7<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-7M" data-domain="LRFFC" data-color="0" title="Selects the correct item from an array of 8 for 25 different LRFFC fill-in statements of any type">7<span class="ndot"></span></td><td class="master-cell" data-k="IV-7M" data-domain="IV" data-color="0" title="Provides first name when asked, What is your name?">7<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-7M" data-domain="GROUP" data-color="0" title="Puts away personal items, lines up, and comes to a table with only 1 verbal prompt">7<span class="ndot"></span></td><td class="master-cell" data-k="LING-7M" data-domain="LING" data-color="0" title="Has a total listener vocabulary of 100 words">7<span class="ndot"></span></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-6M" data-domain="MAND" data-color="0" title="Mands for 20 different missing items without prompts (except e.g., What do you need?) (e.g., mands for paper when given a crayon)">6<span class="ndot"></span></td><td class="master-cell" data-k="TACT-6M" data-domain="TACT" data-color="0" title="Tacts 25 items when asked, What's that? (e.g., book, shoe, car, dog, hat)">6<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-6M" data-domain="LISTENER" data-color="0" title="Selects the correct item from a messy array of 6, for 40 different objects or pictures (e.g., Find cat. Touch ball.)">6<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-6M" data-domain="VPMTS" data-color="0" title="Matches identical objects or pictures in a messy array of 6, for 25 items">6<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-6M" data-domain="PLAY" data-color="0" title="Searches for a missing or corresponding toy or part of a set for 5 items or sets">6<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-6M" data-domain="SOCIAL" data-color="0" title="Initiates a physical interaction with a peer 2 times">6<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-6M" data-domain="IMITATION" data-color="0" title="Imitates 10 actions that require selecting a specific object from an array">6<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-6M" data-domain="ECHOIC" data-color="0" title="Echoes 10 two-syllable words within 2 seconds (e.g., baby, again, mommy)">6<span class="ndot"></span></td><td class="master-cell" data-k="LRFFC-6M" data-domain="LRFFC" data-color="0" title="Selects 5 different foods or drinks when each are presented in an array of 5 and asked the verbal fill-ins You eat... and You drink...">6<span class="ndot"></span></td><td class="master-cell" data-k="IV-6M" data-domain="IV" data-color="0" title="Completes 10 different fill-in-the-blank phrases of any type">6<span class="ndot"></span></td><td class="master-cell" data-k="GROUP-6M" data-domain="GROUP" data-color="0" title="Sits at a group snack or lunch table without negative behavior for 3 minutes">6<span class="ndot"></span></td><td class="master-cell" data-k="LING-6M" data-domain="LING" data-color="0" title="The child's articulation of 10 tacts can be understood by familiar adults who cannot see the item tacted">6<span class="ndot"></span></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="level-sep" colspan="14"></td></tr>
+<tr><td class="level-hdr" rowspan="6">LEVEL 1</td><td class="master-hdr">Mand</td><td class="master-hdr">Tact</td><td class="master-hdr">Listener</td><td class="master-hdr">VP/MTS</td><td class="master-hdr">Play</td><td class="master-hdr">Social</td><td class="master-hdr">Imitation</td><td class="master-hdr">Echoic</td><td class="master-hdr">Vocal</td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-5M" data-domain="MAND" data-color="0" title="Emits 10 different mands without prompts (except, What do you want?) — the desired item can be present (e.g., apple, swing, car, juice)">5<span class="ndot"></span></td><td class="master-cell" data-k="TACT-5M" data-domain="TACT" data-color="0" title="Tacts 10 items (e.g., common objects, people, body parts, or pictures)">5<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-5M" data-domain="LISTENER" data-color="0" title="Selects the correct item from a messy array of 6 for 25 items (e.g., Find cat. Touch ball.)">5<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-5M" data-domain="VPMTS" data-color="0" title="Matches any 10 identical items (e.g., inset puzzles, toys, objects, or pictures)">5<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-5M" data-domain="PLAY" data-color="0" title="Independently engages in cause-and-effect play for 2 minutes (e.g., dumping containers, playing with pop-up toys, pulling toys)">5<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-5M" data-domain="SOCIAL" data-color="0" title="Spontaneously follows peers or imitates their motor behavior 2 times (e.g., follows a peer into a playhouse)">5<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-5M" data-domain="IMITATION" data-color="0" title="Imitates 20 motor movements of any type (e.g., fine motor, gross motor, imitation with objects)">5<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-5M" data-domain="ECHOIC" data-color="0" title="Echoes 25 different words (from EESA groups 1 through 5)">5<span class="ndot"></span></td><td class="master-cell" data-k="VOCAL-5M" data-domain="VOCAL" data-color="0" title="Emits 5 word approximations spontaneously, not including echoics">5<span class="ndot"></span></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-4M" data-domain="MAND" data-color="0" title="Spontaneously emits (no verbal prompts) 5 mands — the desired item can be present">4<span class="ndot"></span></td><td class="master-cell" data-k="TACT-4M" data-domain="TACT" data-color="0" title="Spontaneously tacts (no verbal prompts) 2 different items">4<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-4M" data-domain="LISTENER" data-color="0" title="Performs 4 different motor actions on command without a visual prompt (e.g., Can you jump? Show me clapping.)">4<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-4M" data-domain="VPMTS" data-color="0" title="Places 3 items in a container, stacks 3 blocks, or places 3 rings on a peg for 2 of these or similar activities">4<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-4M" data-domain="PLAY" data-color="0" title="Independently engages in movement play for 2 minutes (e.g., swinging, dancing, rocking, jumping, climbing)">4<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-4M" data-domain="SOCIAL" data-color="0" title="Spontaneously engages in parallel play near other children for a total of 2 minutes">4<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-4M" data-domain="IMITATION" data-color="0" title="Spontaneously imitates 5 functional skills in the natural environment">4<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-4M" data-domain="ECHOIC" data-color="0" title="Echoes 10 sounds on command (from EESA groups 1 through 4)">4<span class="ndot"></span></td><td class="master-cell" data-k="VOCAL-4M" data-domain="VOCAL" data-color="0" title="Varies the pitch, volume, and rhythm of sounds during babbling or word approximations (functional prosody)">4<span class="ndot"></span></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-3M" data-domain="MAND" data-color="0" title="Generalizes 6 mands across 2 people, 2 settings, and 2 different examples of a reinforcer (e.g., mands bubbles from mom and dad, inside and outside, a red bottle and a blue bottle)">3<span class="ndot"></span></td><td class="master-cell" data-k="TACT-3M" data-domain="TACT" data-color="0" title="Tacts 6 non-reinforcing items (e.g., shoe, hat, spoon, car, cup, bed)">3<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-3M" data-domain="LISTENER" data-color="0" title="Looks at, touches, or points to the correct family member, pet, or other reinforcer when presented in an array of 2, for 5 different reinforcers (e.g., Where's Elmo? Where's mommy?)">3<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-3M" data-domain="VPMTS" data-color="0" title="Visually attends to a toy or book for 30 seconds (not a self-stim item)">3<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-3M" data-domain="PLAY" data-color="0" title="Demonstrates generalization by engaging in exploratory movement and playing with the toys in a novel environment for 2 minutes">3<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-3M" data-domain="SOCIAL" data-color="0" title="Spontaneously makes eye contact with others 5 times in a 30-minute period">3<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-3M" data-domain="IMITATION" data-color="0" title="Imitates 8 motor movements, 2 of which involve objects (e.g., shaking a maraca, tapping sticks together)">3<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-3M" data-domain="ECHOIC" data-color="0" title="Echoes 6 sounds on command (from EESA groups 1 through 4)">3<span class="ndot"></span></td><td class="master-cell" data-k="VOCAL-3M" data-domain="VOCAL" data-color="0" title="Emits 10 vowel-consonant or consonant-vowel combinations (babbling)">3<span class="ndot"></span></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-2M" data-domain="MAND" data-color="0" title="Emits 4 different mands without prompts (except What do you want?) — the desired item can be present (e.g., music, slinky, ball)">2<span class="ndot"></span></td><td class="master-cell" data-k="TACT-2M" data-domain="TACT" data-color="0" title="Tacts any 4 items without echoic or imitative prompts (e.g., people, pets, characters, or other objects)">2<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-2M" data-domain="LISTENER" data-color="0" title="Responds to hearing his own name 5 times (e.g., looks at the speaker)">2<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-2M" data-domain="VPMTS" data-color="0" title="Gazes at a stimulus for 3 seconds, 5 times">2<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-2M" data-domain="PLAY" data-color="0" title="Shows variation in play by independently interacting with 5 different items (e.g., plays with rings, then a ball, then a block)">2<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-2M" data-domain="SOCIAL" data-color="0" title="Indicates that he wants to be held or physically played with 2 times (e.g., climbs up on his mom's lap)">2<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-2M" data-domain="IMITATION" data-color="0" title="Imitates 4 gross motor movements when prompted with Do this">2<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-2M" data-domain="ECHOIC" data-color="0" title="Echoes 4 sounds on command (from EESA groups 1, 2, or 3)">2<span class="ndot"></span></td><td class="master-cell" data-k="VOCAL-2M" data-domain="VOCAL" data-color="0" title="Emits 5 vowel or consonant sounds spontaneously">2<span class="ndot"></span></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td></tr>
+<tr><td class="master-cell" data-k="MAND-1M" data-domain="MAND" data-color="0" title="Emits 2 words, signs, or PECS, but may require echoic, imitative, or other prompts, but no physical prompts (e.g., cracker, book)">1<span class="ndot"></span></td><td class="master-cell" data-k="TACT-1M" data-domain="TACT" data-color="0" title="Tacts 2 items with echoic or imitative prompts (e.g., people, pets, characters, or favorite objects)">1<span class="ndot"></span></td><td class="master-cell" data-k="LISTENER-1M" data-domain="LISTENER" data-color="0" title="Attends to a speaker's voice by making eye contact with the speaker 5 times">1<span class="ndot"></span></td><td class="master-cell" data-k="VPMTS-1M" data-domain="VPMTS" data-color="0" title="Visually tracks moving stimuli for 2 seconds, 5 times">1<span class="ndot"></span></td><td class="master-cell" data-k="PLAY-1M" data-domain="PLAY" data-color="0" title="Manipulates and explores objects for 1 minute (e.g., looks at a toy, turns it over, presses buttons)">1<span class="ndot"></span></td><td class="master-cell" data-k="SOCIAL-1M" data-domain="SOCIAL" data-color="0" title="Makes eye contact as a type of mand 5 times">1<span class="ndot"></span></td><td class="master-cell" data-k="IMITATION-1M" data-domain="IMITATION" data-color="0" title="Imitates 2 gross motor movements when prompted with Do this (e.g., clapping, raising arms)">1<span class="ndot"></span></td><td class="master-cell" data-k="ECHOIC-1M" data-domain="ECHOIC" data-color="0" title="Echoes 2 sounds on command (from EESA groups 1, 2, or 3)">1<span class="ndot"></span></td><td class="master-cell" data-k="VOCAL-1M" data-domain="VOCAL" data-color="0" title="Emits 5 sounds spontaneously, does not need to be directed to another person">1<span class="ndot"></span></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td><td style="border:none;background:#fff"></td></tr>
+</table></div><div class="totals-bar"><span class="tl">Level 3: <span id="total_Level_3">—</span></span><span class="tl">Level 2: <span id="total_Level_2">—</span></span><span class="tl">Level 1: <span id="total_Level_1">—</span></span><span class="tl">Total: <span id="total_Total">—</span></span></div></div><div id="tip"></div><div id="vbStickyStatus"></div>
+<script>
+var API_BASE = '';
+var GRID_ID = 'master';
+var STORAGE_KEY = 'vbmapp_grid_' + GRID_ID;
+var NOTES = {};
+var CELL_SEL = 'td.cell, td.m-cell, td.blk-cell, td.master-cell';
+var CELL_SEL_K = 'td.cell[data-k], td.m-cell[data-k], td.blk-cell[data-k], td.master-cell[data-k]';
+
+// ── URL param helper ──
+function addParams(href) {
+  var p = new URLSearchParams(window.location.search||'');
+  var sid = p.get('sessionId'), rid = p.get('respondentId');
+  var u = new URL(href, window.location.origin);
+  if (sid) u.searchParams.set('sessionId', sid);
+  if (rid) u.searchParams.set('respondentId', rid);
+  return u.pathname + u.search;
+}
+
+// ── Color palette ──
+var selectedColor = 0;
+document.querySelectorAll('.pb[data-c]').forEach(function(pb){
+  pb.addEventListener('click', function(){
+    document.querySelectorAll('.pb').forEach(function(p){p.classList.remove('sel')});
+    pb.classList.add('sel');
+    selectedColor = parseInt(pb.dataset.c);
+  });
+});
+
+var VB_PALETTES = {
+  red:    ['#7f1d1d', '#b91c1c', '#ef4444', '#fca5a5'],
+  blue:   ['#1e3a5f', '#2563eb', '#60a5fa', '#93c5fd'],
+  green:  ['#14532d', '#16a34a', '#4ade80', '#86efac'],
+  purple: ['#581c87', '#9333ea', '#c084fc', '#d8b4fe'],
+  amber:  ['#78350f', '#d97706', '#fbbf24', '#fcd34d'],
+  teal:   ['#134e4a', '#0d9488', '#2dd4bf', '#5eead4']
+};
+var DOMAIN_COLOR_KEY = 'vbmapp_domain_colors';
+var domainColorMap = {};
+var domainOptions = [];
+
+function getDomainCodeForCell(cell) {
+  if (!cell) return '';
+  var domain = cell.getAttribute('data-domain');
+  if (domain) return domain;
+  var barrier = cell.getAttribute('data-barrier');
+  if (barrier) return 'BARRIER-' + barrier;
+  var trans = cell.getAttribute('data-trans');
+  if (trans) return 'TRANS-' + trans;
+  return '';
+}
+
+function getDomainLabelForCell(cell, code) {
+  if (!cell) return code;
+  var domain = cell.getAttribute('data-domain');
+  if (domain) return domain;
+  var barrier = cell.getAttribute('data-barrier');
+  if (barrier) return 'Barrier ' + barrier;
+  var trans = cell.getAttribute('data-trans');
+  if (trans) return 'Transition ' + trans;
+  return code;
+}
+
+function compareDomainCodes(a, b) {
+  var am = a.code.match(/^(BARRIER|TRANS)-(\d+)$/);
+  var bm = b.code.match(/^(BARRIER|TRANS)-(\d+)$/);
+  if (am && bm && am[1] === bm[1]) return Number(am[2]) - Number(bm[2]);
+  if (am && !bm) return 1;
+  if (!am && bm) return -1;
+  return a.code.localeCompare(b.code, undefined, { numeric: true });
+}
+
+function loadDomainColors() {
+  try {
+    var raw = localStorage.getItem(DOMAIN_COLOR_KEY);
+    if (raw) Object.assign(domainColorMap, JSON.parse(raw));
+  } catch(e) {}
+}
+
+function saveDomainColors() {
+  try { localStorage.setItem(DOMAIN_COLOR_KEY, JSON.stringify(domainColorMap)); } catch(e) {}
+}
+
+function getGradientForDomain(domainCode) {
+  var palName = domainColorMap[domainCode] || 'red';
+  return VB_PALETTES[palName] || VB_PALETTES.red;
+}
+
+function buildDomainOptions() {
+  var seen = {};
+  var list = [];
+  document.querySelectorAll(CELL_SEL_K).forEach(function(cell){
+    var code = getDomainCodeForCell(cell);
+    if (!code || seen[code]) return;
+    seen[code] = true;
+    list.push({ code: code, label: getDomainLabelForCell(cell, code) });
+  });
+  list.sort(compareDomainCodes);
+  return list;
+}
+
+function syncPaletteSelectionForDomain(domainCode) {
+  var palette = domainColorMap[domainCode] || 'red';
+  document.querySelectorAll('.dm-pal').forEach(function(swatch){
+    swatch.classList.toggle('sel', swatch.dataset.pal === palette);
+  });
+}
+
+function repaintCurrentGridColors() {
+  document.querySelectorAll(CELL_SEL_K).forEach(function(cell){
+    var colorIndex = parseInt(cell.dataset.color || '0', 10) || 0;
+    if (colorIndex > 0) {
+      applyPaletteTone(cell, colorIndex);
+    } else {
+      cell.style.background = '';
+      cell.style.color = '';
+    }
+  });
+}
+
+function initDomainColorControls() {
+  loadDomainColors();
+  domainOptions = buildDomainOptions();
+
+  var domainSelect = document.getElementById('domainSelect');
+  if (!domainSelect || domainOptions.length === 0) return;
+
+  domainSelect.innerHTML = '';
+  domainOptions.forEach(function(option){
+    var el = document.createElement('option');
+    el.value = option.code;
+    el.textContent = option.code + ' - ' + option.label;
+    domainSelect.appendChild(el);
+  });
+
+  if (!domainSelect.value && domainOptions[0]) {
+    domainSelect.value = domainOptions[0].code;
+  }
+
+  syncPaletteSelectionForDomain(domainSelect.value);
+
+  document.querySelectorAll('.dm-pal').forEach(function(swatch){
+    swatch.addEventListener('click', function(){
+      var domainCode = domainSelect.value;
+      if (!domainCode) return;
+      domainColorMap[domainCode] = swatch.dataset.pal || 'red';
+      saveDomainColors();
+      syncPaletteSelectionForDomain(domainCode);
+      repaintCurrentGridColors();
+    });
+  });
+
+  domainSelect.addEventListener('change', function(){
+    syncPaletteSelectionForDomain(domainSelect.value);
+  });
+}
+// ── Apply color on click ──
+function clearColorClasses(cell) {
+  cell.classList.remove('c0','c1','c2','c3','c4','ms-0','ms-half','ms-1',
+    'bar-0','bar-1','bar-2','bar-3','bar-4','tr-1','tr-2','tr-3','tr-4','tr-5');
+}
+
+function applyPaletteTone(cell, colorIndex) {
+  if (colorIndex <= 0) {
+    cell.style.background = '';
+    cell.style.color = '';
+    return;
+  }
+  var domainCode = getDomainCodeForCell(cell);
+  var gradient = getGradientForDomain(domainCode);
+  var toneIndex = Math.max(0, Math.min(3, colorIndex - 1));
+  cell.style.background = gradient[toneIndex];
+  cell.style.color = toneIndex >= 2 ? '#ffffff' : '#111827';
+}
+
+function applyColorClass(cell, colorIndex) {
+  var normalized = Math.max(0, Math.min(4, parseInt(colorIndex, 10) || 0));
+  clearColorClasses(cell);
+  cell.classList.add('c' + normalized);
+  cell.dataset.color = String(normalized);
+  applyPaletteTone(cell, normalized);
+}
+
+function applyColor(cell) {
+  applyColorClass(cell, selectedColor);
+  saveState();
+}
+
+// ── All clickable cells ──
+document.querySelectorAll(CELL_SEL).forEach(function(cell){
+  cell.addEventListener('click', function(){ applyColor(cell); });
+  cell.addEventListener('dblclick', function(e){
+    e.preventDefault();
+    var k = cell.dataset.k;
+    if (!k) return;
+    var cur = NOTES[k] || '';
+    var val = prompt('Note for ' + k + ':', cur);
+    if (val !== null) {
+      NOTES[k] = val;
+      var dot = cell.querySelector('.ndot');
+      if (dot) dot.style.display = val ? 'block' : 'none';
+      saveState();
+    }
+  });
+});
+
+// ── Tooltip ──
+var tip = document.getElementById('tip');
+document.addEventListener('mouseover', function(e){
+  var t = e.target.closest(CELL_SEL);
+  if (!t) { if(tip) tip.style.display='none'; return; }
+  var title = t.getAttribute('title') || '';
+  var note = NOTES[t.dataset.k] || '';
+  var txt = title;
+  if (note) txt += '\n📝 ' + note;
+  if (!txt) { if(tip) tip.style.display='none'; return; }
+  if(tip){tip.textContent=txt;tip.style.display='block';}
+});
+document.addEventListener('mousemove', function(e){
+  if(tip){tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY+10)+'px';}
+});
+document.addEventListener('mouseout', function(e){
+  if(!e.relatedTarget||!e.relatedTarget.closest||!e.relatedTarget.closest(CELL_SEL))
+    if(tip) tip.style.display='none';
+});
+
+// ── Save state to localStorage ──
+function saveState() {
+  var state = { colors:{}, notes:NOTES, fields:{} };
+  document.querySelectorAll(CELL_SEL_K).forEach(function(c){
+    if (c.dataset.color && c.dataset.color !== '0') state.colors[c.dataset.k] = parseInt(c.dataset.color);
+  });
+  document.querySelectorAll('.fl input, .key-box input').forEach(function(inp){
+    if (inp.id && inp.value) state.fields[inp.id] = inp.value;
+  });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+}
+
+// ── Load state from localStorage ──
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    var state = JSON.parse(raw);
+    if (state.colors) {
+      Object.keys(state.colors).forEach(function(k){
+        var cell = document.querySelector('[data-k="'+k+'"]');
+        if (cell) {
+          applyColorClass(cell, parseInt(state.colors[k], 10) || 0);
+
+        }
+      });
+    }
+    if (state.notes) { NOTES = state.notes;
+      Object.keys(NOTES).forEach(function(k){
+        if (NOTES[k]) { var c=document.querySelector('[data-k="'+k+'"]'); if(c){var d=c.querySelector('.ndot');if(d)d.style.display='block';}}
+      });
+    }
+    if (state.fields) {
+      Object.keys(state.fields).forEach(function(id){
+        var el=document.getElementById(id);if(el)el.value=state.fields[id];
+      });
+    }
+    return true;
+  } catch(e){ return false; }
+}
+
+// ── Paint from API payload ──
+function paintFromPayload(scores, scoreMap) {
+  var painted = 0;
+  Object.keys(scores).forEach(function(skillCode){
+    var score = parseFloat(scores[skillCode]) || 0;
+    var max = parseFloat((scoreMap||{})[skillCode]) || 1;
+    // Find cell by data-k attribute
+    var cell = document.querySelector('[data-k="'+skillCode+'"]');
+    if (!cell) return;
+    cell.classList.remove('c0','c1','c2','c3','c4','ms-0','ms-half','ms-1',
+      'bar-0','bar-1','bar-2','bar-3','bar-4','tr-1','tr-2','tr-3','tr-4','tr-5');
+    // Determine color class based on score type
+    if (max <= 1) {
+      // Milestone: 0, 0.5, 1
+      if (score >= 1) { applyColorClass(cell, 4); }
+      else if (score >= 0.5) { applyColorClass(cell, 2); }
+      else { applyColorClass(cell, 0); }
+    } else if (max <= 4) {
+      // Barrier: 0-4
+      var bi = Math.round(score);
+      if (bi >= 4) { applyColorClass(cell, 3); }
+      else if (bi >= 3) { applyColorClass(cell, 3); }
+      else if (bi >= 2) { applyColorClass(cell, 2); }
+      else if (bi >= 1) { applyColorClass(cell, 1); }
+      else { applyColorClass(cell, 0); }
+    } else {
+      // Transition: 1-5
+      var ti = Math.round(score);
+      if (ti >= 4) { applyColorClass(cell, 4); }
+      else if (ti >= 3) { applyColorClass(cell, 3); }
+      else if (ti >= 2) { applyColorClass(cell, 2); }
+      else if (ti >= 1) { applyColorClass(cell, 1); }
+      else { applyColorClass(cell, 0); }
+    }
+    painted++;
+  });
+  saveState();
+  return painted;
+}
+
+// ── Load from API ──
+async function loadFromAPI() {
+  var params = new URLSearchParams(window.location.search||'');
+  var sessionId = params.get('sessionId');
+  if (!sessionId) return false;
+  var status = document.getElementById('apiStatus');
+  if (status) { status.textContent='Loading...'; status.style.color='#92400e'; }
+  try {
+    var apiBase = API_BASE || window.location.origin;
+    var respondentId = params.get('respondentId') || 'system';
+    var res = await fetch(apiBase+'/api/questionnaires/sessions/'+sessionId+'/grid-payload',{
+      headers:{'x-respondent-id':respondentId,'x-user-role':'admin'}
+    });
+    if (!res.ok) throw new Error('API '+res.status);
+    var data = await res.json();
+    if (data.childName) { var ci=document.getElementById('fieldChild'); if(ci)ci.value=data.childName; }
+    if (data.completedAt) { var di=document.getElementById('fieldDate'); if(di)di.value=new Date(data.completedAt).toLocaleDateString(); }
+    var painted = paintFromPayload(data.scores||data.answers||{}, data.scoreMap||{});
+    if (status) { status.textContent='Loaded '+painted+' cells'; status.style.color='#14532d'; }
+    var st = document.getElementById('mockStatus');
+    if (st) { st.textContent='Status: API loaded ('+painted+' cells)'; st.style.color='#0b6b2a'; }
+    return true;
+  } catch(err) {
+    console.warn('API load failed:', err);
+    if (status) { status.textContent='API failed'; status.style.color='#991b1b'; }
+    return false;
+  }
+}
+
+// ── Load from localStorage export payload ──
+function loadExportPayload() {
+  var params = new URLSearchParams(window.location.search||'');
+  var sk = params.get('storageKey') || 'vbmapp_grid_payload';
+  try {
+    var raw = localStorage.getItem(sk);
+    if (!raw) return false;
+    var parsed = JSON.parse(raw);
+    if (parsed.answers && parsed.scoreMap) {
+      var painted = paintFromPayload(parsed.answers, parsed.scoreMap);
+      var st = document.getElementById('mockStatus');
+      if (st) { st.textContent='Status: export loaded ('+painted+' cells)'; st.style.color='#0b6b2a'; }
+      return true;
+    }
+    return false;
+  } catch(e){ return false; }
+}
+
+// ── Clear all ──
+document.getElementById('clrAll').addEventListener('click', function(){
+  if (!confirm('Clear all colors and notes?')) return;
+  document.querySelectorAll(CELL_SEL_K).forEach(function(c){
+    applyColorClass(c, 0);
+
+    var dot = c.querySelector('.ndot');
+    if (dot) dot.style.display='none';
+  });
+  NOTES = {};
+  saveState();
+});
+
+// ── Load session button ──
+document.getElementById('btnLoadSession').addEventListener('click', async function(){
+  var sid = document.getElementById('sessionInput').value.trim();
+  if (!sid) { alert('Enter a session ID'); return; }
+  var url = new URL(window.location.href);
+  url.searchParams.set('sessionId', sid);
+  window.history.replaceState({}, '', url);
+  await loadFromAPI();
+});
+
+// ── Input persistence ──
+document.querySelectorAll('.fl input, .key-box input').forEach(function(inp){
+  inp.addEventListener('input', saveState);
+});
+
+// ── Initialize function (called after all overrides are set up) ──
+function initGrid() {
+  initDomainColorControls();
+  loadState();
+  (async function(){
+    var apiLoaded = await loadFromAPI();
+    if (!apiLoaded) loadExportPayload();
+  })();
+  console.log('VB-MAPP Grid ' + GRID_ID + ' ready');
+}
+initGrid();
+</script></body></html>
+
+
+
+

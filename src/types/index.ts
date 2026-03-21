@@ -97,6 +97,15 @@ export type QuestionnaireResponseEntry = {
   answer: string;
 };
 
+export type GridPayload = {
+  sessionId: string;
+  assessmentType: string;
+  childId: string;
+  completedAt: string | null;
+  answers: Record<string, number>;
+  scoreMap: Record<string, number>;
+};
+
 export type AssessmentScore = {
   domain: string;
   task: string;

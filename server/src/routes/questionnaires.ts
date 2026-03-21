@@ -119,6 +119,38 @@ function resolveExampleImage(skillCode?: string | null, existingImage?: string |
     return exampleImageBySkillCode.get(normalizedSkillCode) || null;
 }
 
+// ── Grid-payload helper: extract numeric score from answer string ──
+function extractGridNumericScore(answerString: string): number {
+    const match = answerString.match(/^(\d+(?:\.\d+)?)/);
+    if (!match) return 0;
+    const parsed = Number.parseFloat(match[1]);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+// ── Grid-payload helper: determine max possible score ──
+function getGridMaxScore(scoreType: string | null | undefined, options?: string[]): number {
+    if (scoreType && scoreType.trim().length > 0) {
+        const rangeMatch = scoreType.trim().match(/(\d+)\s*-\s*(\d+)/);
+        if (rangeMatch) {
+            const max = Number.parseFloat(rangeMatch[2]);
+            if (Number.isFinite(max) && max > 0) return max;
+        }
+    }
+    if (options && options.length > 0) {
+        let maxFromOptions = 0;
+        for (const option of options) {
+            const match = option.trim().match(/^(\d+(?:\.\d+)?)/);
+            if (match) {
+                const parsed = Number.parseFloat(match[1]);
+                if (Number.isFinite(parsed)) maxFromOptions = Math.max(maxFromOptions, parsed);
+            }
+        }
+        if (maxFromOptions > 0) return maxFromOptions;
+        return Math.max(1, options.length - 1);
+    }
+    return 1;
+}
+
 // GET /api/questionnaires/templates
 // List all questionnaire templates (with domain/question counts)
 router.get('/templates', async (_req: Request, res: Response) => {
@@ -457,6 +489,77 @@ router.patch('/sessions/:sessionId/complete', async (req: Request, res: Response
     } catch (error) {
         console.error('Error completing session:', error);
         res.status(500).json({ error: 'Failed to complete session' });
+    }
+});
+
+// GET /api/questionnaires/sessions/:sessionId/grid-payload
+// Return answers + scoreMap for painting VB-MAPP grid HTML files
+router.get('/sessions/:sessionId/grid-payload', async (req: Request, res: Response) => {
+    try {
+        const actor = requireActorContext(req, res);
+        if (!actor) return;
+
+        const sessionId = req.params.sessionId as string;
+        const access = await getSessionForActor(sessionId, actor);
+        if (!access.session) {
+            res.status(access.status).json({ error: access.error });
+            return;
+        }
+
+        const session = access.session;
+
+        // Fetch the template to get question metadata (skillCode, scoreType, options)
+        const template = await prisma.questionnaireTemplate.findUnique({
+            where: { assessmentType: session.assessmentType },
+            include: {
+                domains: {
+                    include: {
+                        questions: true,
+                    },
+                },
+            },
+        });
+
+        if (!template) {
+            res.status(404).json({ error: 'Template not found for this assessment type' });
+            return;
+        }
+
+        // Build response map
+        const responseMap = new Map<string, string>();
+        session.responses.forEach((r) => {
+            responseMap.set(r.questionId, r.answer);
+        });
+
+        // Build answers (skillCode → numeric score) and scoreMap (skillCode → max)
+        const answers: Record<string, number> = {};
+        const scoreMap: Record<string, number> = {};
+
+        for (const domain of template.domains) {
+            for (const question of domain.questions) {
+                const skillCode = (question.skillCode || '').trim();
+                if (!skillCode) continue;
+
+                const answer = responseMap.get(question.id);
+                const rawScore = answer ? extractGridNumericScore(answer) : 0;
+                const maxScore = getGridMaxScore(question.scoreType, question.options);
+
+                answers[skillCode] = Math.max(0, Math.min(rawScore, maxScore));
+                scoreMap[skillCode] = maxScore;
+            }
+        }
+
+        res.json({
+            sessionId: session.id,
+            assessmentType: session.assessmentType,
+            childId: session.childId,
+            completedAt: session.completedAt,
+            answers,
+            scoreMap,
+        });
+    } catch (error) {
+        console.error('Error generating grid payload:', error);
+        res.status(500).json({ error: 'Failed to generate grid payload' });
     }
 });
 
